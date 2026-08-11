@@ -10,6 +10,26 @@
     <meta name="application-name" content="MOMNTUM" />
     <meta name="description" content="Personal offline calisthenics training companion." />
 
+    <script>
+      /* v0.6.3.2i: apply the saved/system appearance before first paint so the splash
+         never flashes the wrong theme. */
+      (function applyPrePaintAppearance() {
+        try {
+          const stored = JSON.parse(localStorage.getItem("homeStrength.v1") || "{}");
+          const settings = stored.settings || {};
+          const preference = settings.themeMode || "system";
+          const mode = preference === "light" || preference === "dark"
+            ? preference
+            : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+          const allowedHues = ["midnight", "ember", "forest", "slate", "carbon"];
+          const hue = allowedHues.includes(settings.themeHue) ? settings.themeHue : "midnight";
+          document.documentElement.dataset.mode = mode;
+          document.documentElement.dataset.hue = hue;
+        } catch (_) {
+          document.documentElement.dataset.mode = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+      })();
+    </script>
 
 <title>MOMNTUM</title>
     <style>
@@ -2322,7 +2342,7 @@ body::before {
         color: #fff !important;
       }
 
-      /* v0.6.3.1 modular first-run onboarding */
+      /* v0.6.3.2i modular first-run onboarding */
       .onboardingOverlay {
         position: fixed;
         inset: 0;
@@ -2394,7 +2414,7 @@ body::before {
         .onboardingThemePreview { min-height: 58px; flex-direction: row; justify-content: space-between; }
       }
 
-      /* v0.6.3.1 UI/UX enhancements */
+      /* v0.6.3.2i UI/UX enhancements */
       .expandableWorkoutCard { overflow: hidden; }
       .expandableCardHeader {
         display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer;
@@ -2595,7 +2615,7 @@ body::before {
         .collapsedWorkoutPct { grid-column: 1 / -1; }
       }
 
-      /* v0.6.3.1 home screen polish */
+      /* v0.6.3.2i home screen polish */
       #page-home {
         padding-bottom: 28px;
       }
@@ -2755,7 +2775,7 @@ body::before {
       }
 
 
-      /* Dark-mode tour prominence — v0.6.3.1 */
+      /* Dark-mode tour prominence — v0.6.3.2i */
       html[data-mode="dark"] .appTourSpotlight {
         border-color: color-mix(in srgb, var(--accent) 92%, white 8%);
         box-shadow:
@@ -2803,7 +2823,7 @@ body::before {
 
 
 
-      /* v0.6.3.1 active workout focus */
+      /* v0.6.3.2i active workout focus */
       #page-active .timerPanel {
         position: sticky;
         top: 8px;
@@ -2829,42 +2849,35 @@ body::before {
         display: none;
       }
 
-      /* v0.6.3.1 continuously traced active-workout outline */
-      @property --active-trace-angle {
-        syntax: "<angle>";
-        inherits: false;
-        initial-value: 0deg;
+      /* v0.6.3.2i active workout: aligned static border + clearly visible breathing halo */
+      #page-active .timerPanel {
+        border: 2px solid color-mix(in srgb, var(--accent) 82%, white 8%);
+        overflow: visible;
+        isolation: isolate;
+        box-shadow:
+          0 18px 38px rgba(0, 0, 0, 0.30),
+          0 4px 12px rgba(0, 0, 0, 0.18),
+          inset 0 1px 0 color-mix(in srgb, #fff 10%, transparent) !important;
       }
 
       #page-active .timerPanel::after {
-        content: "";
+        content: "" !important;
         position: absolute;
-        inset: 0;
-        z-index: 0;
-        padding: 2px;
-        border-radius: inherit;
+        inset: -5px;
+        z-index: -1;
         pointer-events: none;
-        background: conic-gradient(
-          from var(--active-trace-angle),
-          transparent 0deg 212deg,
-          rgba(255, 69, 58, 0.08) 224deg,
-          rgba(255, 69, 58, 0.34) 250deg,
-          rgba(255, 69, 58, 0.88) 294deg,
-          rgba(255, 128, 120, 0.98) 326deg,
-          rgba(255, 69, 58, 0.42) 350deg,
-          transparent 360deg
-        );
-        -webkit-mask:
-          linear-gradient(#000 0 0) content-box,
-          linear-gradient(#000 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        filter: drop-shadow(0 0 4px rgba(255, 69, 58, 0.22));
-        animation: activeWorkoutTraceA 7s linear infinite;
-      }
-
-      #page-active .timerPanel[data-trace-cycle="b"]::after {
-        animation-name: activeWorkoutTraceB;
+        border-radius: calc(26px + 5px);
+        border: 0;
+        box-shadow:
+          0 0 10px 2px color-mix(in srgb, var(--accent) 92%, transparent),
+          0 0 24px 6px color-mix(in srgb, var(--accent) 68%, transparent),
+          0 0 48px 12px color-mix(in srgb, var(--accent) 38%, transparent),
+          0 0 72px 18px color-mix(in srgb, var(--accent) 18%, transparent);
+        opacity: .34;
+        transform: scale(.997);
+        transform-origin: center;
+        will-change: opacity, transform;
+        animation: activeWorkoutHaloPulse 2.6s ease-in-out infinite;
       }
 
       #page-active .timerPanel > * {
@@ -2872,18 +2885,33 @@ body::before {
         z-index: 1;
       }
 
-      @keyframes activeWorkoutTraceA {
-        to { --active-trace-angle: 360deg; }
+      @keyframes activeWorkoutHaloPulse {
+        0%, 100% {
+          opacity: .28;
+          transform: scale(.997);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.009);
+        }
       }
 
-      @keyframes activeWorkoutTraceB {
-        to { --active-trace-angle: 360deg; }
+      html[data-mode="light"] #page-active .timerPanel {
+        border-color: color-mix(in srgb, var(--accent) 78%, rgba(23, 32, 51, .14));
+      }
+
+      html[data-mode="light"] #page-active .timerPanel::after {
+        box-shadow:
+          0 0 9px 2px color-mix(in srgb, var(--accent) 58%, transparent),
+          0 0 22px 5px color-mix(in srgb, var(--accent) 36%, transparent),
+          0 0 40px 9px color-mix(in srgb, var(--accent) 18%, transparent);
       }
 
       @media (prefers-reduced-motion: reduce) {
         #page-active .timerPanel::after {
-          animation: none;
-          background: rgba(255, 69, 58, 0.58);
+          animation: none !important;
+          opacity: .52;
+          transform: none;
         }
       }
 
@@ -2958,7 +2986,7 @@ body::before {
         }
       }
 
-      /* v0.6.3.1 workout start countdown */
+      /* v0.6.3.2i workout start countdown */
       #page-active .timerPanel > .workoutCountdownOverlay {
         position: absolute !important;
         inset: 0 !important;
@@ -3020,13 +3048,118 @@ body::before {
         }
       }
 
+
+
+      /* v0.6.3.2i workout focus + launch polish */
+      .brandWordmarkOnly { gap: 0; }
+
+      .launchSplash {
+        background: var(--bg) !important;
+        transition: opacity .2s ease;
+      }
+      html[data-mode="light"] .launchSplash {
+        background: #eef3f9 !important;
+      }
+      html[data-mode="dark"] .launchSplash {
+        background: #020814 !important;
+      }
+      html[data-mode="light"] .launchVersion { color: rgba(23,32,51,.34); }
+      html[data-mode="dark"] .launchVersion { color: rgba(255,255,255,.34); }
+
+      /* The destination wordmark is reserved but hidden until the flying N>> lands. */
+      body.launchPending #headerWordmark,
+      body.launchReady #headerWordmark {
+        opacity: 0;
+      }
+      body.launchWordmarkLanded #headerWordmark {
+        opacity: 1;
+        transition: opacity .12s ease-out;
+      }
+
+      /* Active workout: stronger hierarchy without turning the card into a solid accent block. */
+      body.workoutActive #page-active .timerPanel {
+        transform: scale(1.018) translateZ(0);
+        transform-origin: top center;
+        border: 2px solid color-mix(in srgb, var(--accent) 66%, var(--divider));
+        box-shadow:
+          0 22px 48px rgba(0,0,0,.38),
+          0 8px 22px rgba(0,0,0,.20),
+          0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent),
+          0 0 30px color-mix(in srgb, var(--accent) 24%, transparent),
+          inset 0 1px 0 color-mix(in srgb, #fff 12%, transparent) !important;
+        transition: transform .22s cubic-bezier(.22,1,.36,1), box-shadow .22s ease, border-color .22s ease;
+      }
+
+      html[data-mode="light"] body.workoutActive #page-active .timerPanel {
+        border-color: color-mix(in srgb, var(--accent) 72%, rgba(23,32,51,.14));
+        box-shadow:
+          0 22px 46px rgba(28,42,68,.22),
+          0 7px 18px rgba(28,42,68,.12),
+          0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent),
+          0 0 28px color-mix(in srgb, var(--accent) 18%, transparent),
+          inset 0 1px 0 rgba(255,255,255,.96) !important;
+      }
+      body.workoutActive #page-active > .kicker,
+      body.workoutActive #page-active > h1,
+      body.workoutActive #page-active > p,
+      body.workoutActive #page-active > .card,
+      body.workoutActive #page-active > h2,
+      body.workoutActive #page-active > .stack,
+      body.workoutActive #page-active > .grid {
+        opacity: .90;
+        transition: opacity .22s ease;
+      }
+
+      /* Countdown glass: card remains visible beneath the countdown in both themes. */
+      #page-active .timerPanel > .workoutCountdownOverlay {
+        background: rgba(2, 8, 20, 0.62);
+        -webkit-backdrop-filter: blur(8px) saturate(82%);
+        backdrop-filter: blur(8px) saturate(82%);
+      }
+      html[data-mode="light"] #page-active .timerPanel > .workoutCountdownOverlay {
+        background: rgba(238, 243, 249, 0.72);
+        -webkit-backdrop-filter: blur(9px) saturate(92%);
+        backdrop-filter: blur(9px) saturate(92%);
+      }
+      html[data-mode="light"] .workoutCountdownNumber {
+        color: #172033;
+        text-shadow: 0 0 26px color-mix(in srgb, var(--accent) 24%, transparent);
+      }
+      html[data-mode="light"] .workoutCountdownNumber.go {
+        color: var(--accent);
+      }
+      #page-active .timerPanel.countdownActive > :not(.workoutCountdownOverlay) {
+        filter: brightness(.70) saturate(.78);
+      }
+      html[data-mode="light"] #page-active .timerPanel.countdownActive > :not(.workoutCountdownOverlay) {
+        filter: brightness(.92) saturate(.76);
+      }
+
+      /* GO dissolves as the active card settles into its resting scale. */
+      body.workoutActive #page-active .timerPanel.countdownSettling {
+        animation: workoutCardLockIn .20s cubic-bezier(.22,1,.36,1) both;
+      }
+      @keyframes workoutCardLockIn {
+        from { transform: scale(1.032) translateZ(0); }
+        to   { transform: scale(1.018) translateZ(0); }
+      }
+
+      @media (max-width: 430px) {
+        body.workoutActive #page-active .timerPanel {
+          transform: scale(1.012) translateZ(0);
+        }
+        @keyframes workoutCardLockIn {
+          from { transform: scale(1.026) translateZ(0); }
+          to   { transform: scale(1.012) translateZ(0); }
+        }
+      }
     </style>
-    <link rel="icon" href="favicon.ico?v=0.6.3.1" sizes="any" />
-    <link rel="icon" href="momntum-mark.svg?v=0.6.3.1" type="image/svg+xml" />
-    <link rel="icon" href="favicon-32x32.png?v=0.6.3.1" type="image/png" sizes="32x32" />
-    <link rel="icon" href="favicon-16x16.png?v=0.6.3.1" type="image/png" sizes="16x16" />
-    <link rel="apple-touch-icon" href="apple-touch-icon.png?v=0.6.3.1" sizes="180x180" />
-    <link rel="manifest" href="site.webmanifest?v=0.6.3.1" />
+    <link rel="icon" href="favicon.ico?v=0.6.3.2i" sizes="any" />
+    <link rel="icon" href="momntum-mark.svg?v=0.6.3.2i" type="image/svg+xml" />
+    <link rel="icon" href="favicon-32x32.png?v=0.6.3.2i" type="image/png" sizes="32x32" />
+    <link rel="icon" href="favicon-16x16.png?v=0.6.3.2i" type="image/png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png?v=0.6.3.2i" sizes="180x180" />
+    <link rel="manifest" href="site.webmanifest?v=0.6.3.2i" />
   </head>
 
   <body class="launchPending">
@@ -3061,11 +3194,11 @@ body::before {
     <section id="testerInstallGate" class="testerInstallGate" aria-labelledby="testerInstallTitle">
       <div class="testerInstallCard">
         <div class="testerInstallMark" aria-hidden="true">
-          <img src="momntum-mark.svg?v=0.6.3.1" alt="" draggable="false" />
+          <img src="momntum-mark.svg?v=0.6.3.2i" alt="" draggable="false" />
         </div>
         <img
           class="testerInstallWordmark"
-          src="momntum-wordmark-dark.svg?v=0.6.3.1"
+          src="momntum-wordmark-dark.svg?v=0.6.3.2i"
           alt="MOMNTUM"
           draggable="false"
         />
@@ -3102,7 +3235,7 @@ body::before {
         <p class="testerInstallInstalled">MOMNTUM will now be installed to your device.</p>
 
         <p class="testerInstallOpenPrompt">
-          <img src="momntum-mark.svg?v=0.6.3.1" alt="" draggable="false" />
+          <img src="momntum-mark.svg?v=0.6.3.2i" alt="" draggable="false" />
           <span>Now open MOMNTUM from your home screen</span>
         </p>
 
@@ -3113,19 +3246,19 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.6.3.1</p>
+        <p class="testerInstallVersion">v0.6.3.2i</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
-      <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.6.3.1" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.6.3.1</div>
+      <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.6.3.2i" alt="" draggable="false" /></div>
+      <div class="launchVersion">v0.6.3.2i</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
       <div class="onboardingShell">
         <div class="onboardingHeader">
-          <div class="onboardingMark"><img src="momntum-mark.svg?v=0.6.3.1" alt="" draggable="false" /></div>
+          <div class="onboardingMark"><img src="momntum-mark.svg?v=0.6.3.2i" alt="" draggable="false" /></div>
           <div class="kicker">First-time setup</div>
           <h1 id="onboardingTitle" style="margin-top:6px">Make MOMNTUM yours</h1>
           <p class="muted" style="margin-top:8px">Choose a few preferences now. You can change everything later in Settings.</p>
@@ -3168,21 +3301,18 @@ body::before {
 
     <div class="app" id="app">
       <header class="topbar">
-        <div class="brand">
-          <div class="logo momntumAppIcon" id="headerBrandLogo" aria-hidden="true">
-            <img src="momntum-mark.svg?v=0.6.3.1" alt="" draggable="false" />
-          </div>
+        <div class="brand brandWordmarkOnly">
           <div>
-            <div class="title momntumWordmark">
+            <div class="title momntumWordmark" id="headerWordmark">
               <img
                 class="wordmarkDark"
-                src="momntum-wordmark-dark.svg?v=0.6.3.1"
+                src="momntum-wordmark-dark.svg?v=0.6.3.2i"
                 alt="MOMNTUM"
                 draggable="false"
               />
               <img
                 class="wordmarkLight"
-                src="momntum-wordmark.svg?v=0.6.3.1"
+                src="momntum-wordmark.svg?v=0.6.3.2i"
                 alt="MOMNTUM"
                 draggable="false"
               />
@@ -3689,13 +3819,25 @@ body::before {
       const STORAGE_KEY = "homeStrength.v1";
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.6.3.1",
-        buildDate: "31 July 2026",
+        version: "0.6.3.2i",
+        buildDate: "10 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
         description: "Personal offline calisthenics training companion."
       };
       const CHANGELOG = [
+        "Made the active workout breathing halo use the selected accent colour for stronger dark-mode visibility",
+        "Made the active-workout halo pulse clearly visible while keeping the border perfectly static",
+        "Restored the original v0.6.3.1 active-workout tracing effect",
+        "Changed the active-workout perimeter trace into a soft moving glow in both light and dark modes",
+        "Replaced the centre-rotating active-card trace with a true perimeter-following border trace",
+        "Aligned the animated active-workout trace precisely to the card border and rounded corners",
+        "Made the launch splash respect the saved/system light or dark appearance from first paint",
+        "Redesigned the launch animation so the N>> flies directly into the MOMNTUM header wordmark",
+        "Removed the duplicated standalone logo from the app header",
+        "Made the active workout card more prominent with accent depth, scale and surrounding-content de-emphasis",
+        "Refined the workout countdown into a translucent theme-aware glass overlay with a GO lock-in transition",
+        "Fixed the active workout breathing halo so it renders outside the card edge without clipping",
         "Fixed the workout-start visual countdown overlay and synchronised it with the sound sequence",
         "Changed the Training status dot to an always-red glowing recording indicator",
         "Made the Suggested Workout accent outline clearly visible in light mode",
@@ -5230,8 +5372,8 @@ body::before {
         };
 
         const compareVersions = (a, b) => {
-          const left = String(a).split(".").map(Number);
-          const right = String(b).split(".").map(Number);
+          const left = String(a).split(".").map((part) => parseInt(part, 10) || 0);
+          const right = String(b).split(".").map((part) => parseInt(part, 10) || 0);
           const length = Math.max(left.length, right.length);
           for (let i = 0; i < length; i += 1) {
             const difference = (left[i] || 0) - (right[i] || 0);
@@ -5969,19 +6111,25 @@ body::before {
         });
 
         const finishCountdown = () => {
+          panel.classList.add("countdownSettling");
+          overlay.style.transition = "opacity .18s ease, visibility .18s ease";
+          overlay.style.opacity = "0";
           overlay.classList.remove("active");
           overlay.setAttribute("aria-hidden", "true");
-          panel.classList.remove("countdownActive");
-          overlay.style.opacity = "0";
-          overlay.style.visibility = "hidden";
 
-          if (!state.active) return;
-          state.active.paused = false;
-          state.active.lastWorkoutTickAt = Date.now();
-          saveState();
-          renderActiveWorkout();
-          startClock();
-          toast("Workout started");
+          window.setTimeout(() => {
+            panel.classList.remove("countdownActive", "countdownSettling");
+            overlay.style.visibility = "hidden";
+            overlay.style.transition = "";
+
+            if (!state.active) return;
+            state.active.paused = false;
+            state.active.lastWorkoutTickAt = Date.now();
+            saveState();
+            renderActiveWorkout();
+            startClock();
+            toast("Workout started");
+          }, 190);
         };
 
         const showNext = () => {
@@ -6553,10 +6701,10 @@ body::before {
 
         const splash = document.getElementById("launchSplash");
         const launchLogo = document.getElementById("launchLogo");
-        const headerLogo = document.getElementById("headerBrandLogo");
+        const headerWordmark = document.getElementById("headerWordmark");
         const version = splash?.querySelector(".launchVersion");
 
-        if (!splash || !launchLogo || !headerLogo) {
+        if (!splash || !launchLogo || !headerWordmark) {
           document.body.classList.remove("launchPending");
           openOnboarding(false);
           return;
@@ -6564,9 +6712,11 @@ body::before {
 
         const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         const settle = () => {
-          const target = headerLogo.getBoundingClientRect();
+          const target = headerWordmark.getBoundingClientRect();
           const source = launchLogo.getBoundingClientRect();
-          const targetSize = Math.max(target.width, target.height);
+          // MOMNTUM has seven letters; N is the centre letter, so the centre of the
+          // wordmark is the visual landing point for the N>> mark.
+          const targetSize = Math.max(20, Math.min(28, target.height * 1.02));
           const targetCentreX = target.left + target.width / 2;
           const targetCentreY = target.top + target.height / 2;
 
@@ -6574,8 +6724,9 @@ body::before {
           document.body.classList.add("launchReady");
 
           if (reduceMotion) {
+            document.body.classList.add("launchWordmarkLanded");
             splash.remove();
-            document.body.classList.remove("launchReady");
+            document.body.classList.remove("launchReady", "launchWordmarkLanded");
             openOnboarding(false);
             return;
           }
@@ -6615,13 +6766,15 @@ body::before {
               easing: "cubic-bezier(.22,1,.36,1)"
             }
           ).finished.then(() => {
+            document.body.classList.add("launchWordmarkLanded");
+            launchLogo.style.opacity = "0";
             splash.animate([{ opacity: 1 }, { opacity: 0 }], {
-              duration: 180,
+              duration: 190,
               fill: "forwards",
               easing: "ease-out"
             }).finished.then(() => {
               splash.remove();
-              document.body.classList.remove("launchReady");
+              document.body.classList.remove("launchReady", "launchWordmarkLanded");
               openOnboarding(false);
             });
           });
