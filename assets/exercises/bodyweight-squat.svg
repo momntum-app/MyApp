@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 130" role="img" aria-labelledby="title">
+<style>
+:root{--mom-text:#f6f7fb;--mom-muted:#9aa3b8;--mom-accent:#4f78c8;--mom-card:#0d1a2b}.floor{stroke:color-mix(in srgb,var(--mom-muted) 42%,transparent);stroke-width:2;stroke-linecap:round}.fig{fill:none;stroke:var(--mom-text);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}.head{fill:color-mix(in srgb,var(--mom-accent) 18%,var(--mom-card));stroke:var(--mom-text);stroke-width:4}.joint{fill:var(--mom-accent)}@media(prefers-color-scheme:light){:root{--mom-text:#172033;--mom-muted:#657188;--mom-card:#fff}}
+</style>
+<title id="title">Bodyweight squat exercise animation</title>
+<line class="floor" x1="58" y1="112" x2="264" y2="112"/>
+<g class="fig">
+  <circle class="head" r="11" cx="160" cy="25"><animate attributeName="cy" values="25;25;49;49;25" keyTimes="0;.22;.5;.72;1" dur="3.2s" repeatCount="indefinite"/></circle>
+  <line x1="160" y1="37" x2="160" y2="73"><animate attributeName="y1" values="37;37;61;61;37" keyTimes="0;.22;.5;.72;1" dur="3.2s" repeatCount="indefinite"/><animate attributeName="y2" values="73;73;85;85;73" keyTimes="0;.22;.5;.72;1" dur="3.2s" repeatCount="indefinite"/></line>
+  <polyline points="158,48 137,62 129,78"><animate attributeName="points" values="158,48 137,62 129,78;158,48 137,62 129,78;158,70 136,77 124,87;158,70 136,77 124,87;158,48 137,62 129,78" keyTimes="0;.22;.5;.72;1" dur="3.2s" repeatCount="indefinite"/></polyline>
+  <polyline points="162,48 183,62 191,78"><animate attributeName="points" values="162,48 183,62 191,78;162,48 183,62 191,78;162,70 184,77 196,87;162,70 184,77 196,87;162,48 183,62 191,78" keyTimes="0;.22;.5;.72;1" dur="3.2s" repeatCount="indefinite"/></polyline>
+  <polyline points="160,73 143,91 137,110"><animate attributeName="points" values="160,73 143,91 137,110;160,73 143,91 137,110;160,85 126,88 137,110;160,85 126,88 137,110;160,73 143,91 137,110" keyTimes="0;.22;.5;.72;1" dur="3.2s" repeatCount="indefinite"/></polyline>
+  <polyline points="160,73 177,91 183,110"><animate attributeName="points" values="160,73 177,91 183,110;160,73 177,91 183,110;160,85 194,88 183,110;160,85 194,88 183,110;160,73 177,91 183,110" keyTimes="0;.22;.5;.72;1" dur="3.2s" repeatCount="indefinite"/></polyline>
+  <line x1="128" y1="110" x2="143" y2="110"/><line x1="177" y1="110" x2="192" y2="110"/>
+</g>
+</svg>

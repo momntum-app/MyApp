@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 118" role="img" aria-label="Pike push-up animation">
+<style>
+  :root{
+    --fg:#111111;
+    --rear:#8f98a6;
+    --env:#a8b0bc;
+  }
+  .fg,.rear,.env,.head{
+    fill:none;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+  }
+  .fg{stroke:var(--fg);stroke-width:4}
+  .rear{stroke:var(--rear);stroke-width:4}
+  .env{stroke:var(--env);stroke-width:1.6;opacity:.9}
+  .head{stroke:var(--fg);stroke-width:3.5}
+</style>
+
+<!-- floor -->
+<line class="env" x1="82" y1="105" x2="238" y2="105"/>
+
+<!-- straight legs in grey: fixed throughout -->
+<line class="rear" x1="160" y1="28" x2="138" y2="103"/>
+<line class="rear" x1="160" y1="28" x2="182" y2="103"/>
+
+<!-- short torso from hips to shoulder centre -->
+<line class="fg" x1="160" y1="28" x2="160" y2="56">
+  <animate attributeName="y2" values="56;68;56" dur="2.8s" repeatCount="indefinite"/>
+</line>
+
+<!-- LEFT ARM: one hinge at midpoint, elbow moves outward -->
+<line class="fg" x1="160" y1="56" x2="127" y2="72">
+  <animate attributeName="y1" values="56;68;56" dur="2.8s" repeatCount="indefinite"/>
+  <animate attributeName="x2" values="127;116;127" dur="2.8s" repeatCount="indefinite"/>
+  <animate attributeName="y2" values="72;84;72" dur="2.8s" repeatCount="indefinite"/>
+</line>
+<line class="fg" x1="127" y1="72" x2="103" y2="103">
+  <animate attributeName="x1" values="127;116;127" dur="2.8s" repeatCount="indefinite"/>
+  <animate attributeName="y1" values="72;84;72" dur="2.8s" repeatCount="indefinite"/>
+</line>
+
+<!-- RIGHT ARM: one hinge at midpoint, elbow moves outward -->
+<line class="fg" x1="160" y1="56" x2="193" y2="72">
+  <animate attributeName="y1" values="56;68;56" dur="2.8s" repeatCount="indefinite"/>
+  <animate attributeName="x2" values="193;204;193" dur="2.8s" repeatCount="indefinite"/>
+  <animate attributeName="y2" values="72;84;72" dur="2.8s" repeatCount="indefinite"/>
+</line>
+<line class="fg" x1="193" y1="72" x2="217" y2="103">
+  <animate attributeName="x1" values="193;204;193" dur="2.8s" repeatCount="indefinite"/>
+  <animate attributeName="y1" values="72;84;72" dur="2.8s" repeatCount="indefinite"/>
+</line>
+
+<!-- head moves straight down between hands -->
+<circle class="head" cx="160" cy="62" r="10">
+  <animate attributeName="cy" values="62;90;62" dur="2.8s" repeatCount="indefinite"/>
+</circle>
+</svg>

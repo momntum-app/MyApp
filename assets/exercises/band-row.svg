@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 130" role="img" aria-labelledby="title">
+  <style>
+    :root {
+      --mom-text: #f6f7fb;
+      --mom-muted: #9aa3b8;
+      --mom-accent: #4f78c8;
+      --mom-card: #0d1a2b;
+      color: var(--mom-text);
+    }
+    .exerciseMotionFloor { stroke: color-mix(in srgb, var(--mom-muted) 42%, transparent); stroke-width: 2; stroke-linecap: round; }
+    .exerciseMotionFigure { fill: none; stroke: var(--mom-text); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+    .exerciseMotionJoint { fill: var(--mom-accent); stroke: none; }
+    .exerciseMotionHead { fill: color-mix(in srgb, var(--mom-accent) 18%, var(--mom-card)); stroke: var(--mom-text); stroke-width: 4; }
+    @media (prefers-color-scheme: light) {
+      :root { --mom-text:#172033; --mom-muted:#657188; --mom-card:#ffffff; }
+    }
+  </style>
+
+  <title id="title">Band row exercise animation</title>
+<g class="exerciseMotionStage"><line class="exerciseMotionFloor" x1="42" y1="112" x2="278" y2="112"/><line x1="66" y1="20" x2="66" y2="112" class="exerciseMotionFloor"/><g class="exerciseMotionFigure"><circle class="exerciseMotionHead" r="11" cx="174" cy="31"/><line x1="170" y1="43" x2="166" y2="79"/><polyline points="166,79 149,96 145,110"/><polyline points="166,79 189,96 196,110"/><polyline points="168,54 130,65 103,67"><animate attributeName="points" values="168,54 130,65 103,67;168,54 130,65 103,67;168,54 154,66 139,69;168,54 154,66 139,69;168,54 130,65 103,67" keyTimes="0;.22;.5;.72;1" dur="3.1s" repeatCount="indefinite"/></polyline><polyline points="170,58 132,71 105,73"><animate attributeName="points" values="170,58 132,71 105,73;170,58 132,71 105,73;170,58 156,70 141,73;170,58 156,70 141,73;170,58 132,71 105,73" keyTimes="0;.22;.5;.72;1" dur="3.1s" repeatCount="indefinite"/></polyline></g><g fill="none" stroke="var(--mom-accent)" stroke-width="3.2" stroke-linecap="round" opacity=".95"><line x1="66" y1="67" x2="103" y2="67"><animate attributeName="x2" values="103;103;139;139;103" keyTimes="0;.22;.5;.72;1" dur="3.1s" repeatCount="indefinite"/></line><line x1="66" y1="73" x2="105" y2="73"><animate attributeName="x2" values="105;105;141;141;105" keyTimes="0;.22;.5;.72;1" dur="3.1s" repeatCount="indefinite"/></line></g></g>
+</svg>

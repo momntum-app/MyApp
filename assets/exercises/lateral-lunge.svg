@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 130" role="img" aria-labelledby="title">
+<style>:root{--mom-text:#f6f7fb;--mom-muted:#9aa3b8;--mom-accent:#4f78c8;--mom-card:#0d1a2b}.floor{stroke:color-mix(in srgb,var(--mom-muted) 42%,transparent);stroke-width:2;stroke-linecap:round}.fig{fill:none;stroke:var(--mom-text);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}.head{fill:color-mix(in srgb,var(--mom-accent) 18%,var(--mom-card));stroke:var(--mom-text);stroke-width:4}@media(prefers-color-scheme:light){:root{--mom-text:#172033;--mom-muted:#657188;--mom-card:#fff}}</style>
+<title id="title">Lateral lunge exercise animation</title>
+<line class="floor" x1="50" y1="112" x2="270" y2="112"/>
+<g class="fig">
+  <!-- feet stay planted -->
+  <line x1="82" y1="110" x2="102" y2="110"/>
+  <line x1="218" y1="110" x2="238" y2="110"/>
+
+  <!-- head follows hip shift -->
+  <circle class="head" r="11" cx="160" cy="25">
+    <animate attributeName="cx" values="160;160;128;128;160" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/>
+    <animate attributeName="cy" values="25;25;42;42;25" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- torso remains long, shifting over bent leg -->
+  <line x1="160" y1="37" x2="160" y2="72">
+    <animate attributeName="x1" values="160;160;128;128;160" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/>
+    <animate attributeName="y1" values="37;37;54;54;37" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/>
+    <animate attributeName="x2" values="160;160;130;130;160" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/>
+    <animate attributeName="y2" values="72;72;82;82;72" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/>
+  </line>
+
+  <!-- arms -->
+  <polyline points="158,48 140,61 132,75">
+    <animate attributeName="points" values="158,48 140,61 132,75;158,48 140,61 132,75;126,65 111,76 103,89;126,65 111,76 103,89;158,48 140,61 132,75" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/>
+  </polyline>
+  <polyline points="162,48 180,61 188,75">
+    <animate attributeName="points" values="162,48 180,61 188,75;162,48 180,61 188,75;130,65 147,75 160,88;130,65 147,75 160,88;162,48 180,61 188,75" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/>
+  </polyline>
+
+  <!-- working leg: ankle fixed at planted left foot, knee bends -->
+  <polyline points="160,72 125,90 92,110">
+    <animate attributeName="points" values="160,72 125,90 92,110;160,72 125,90 92,110;130,82 104,88 92,110;130,82 104,88 92,110;160,72 125,90 92,110" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/>
+  </polyline>
+
+  <!-- trailing leg: ankle fixed, leg straightens -->
+  <polyline points="160,72 195,90 228,110">
+    <animate attributeName="points" values="160,72 195,90 228,110;160,72 195,90 228,110;130,82 178,95 228,110;130,82 178,95 228,110;160,72 195,90 228,110" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/>
+  </polyline>
+</g>
+</svg>

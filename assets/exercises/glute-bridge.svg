@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 130" role="img" aria-labelledby="title">
+<style>:root{--mom-text:#f6f7fb;--mom-muted:#9aa3b8;--mom-accent:#4f78c8;--mom-card:#0d1a2b}.floor{stroke:color-mix(in srgb,var(--mom-muted) 42%,transparent);stroke-width:2;stroke-linecap:round}.fig{fill:none;stroke:var(--mom-text);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}.head{fill:color-mix(in srgb,var(--mom-accent) 18%,var(--mom-card));stroke:var(--mom-text);stroke-width:4}@media(prefers-color-scheme:light){:root{--mom-text:#172033;--mom-muted:#657188;--mom-card:#fff}}</style>
+<title id="title">Glute bridge exercise animation</title><line class="floor" x1="36" y1="112" x2="286" y2="112"/>
+<g class="fig">
+<circle class="head" r="11" cx="72" cy="92"/>
+<line x1="83" y1="94" x2="145" y2="101"><animate attributeName="y2" values="101;101;72;72;101" keyTimes="0;.22;.5;.72;1" dur="3.2s" repeatCount="indefinite"/></line>
+<polyline points="145,101 190,86 218,109"><animate attributeName="points" values="145,101 190,86 218,109;145,101 190,86 218,109;145,72 190,72 218,109;145,72 190,72 218,109;145,101 190,86 218,109" keyTimes="0;.22;.5;.72;1" dur="3.2s" repeatCount="indefinite"/></polyline>
+<polyline points="145,101 179,88 198,109"><animate attributeName="points" values="145,101 179,88 198,109;145,101 179,88 198,109;145,72 179,74 198,109;145,72 179,74 198,109;145,101 179,88 198,109" keyTimes="0;.22;.5;.72;1" dur="3.2s" repeatCount="indefinite"/></polyline>
+<line x1="96" y1="103" x2="126" y2="109"/>
+<line x1="191" y1="109" x2="205" y2="109"/><line x1="212" y1="109" x2="226" y2="109"/>
+</g></svg>

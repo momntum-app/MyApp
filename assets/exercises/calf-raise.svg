@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 130" role="img" aria-labelledby="title">
+<style>:root{--mom-text:#f6f7fb;--mom-muted:#9aa3b8;--mom-accent:#4f78c8;--mom-card:#0d1a2b}.floor{stroke:color-mix(in srgb,var(--mom-muted) 42%,transparent);stroke-width:2;stroke-linecap:round}.fig{fill:none;stroke:var(--mom-text);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}.head{fill:color-mix(in srgb,var(--mom-accent) 18%,var(--mom-card));stroke:var(--mom-text);stroke-width:4}@media(prefers-color-scheme:light){:root{--mom-text:#172033;--mom-muted:#657188;--mom-card:#fff}}</style>
+<title id="title">Calf raise exercise animation</title>
+<line class="floor" x1="110" y1="112" x2="210" y2="112"/>
+<g class="fig">
+  <circle class="head" r="11" cx="160" cy="24">
+    <animate attributeName="cy" values="24;24;15;15;24" keyTimes="0;.22;.5;.72;1" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <line x1="160" y1="36" x2="160" y2="72">
+    <animate attributeName="y1" values="36;36;27;27;36" keyTimes="0;.22;.5;.72;1" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="y2" values="72;72;63;63;72" keyTimes="0;.22;.5;.72;1" dur="3s" repeatCount="indefinite"/>
+  </line>
+
+  <polyline points="158,48 140,63 138,79">
+    <animate attributeName="points" values="158,48 140,63 138,79;158,48 140,63 138,79;158,39 140,54 138,70;158,39 140,54 138,70;158,48 140,63 138,79" keyTimes="0;.22;.5;.72;1" dur="3s" repeatCount="indefinite"/>
+  </polyline>
+  <polyline points="162,48 180,63 182,79">
+    <animate attributeName="points" values="162,48 180,63 182,79;162,48 180,63 182,79;162,39 180,54 182,70;162,39 180,54 182,70;162,48 180,63 182,79" keyTimes="0;.22;.5;.72;1" dur="3s" repeatCount="indefinite"/>
+  </polyline>
+
+  <!-- left leg terminates at ankle; ankle rises with heel -->
+  <polyline points="160,72 149,91 146,106">
+    <animate attributeName="points" values="160,72 149,91 146,106;160,72 149,91 146,106;160,63 149,82 148,99;160,63 149,82 148,99;160,72 149,91 146,106" keyTimes="0;.22;.5;.72;1" dur="3s" repeatCount="indefinite"/>
+  </polyline>
+  <!-- right leg terminates at ankle; ankle rises with heel -->
+  <polyline points="160,72 171,91 174,106">
+    <animate attributeName="points" values="160,72 171,91 174,106;160,72 171,91 174,106;160,63 171,82 172,99;160,63 171,82 172,99;160,72 171,91 174,106" keyTimes="0;.22;.5;.72;1" dur="3s" repeatCount="indefinite"/>
+  </polyline>
+
+  <!-- feet pivot around planted toes; ankle is the rear/top endpoint -->
+  <polyline points="146,106 142,110 156,110">
+    <animate attributeName="points" values="146,106 142,110 156,110;146,106 142,110 156,110;148,99 146,106 156,110;148,99 146,106 156,110;146,106 142,110 156,110" keyTimes="0;.22;.5;.72;1" dur="3s" repeatCount="indefinite"/>
+  </polyline>
+  <polyline points="174,106 170,110 184,110">
+    <animate attributeName="points" values="174,106 170,110 184,110;174,106 170,110 184,110;172,99 170,106 184,110;172,99 170,106 184,110;174,106 170,110 184,110" keyTimes="0;.22;.5;.72;1" dur="3s" repeatCount="indefinite"/>
+  </polyline>
+</g>
+</svg>

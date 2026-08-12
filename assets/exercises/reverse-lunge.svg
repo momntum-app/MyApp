@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 130" role="img" aria-labelledby="title">
+<style>:root{--mom-text:#f6f7fb;--mom-muted:#9aa3b8;--mom-accent:#4f78c8;--mom-card:#0d1a2b}.floor{stroke:color-mix(in srgb,var(--mom-muted) 42%,transparent);stroke-width:2;stroke-linecap:round}.fig{fill:none;stroke:var(--mom-text);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}.head{fill:color-mix(in srgb,var(--mom-accent) 18%,var(--mom-card));stroke:var(--mom-text);stroke-width:4}@media(prefers-color-scheme:light){:root{--mom-text:#172033;--mom-muted:#657188;--mom-card:#fff}}</style>
+<title id="title">Reverse lunge exercise animation</title><line class="floor" x1="44" y1="112" x2="280" y2="112"/>
+<g class="fig">
+<circle class="head" r="11" cx="150" cy="25"><animate attributeName="cy" values="25;25;44;44;25" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/></circle>
+<line x1="150" y1="37" x2="151" y2="73"><animate attributeName="y1" values="37;37;56;56;37" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/><animate attributeName="y2" values="73;73;84;84;73" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/></line>
+<polyline points="149,48 133,63 129,80"><animate attributeName="points" values="149,48 133,63 129,80;149,48 133,63 129,80;149,67 134,79 129,94;149,67 134,79 129,94;149,48 133,63 129,80" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/></polyline>
+<polyline points="152,48 168,63 172,80"><animate attributeName="points" values="152,48 168,63 172,80;152,48 168,63 172,80;152,67 168,79 174,94;152,67 168,79 174,94;152,48 168,63 172,80" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/></polyline>
+<!-- front leg remains planted -->
+<polyline points="151,73 136,91 132,110"><animate attributeName="points" values="151,73 136,91 132,110;151,73 136,91 132,110;151,84 124,88 132,110;151,84 124,88 132,110;151,73 136,91 132,110" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/></polyline>
+<!-- rear leg steps back, knee lowers -->
+<polyline points="151,73 169,91 176,110"><animate attributeName="points" values="151,73 169,91 176,110;151,73 169,91 176,110;151,84 190,96 220,110;151,84 190,96 220,110;151,73 169,91 176,110" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/></polyline>
+<line x1="124" y1="110" x2="140" y2="110"/><line x1="212" y1="110" x2="228" y2="110"><animate attributeName="x1" values="168;168;212;212;168" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/><animate attributeName="x2" values="184;184;228;228;184" keyTimes="0;.2;.52;.74;1" dur="3.5s" repeatCount="indefinite"/></line>
+</g></svg>

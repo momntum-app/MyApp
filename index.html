@@ -11,7 +11,7 @@
     <meta name="description" content="Personal offline calisthenics training companion." />
 
     <script>
-      /* v0.6.3.2i: apply the saved/system appearance before first paint so the splash
+      /* v0.6.4.0: apply the saved/system appearance before first paint so the splash
          never flashes the wrong theme. */
       (function applyPrePaintAppearance() {
         try {
@@ -2342,7 +2342,7 @@ body::before {
         color: #fff !important;
       }
 
-      /* v0.6.3.2i modular first-run onboarding */
+      /* v0.6.4.0 modular first-run onboarding */
       .onboardingOverlay {
         position: fixed;
         inset: 0;
@@ -2414,7 +2414,7 @@ body::before {
         .onboardingThemePreview { min-height: 58px; flex-direction: row; justify-content: space-between; }
       }
 
-      /* v0.6.3.2i UI/UX enhancements */
+      /* v0.6.4.0 UI/UX enhancements */
       .expandableWorkoutCard { overflow: hidden; }
       .expandableCardHeader {
         display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer;
@@ -2615,7 +2615,7 @@ body::before {
         .collapsedWorkoutPct { grid-column: 1 / -1; }
       }
 
-      /* v0.6.3.2i home screen polish */
+      /* v0.6.4.0 home screen polish */
       #page-home {
         padding-bottom: 28px;
       }
@@ -2775,7 +2775,7 @@ body::before {
       }
 
 
-      /* Dark-mode tour prominence — v0.6.3.2i */
+      /* Dark-mode tour prominence — v0.6.4.0 */
       html[data-mode="dark"] .appTourSpotlight {
         border-color: color-mix(in srgb, var(--accent) 92%, white 8%);
         box-shadow:
@@ -2823,7 +2823,7 @@ body::before {
 
 
 
-      /* v0.6.3.2i active workout focus */
+      /* v0.6.4.0 active workout focus */
       #page-active .timerPanel {
         position: sticky;
         top: 8px;
@@ -2849,7 +2849,7 @@ body::before {
         display: none;
       }
 
-      /* v0.6.3.2i active workout: aligned static border + clearly visible breathing halo */
+      /* v0.6.4.0 active workout: aligned static border + clearly visible breathing halo */
       #page-active .timerPanel {
         border: 2px solid color-mix(in srgb, var(--accent) 82%, white 8%);
         overflow: visible;
@@ -2986,7 +2986,7 @@ body::before {
         }
       }
 
-      /* v0.6.3.2i workout start countdown */
+      /* v0.6.4.0 workout start countdown */
       #page-active .timerPanel > .workoutCountdownOverlay {
         position: absolute !important;
         inset: 0 !important;
@@ -3050,7 +3050,7 @@ body::before {
 
 
 
-      /* v0.6.3.2i workout focus + launch polish */
+      /* v0.6.4.0 workout focus + launch polish */
       .brandWordmarkOnly { gap: 0; }
 
       .launchSplash {
@@ -3153,13 +3153,220 @@ body::before {
           to   { transform: scale(1.012) translateZ(0); }
         }
       }
+
+      /* v0.6.4.0 active exercise and expanded-card emphasis */
+      #page-active .exerciseItem.currentExercise {
+        position: relative;
+        border: 2px solid color-mix(in srgb, var(--accent) 82%, var(--divider));
+        background: linear-gradient(145deg, color-mix(in srgb, var(--accent) 15%, var(--card)), var(--card));
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent) !important;
+        transform: scale(1.015);
+      }
+      #page-active .exerciseItem.exerciseDone { opacity: .55; }
+      #page-active .exerciseItem.exerciseDone.currentExercise { opacity: 1; }
+      #page-active .setGrid {
+        gap: 8px;
+      }
+      #page-active .setBtn {
+        background: transparent;
+        border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--divider));
+        color: var(--text);
+        font-weight: 850;
+      }
+      #page-active .setBtn.done {
+        background: color-mix(in srgb, var(--green) 16%, transparent);
+        border-color: color-mix(in srgb, var(--green) 48%, var(--divider));
+        color: color-mix(in srgb, var(--green) 70%, var(--heading));
+        cursor: default;
+      }
+      #page-active .setBtn.inProgress {
+        border-color: var(--accent) !important;
+        background: color-mix(in srgb, var(--accent) 18%, var(--card2));
+        color: var(--heading);
+        box-shadow:
+          0 0 0 2px color-mix(in srgb, var(--accent) 16%, transparent),
+          0 0 15px color-mix(in srgb, var(--accent) 52%, transparent) !important;
+        animation: currentSetGlow 1.8s ease-in-out infinite;
+      }
+      @keyframes currentSetGlow {
+        0%, 100% { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 13%, transparent), 0 0 10px color-mix(in srgb, var(--accent) 34%, transparent) !important; }
+        50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent), 0 0 22px color-mix(in srgb, var(--accent) 68%, transparent) !important; }
+      }
+      #page-active .currentExerciseComplete {
+        width: 100%;
+        min-height: 52px;
+        margin-top: 13px;
+        padding: 10px 14px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: var(--button-text) !important;
+        font-weight: 900;
+        border: 1px solid color-mix(in srgb, white 18%, transparent);
+      }
+      #page-active .currentExerciseComplete:disabled {
+        background: var(--card2);
+        color: var(--muted) !important;
+        border-color: var(--divider);
+        opacity: .72;
+        cursor: default;
+      }
+      .currentExerciseCompleteBox {
+        width: 27px; height: 27px; border-radius: 9px; display: grid; place-items: center;
+        background: rgba(255,255,255,.18); border: 2px solid rgba(255,255,255,.82); color: #fff; font-weight: 950;
+      }
+      #page-active .currentExerciseComplete:disabled .currentExerciseCompleteBox {
+        background: transparent;
+        border-color: color-mix(in srgb, var(--muted) 60%, transparent);
+        color: var(--muted);
+      }
+      #page-workouts #workoutList > .expandableWorkoutCard.open {
+        border: 2px solid var(--accent) !important;
+        outline: 2px solid color-mix(in srgb, var(--accent) 92%, transparent) !important;
+        outline-offset: -2px !important;
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent) !important;
+      }
+      #page-library .exerciseItem.open {
+        border: 2px solid color-mix(in srgb, var(--accent) 82%, var(--divider)) !important;
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 11%, transparent) !important;
+      }
+      html[data-mode="light"] #page-active .exerciseItem.currentExercise {
+        background: linear-gradient(145deg, color-mix(in srgb, var(--accent) 10%, #fff), #fff);
+        border-color: color-mix(in srgb, var(--accent) 76%, rgba(23,32,51,.18));
+      }
+      @media (max-width: 430px) {
+        #page-active .exerciseItem.currentExercise { transform: scale(1.008); }
+      }
+
+
+      /* v0.7.0 proof-of-concept exercise motion */
+      .exerciseMotion {
+        width: 100%;
+        margin: 12px 0 10px;
+        padding: 10px 12px;
+        border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--divider));
+        border-radius: 16px;
+        background: color-mix(in srgb, var(--accent) 6%, transparent);
+        overflow: hidden;
+      }
+      .exerciseMotion svg {
+        display: block;
+        width: 100%;
+        height: 118px;
+        color: var(--text);
+      }
+      .exerciseMotionObject {
+        display: block;
+        width: 100%;
+        height: 118px;
+        border: 0;
+        background: transparent;
+        pointer-events: none;
+      }
+      .exerciseMotionFloor {
+        stroke: color-mix(in srgb, var(--muted) 42%, transparent);
+        stroke-width: 2;
+        stroke-linecap: round;
+      }
+      .exerciseMotionFigure {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .exerciseMotionJoint {
+        fill: var(--accent);
+        stroke: none;
+      }
+      .exerciseMotionHead {
+        fill: color-mix(in srgb, var(--accent) 18%, var(--card));
+        stroke: currentColor;
+        stroke-width: 4;
+      }
+      .exerciseMotionLabel {
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-align: center;
+        text-transform: uppercase;
+      }
+      .exerciseMotionStage {
+        transform-box: fill-box;
+        transform-origin: center;
+        will-change: transform, opacity;
+      }
+      .exerciseMotionSide {
+        animation: exerciseViewSideCamera 23.2s ease-in-out infinite;
+      }
+      .exerciseMotionThreeQuarter {
+        opacity: 0;
+        animation: exerciseViewThreeQuarterCamera 23.2s ease-in-out infinite;
+      }
+      .exerciseMotionFront {
+        opacity: 0;
+        animation: exerciseViewFrontCamera 23.2s ease-in-out infinite;
+      }
+      /* Staggered viewpoint sequence: hold each camera angle for two full reps,
+         then cross-fade to the next prepared SVG view. */
+      @keyframes exerciseViewSideCamera {
+        0%, 22.4% { opacity: 1; transform: translateX(0); }
+        25%, 97.4% { opacity: 0; transform: translateX(-3px); }
+        100% { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes exerciseViewThreeQuarterCamera {
+        0%, 22.4% { opacity: 0; transform: translateX(3px); }
+        25%, 47.4% { opacity: 1; transform: translateX(0); }
+        50%, 72.4% { opacity: 0; transform: translateX(-3px); }
+        75%, 97.4% { opacity: 1; transform: translateX(0); }
+        100% { opacity: 0; transform: translateX(3px); }
+      }
+      @keyframes exerciseViewFrontCamera {
+        0%, 47.4% { opacity: 0; transform: translateX(3px); }
+        50%, 72.4% { opacity: 1; transform: translateX(0); }
+        75%, 100% { opacity: 0; transform: translateX(-3px); }
+      }
+
+      /* v0.7.0 exercise-specific camera strategy */
+      .exerciseMotion.motionStatic .exerciseMotionStage { opacity: 1; animation: none !important; }
+      .exerciseMotion.motionTwoView .exerciseMotionStage { opacity: 0; }
+      .exerciseMotion.motionTwoView .exerciseMotionPrimary { animation: exerciseViewPrimaryTwo 11.6s ease-in-out infinite; }
+      .exerciseMotion.motionTwoView .exerciseMotionSecondary { animation: exerciseViewSecondaryTwo 11.6s ease-in-out infinite; }
+      @keyframes exerciseViewPrimaryTwo {
+        0%, 44.8% { opacity: 1; transform: translateX(0); }
+        50%, 94.8% { opacity: 0; transform: translateX(-3px); }
+        100% { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes exerciseViewSecondaryTwo {
+        0%, 44.8% { opacity: 0; transform: translateX(3px); }
+        50%, 94.8% { opacity: 1; transform: translateX(0); }
+        100% { opacity: 0; transform: translateX(3px); }
+      }
+
+      #page-active .exerciseItem.currentExercise .exerciseMotion {
+        background: color-mix(in srgb, var(--accent) 10%, var(--card2));
+        border-color: color-mix(in srgb, var(--accent) 42%, var(--divider));
+      }
+      html[data-mode="light"] .exerciseMotion {
+        background: color-mix(in srgb, var(--accent) 5%, #fff);
+      }
+      @media (max-width: 430px) {
+        .exerciseMotion svg,
+        .exerciseMotionObject { height: 104px; }
+      }
+
     </style>
-    <link rel="icon" href="favicon.ico?v=0.6.3.2i" sizes="any" />
-    <link rel="icon" href="momntum-mark.svg?v=0.6.3.2i" type="image/svg+xml" />
-    <link rel="icon" href="favicon-32x32.png?v=0.6.3.2i" type="image/png" sizes="32x32" />
-    <link rel="icon" href="favicon-16x16.png?v=0.6.3.2i" type="image/png" sizes="16x16" />
-    <link rel="apple-touch-icon" href="apple-touch-icon.png?v=0.6.3.2i" sizes="180x180" />
-    <link rel="manifest" href="site.webmanifest?v=0.6.3.2i" />
+    <link rel="icon" href="favicon.ico?v=0.7.0" sizes="any" />
+    <link rel="icon" href="momntum-mark.svg?v=0.7.0" type="image/svg+xml" />
+    <link rel="icon" href="favicon-32x32.png?v=0.7.0" type="image/png" sizes="32x32" />
+    <link rel="icon" href="favicon-16x16.png?v=0.7.0" type="image/png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png?v=0.7.0" sizes="180x180" />
+    <link rel="manifest" href="site.webmanifest?v=0.7.0" />
   </head>
 
   <body class="launchPending">
@@ -3194,11 +3401,11 @@ body::before {
     <section id="testerInstallGate" class="testerInstallGate" aria-labelledby="testerInstallTitle">
       <div class="testerInstallCard">
         <div class="testerInstallMark" aria-hidden="true">
-          <img src="momntum-mark.svg?v=0.6.3.2i" alt="" draggable="false" />
+          <img src="momntum-mark.svg?v=0.7.0" alt="" draggable="false" />
         </div>
         <img
           class="testerInstallWordmark"
-          src="momntum-wordmark-dark.svg?v=0.6.3.2i"
+          src="momntum-wordmark-dark.svg?v=0.7.0"
           alt="MOMNTUM"
           draggable="false"
         />
@@ -3235,7 +3442,7 @@ body::before {
         <p class="testerInstallInstalled">MOMNTUM will now be installed to your device.</p>
 
         <p class="testerInstallOpenPrompt">
-          <img src="momntum-mark.svg?v=0.6.3.2i" alt="" draggable="false" />
+          <img src="momntum-mark.svg?v=0.7.0" alt="" draggable="false" />
           <span>Now open MOMNTUM from your home screen</span>
         </p>
 
@@ -3246,19 +3453,19 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.6.3.2i</p>
+        <p class="testerInstallVersion">v0.7.0</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
-      <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.6.3.2i" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.6.3.2i</div>
+      <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.7.0" alt="" draggable="false" /></div>
+      <div class="launchVersion">v0.7.0 SVG assets</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
       <div class="onboardingShell">
         <div class="onboardingHeader">
-          <div class="onboardingMark"><img src="momntum-mark.svg?v=0.6.3.2i" alt="" draggable="false" /></div>
+          <div class="onboardingMark"><img src="momntum-mark.svg?v=0.7.0" alt="" draggable="false" /></div>
           <div class="kicker">First-time setup</div>
           <h1 id="onboardingTitle" style="margin-top:6px">Make MOMNTUM yours</h1>
           <p class="muted" style="margin-top:8px">Choose a few preferences now. You can change everything later in Settings.</p>
@@ -3306,13 +3513,13 @@ body::before {
             <div class="title momntumWordmark" id="headerWordmark">
               <img
                 class="wordmarkDark"
-                src="momntum-wordmark-dark.svg?v=0.6.3.2i"
+                src="momntum-wordmark-dark.svg?v=0.7.0"
                 alt="MOMNTUM"
                 draggable="false"
               />
               <img
                 class="wordmarkLight"
-                src="momntum-wordmark.svg?v=0.6.3.2i"
+                src="momntum-wordmark.svg?v=0.7.0"
                 alt="MOMNTUM"
                 draggable="false"
               />
@@ -3413,7 +3620,6 @@ body::before {
               <button class="btn sm primaryTimer resumeWorkoutBtn hidden" id="resumeWorkoutBtn">Resume Workout</button>
               <button class="btn sm primaryTimer" id="pauseWorkoutBtn">Pause</button>
               <button class="btn sm danger endWorkoutBtn" id="resetWorkoutBtn">End</button>
-              <button class="btn sm resetTimerBtn" id="restResetBtn">Reset</button>
             </div>
             <div class="timerSecondary">
               <div>
@@ -3565,7 +3771,6 @@ body::before {
                 <label class="equipmentOption"><input type="checkbox" value="kettlebell" data-equipment-choice><span class="equipmentOptionText"><strong>Kettlebell</strong><small>Single kettlebell movements</small></span></label>
                 <label class="equipmentOption"><input type="checkbox" value="pullup" data-equipment-choice><span class="equipmentOptionText"><strong>Pull-up bar</strong><small>Pull-ups, chin-ups and supported hangs</small></span></label>
               </div>
-              <div class="equipmentProfileSummary small" id="equipmentProfileSummary"></div>
             </div>
             <div class="card">
               <h3>Workout reminders</h3>
@@ -3819,13 +4024,24 @@ body::before {
       const STORAGE_KEY = "homeStrength.v1";
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.6.3.2i",
-        buildDate: "10 August 2026",
+        version: "0.7.0-svg-assets",
+        buildDate: "12 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
         description: "Personal offline calisthenics training companion."
       };
       const CHANGELOG = [
+        "Rebuilt Push-up as a dedicated authored side-view SVG and retained Band Row as the animation benchmark",
+        "Made exercise animation viewpoints movement-specific instead of rotating every exercise through all angles",
+        "Added staggered multi-angle animated demonstrations across the full exercise library",
+        "Added a proof-of-concept animated Full Push-up illustration to Library and active workout exercise cards",
+        "Made the current exercise the visual focus during active workouts",
+        "Removed manual per-exercise tick boxes and added a prominent current-exercise completion control",
+        "Automatically keeps the current exercise in view as the workout advances",
+        "Changed End Workout and Finish Workout to land on Progress",
+        "Removed the active-workout Reset control",
+        "Added prominent accent edges to expanded Workout and Library cards",
+        "Shortened all five daily workouts to 20 minutes or less",
         "Made the active workout breathing halo use the selected accent colour for stronger dark-mode visibility",
         "Made the active-workout halo pulse clearly visible while keeping the border perfectly static",
         "Restored the original v0.6.3.1 active-workout tracing effect",
@@ -4956,56 +5172,49 @@ body::before {
       const workoutBlueprints = {
         push: {
           warm: [
-            { none: "March in Place" }, { none: "Arm Circles" }, { none: "Scapular Push-up" },
-            { bandsFree: "Band Pull-apart", none: "Prone W Raise" },
+            { none: "March in Place" }, { none: "Scapular Push-up" },
           ],
           main: [
             { bandsFixed: "Band Chest Press", dumbbells: "Dumbbell Floor Press", none: "Incline Push-up" },
             { bandsFree: "Band Overhead Press", dumbbells: "Dumbbell Shoulder Press", kettlebell: "Kettlebell Clean and Press", none: "Pike Push-up" },
             { bandsFree: "Band Lateral Raise", dumbbells: "Dumbbell Lateral Raise", none: "Scapular Push-up" },
             { bandsFixed: "Band Triceps Pressdown", dumbbells: "Dumbbell Overhead Triceps Extension", none: "Diamond Push-up" },
-            { bandsFixed: "Band Chest Press", dumbbells: "Dumbbell Floor Press", none: "Push-up" },
-            { none: "Close Grip Push-up" },
           ],
         },
         pull: {
           warm: [
-            { none: "March in Place" }, { none: "Cat Cow" }, { bandsFree: "Band Pull-apart", none: "Prone W Raise" }, { none: "Hip Hinge Drill" },
+            { none: "Cat Cow" }, { bandsFree: "Band Pull-apart", none: "Prone W Raise" },
           ],
           main: [
             { pullup: "Pull-up", bandsFixed: "Band Row", dumbbells: "One-arm Dumbbell Row", none: "Doorframe Row" },
             { pullup: "Chin-up", bandsFixed: "Band Lat Pulldown", dumbbells: "Dumbbell Pullover", none: "Prone Lat Pull" },
             { bandsFixed: "Band Face Pull", dumbbells: "Dumbbell Reverse Fly", none: "Prone Reverse Fly" },
-            { bandsFixed: "Band Straight-arm Pulldown", dumbbells: "Dumbbell Pullover", none: "Reverse Snow Angel" },
             { pullup: "Chin-up", bandsFree: "Band Biceps Curl", dumbbells: "Dumbbell Biceps Curl", none: "Self-resisted Biceps Curl" },
-            { none: "Prone W Raise" },
           ],
         },
         legs: {
-          warm: [{ none: "March in Place" }, { none: "Ankle Rocks" }, { none: "Hamstring Sweep" }, { none: "Hip Hinge Drill" }],
+          warm: [{ none: "March in Place" }, { none: "Hip Hinge Drill" }],
           main: [
             { kettlebell: "Kettlebell Goblet Squat", dumbbells: "Goblet Squat", bandsFree: "Band Squat", none: "Bodyweight Squat" },
             { dumbbells: "Dumbbell Reverse Lunge", none: "Reverse Lunge" },
             { kettlebell: "Kettlebell Deadlift", dumbbells: "Dumbbell Romanian Deadlift", bandsFree: "Band Romanian Deadlift", none: "Hip Hinge Drill" },
-            { none: "Glute Bridge" }, { none: "Wall Sit" }, { none: "Calf Raise" },
+            { none: "Glute Bridge" },
           ],
         },
         core: {
-          warm: [{ none: "Inchworm" }, { none: "World's Greatest Stretch" }, { none: "Bird Dog" }],
+          warm: [{ none: "Inchworm" }, { none: "Bird Dog" }],
           main: [
             { none: "Dead Bug" }, { none: "Plank" }, { none: "Side Plank" },
             { bandsFixed: "Band Pallof Press", dumbbells: "Suitcase March", kettlebell: "Suitcase March", none: "Bird Dog" },
             { none: "Mountain Climber" },
-            { dumbbells: "Dumbbell Thruster", kettlebell: "Kettlebell Clean and Press", bandsFree: "Band Squat to Press", none: "Squat Thrust" },
           ],
         },
         conditioning: {
-          warm: [{ none: "March in Place" }, { none: "Arm Circles" }, { none: "Cat Cow" }],
+          warm: [{ none: "March in Place" }, { none: "Arm Circles" }],
           main: [
             { kettlebell: "Kettlebell Swing", dumbbells: "Dumbbell Thruster", none: "Step Jack" },
             { none: "Shadow Boxing" }, { none: "Bear Crawl Hold" },
             { bandsFree: "Band Hip Abduction", kettlebell: "Suitcase March", dumbbells: "Suitcase March", none: "Glute Bridge" },
-            { none: "World's Greatest Stretch" }, { none: "Box Breathing" },
           ],
         },
       };
@@ -5016,7 +5225,7 @@ body::before {
           day: "Day 1",
           title: "Upper Body Push",
           focusAreas: ["Chest", "Shoulders", "Triceps"],
-          duration: 36,
+          duration: 18,
           equipment: "resistance resistance band, bodyweight",
           warm: [
             "March in Place",
@@ -5038,7 +5247,7 @@ body::before {
           day: "Day 2",
           title: "Upper Body Pull",
           focusAreas: ["Back", "Rear Shoulders", "Biceps"],
-          duration: 38,
+          duration: 19,
           equipment: "resistance resistance band, towel optional",
           warm: [
             "March in Place",
@@ -5060,7 +5269,7 @@ body::before {
           day: "Day 3",
           title: "Lower Body",
           focusAreas: ["Quads", "Hamstrings", "Glutes", "Calves"],
-          duration: 40,
+          duration: 20,
           equipment: "resistance resistance band, bodyweight",
           warm: [
             "March in Place",
@@ -5082,7 +5291,7 @@ body::before {
           day: "Day 4",
           title: "Core & Stability",
           focusAreas: ["Abs", "Obliques", "Lower Back", "Stability"],
-          duration: 35,
+          duration: 18,
           equipment: "resistance resistance band, bodyweight",
           warm: ["Inchworm", "World's Greatest Stretch", "Bird Dog"],
           main: [
@@ -5099,7 +5308,7 @@ body::before {
           day: "Day 5",
           title: "Conditioning",
           focusAreas: ["Full Body", "Cardio", "Endurance", "Mobility"],
-          duration: 28,
+          duration: 17,
           equipment: "resistance resistance band, bodyweight",
           warm: ["March in Place", "Arm Circles", "Cat Cow"],
           main: [
@@ -5183,6 +5392,7 @@ body::before {
         workoutCountdownTimer = null,
         confirmAction = null,
         activeExpandedExerciseId = null,
+        activeCurrentExerciseId = null,
         libraryExpandedExerciseId = null,
         onboardingStep = 0,
         appTourStep = 0,
@@ -5753,6 +5963,8 @@ body::before {
         renderSettings();
         renderProgress();
         if (state.active) renderActiveWorkout();
+      
+        scheduleExerciseSvgHydration();
       }
       function renderHome() {
         const sw = suggestedWorkout(),
@@ -5854,81 +6066,63 @@ body::before {
       function exerciseChevronMarkup() {
         return `<span class="exerciseChevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
       }
-      function exCard(ex) {
-        return `<div class="exerciseItem" data-exid="${ex.id}" data-expandable="true" role="button" tabindex="0" aria-expanded="false"><button class="check" aria-label="Mark ${ex.name} complete">✓</button><div class="exerciseText"><div class="row"><div><div class="exName">${ex.name}</div><div class="exMuscles">${ex.primary} · ${ex.equipment}</div></div><span class="exerciseSummaryActions"><span class="pill">${ex.sets} x ${ex.reps}</span>${exerciseChevronMarkup()}</span></div><div class="setGrid">${Array.from({ length: parseInt(ex.sets) || 1 }, (_, i) => `<button class="setBtn" data-set="${i}">Set ${i + 1}</button>`).join("")}</div><div class="detail"><p><strong>Description:</strong> ${ex.description}</p><p><strong>Tips:</strong> ${ex.tips}</p><p><strong>Common mistakes:</strong> ${ex.mistakes}</p><p><strong>Progression:</strong> ${ex.progression}</p><p><strong>Regression:</strong> ${ex.regression}</p></div></div></div>`;
+
+      /* v0.7.0 external authored SVG exercise asset library.
+         Exercise SVGs are loaded as ordinary external objects rather than with
+         fetch(), so the project also works when index.html is opened locally. */
+      const EXERCISE_SVG_ASSETS = Object.freeze({
+        "Push-up": "assets/exercises/push-up.svg",
+        "Band Row": "assets/exercises/band-row.svg",
+        "Bodyweight Squat": "assets/exercises/bodyweight-squat.svg",
+        "Reverse Lunge": "assets/exercises/reverse-lunge.svg",
+        "Lateral Lunge": "assets/exercises/lateral-lunge.svg",
+        "Glute Bridge": "assets/exercises/glute-bridge.svg",
+        "Calf Raise": "assets/exercises/calf-raise.svg",
+        "Incline Push-up": "assets/exercises/incline-push-up.svg?v=0.7.0-final",
+        "Pike Push-up": "assets/exercises/pike-push-up.svg?v=0.7.0-pike-arm-fix",
+        "Band Chest Press": "assets/exercises/band-chest-press.svg",
+        "Band Overhead Press": "assets/exercises/band-overhead-press.svg",
+        "Band Lateral Raise": "assets/exercises/band-lateral-raise.svg",
+      });
+
+      function exerciseAnimationMarkup(ex) {
+        const assetPath = EXERCISE_SVG_ASSETS[ex.name];
+        if (!assetPath) return "";
+        const safeName = String(ex.name || "Exercise")
+          .replace(/&/g, "&amp;")
+          .replace(/"/g, "&quot;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+        return `<div class="exerciseMotion motionStatic" data-svg-asset="${safeName}" aria-label="Animated SVG demonstration of ${safeName}."><object class="exerciseMotionObject" data="${assetPath}" type="image/svg+xml" aria-hidden="true" tabindex="-1"></object></div>`;
       }
-      function renderActiveWorkout() {
-        const a = state.active;
-        if (!a) return;
-        const baseWorkout = workouts.find((x) => x.id === a.workoutId);
-        const w = a.resolvedWorkout || resolveWorkout(baseWorkout);
-        $("activeWorkoutTitle").textContent = w.day + " - " + w.title;
-        $("activeMeta").textContent = w.duration + " min · " + (w.activeEquipment || "Bodyweight only");
-        $("workoutTimer").textContent = fmtTime(a.elapsed);
-        $("restTimer").textContent = fmtTime(Math.max(0, a.restRemaining));
-        $("pauseWorkoutBtn").textContent = a.paused ? "Resume" : "Pause";
-        $("resumeWorkoutBtn").classList.toggle("hidden", !a.restRunning);
-        $("timerStatus").textContent = a.paused
-          ? "Paused"
-          : a.restRunning
-            ? "Resting"
-            : "Training";
-        const targetSeconds = Math.max(1, (w.duration || 30) * 60);
-        $("timerProgressFill").style.width = Math.min(100, (a.elapsed / targetSeconds) * 100) + "%";
-        $("workoutNotes").value = a.notes || "";
-        $("warmupContainer").innerHTML = w.warm
-          .map((n) => exCard(byName(n)))
-          .join("");
-        $("activeExercises").innerHTML = w.main
-          .map((n) => exCard(byName(n)))
-          .join("");
-        document
-          .querySelectorAll("#page-active .exerciseItem")
-          .forEach((item) => {
-            const id = item.dataset.exid,
-              p = a.exercises[id] || { sets: [], done: false };
-            item.querySelector(".check").classList.toggle("done", p.done);
-            item.querySelectorAll(".setBtn").forEach((btn) => {
-              btn.classList.toggle("done", !!p.sets[btn.dataset.set]);
-              btn.onclick = (e) => {
-                e.stopPropagation();
-                toggleSet(id, btn.dataset.set);
-              };
-            });
-            item.querySelector(".check").onclick = (e) => {
-              e.stopPropagation();
-              toggleExercise(id);
-            };
 
-            const setExpanded = (shouldOpen) => {
-              document
-                .querySelectorAll("#page-active .exerciseItem.open")
-                .forEach((other) => {
-                  if (other !== item) {
-                    other.classList.remove("open");
-                    other.setAttribute("aria-expanded", "false");
-                  }
-                });
-
-              item.classList.toggle("open", shouldOpen);
-              item.setAttribute("aria-expanded", String(shouldOpen));
-              activeExpandedExerciseId = shouldOpen ? id : null;
-            };
-
-            if (activeExpandedExerciseId === id) {
-              item.classList.add("open");
-              item.setAttribute("aria-expanded", "true");
+      function syncExerciseSvgObjectStyles(root = document) {
+        const appStyles = getComputedStyle(document.documentElement);
+        root.querySelectorAll(".exerciseMotionObject").forEach((objectEl) => {
+          if (objectEl.dataset.styleSyncBound === "true") return;
+          objectEl.dataset.styleSyncBound = "true";
+          const sync = () => {
+            try {
+              const svgRoot = objectEl.contentDocument?.documentElement;
+              if (!svgRoot) return;
+              svgRoot.style.setProperty("--mom-text", appStyles.getPropertyValue("--text").trim());
+              svgRoot.style.setProperty("--mom-muted", appStyles.getPropertyValue("--muted").trim());
+              svgRoot.style.setProperty("--mom-accent", appStyles.getPropertyValue("--accent").trim());
+              svgRoot.style.setProperty("--mom-card", appStyles.getPropertyValue("--card").trim());
+            } catch (_) {
+              /* Local-file browsers may isolate object documents. The SVGs have
+                 self-contained fallback colours, so this is non-fatal. */
             }
-
-            item.onclick = () => setExpanded(!item.classList.contains("open"));
-            item.onkeydown = (event) => {
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault();
-                setExpanded(!item.classList.contains("open"));
-              }
-            };
-          });
+          };
+          objectEl.addEventListener("load", sync, { passive: true });
+          if (objectEl.contentDocument) sync();
+        });
       }
+
+      function scheduleExerciseSvgHydration() {
+        requestAnimationFrame(() => syncExerciseSvgObjectStyles());
+      }
+
       function renderLibrary() {
         const filters = [
           "All",
@@ -5959,6 +6153,7 @@ body::before {
           $("exerciseSearch").addEventListener("input", renderLibraryList);
         }
         renderLibraryList();
+        scheduleExerciseSvgHydration();
       }
       function equipmentBadge(equipment) {
         const value = equipment.toLowerCase();
@@ -5993,7 +6188,7 @@ body::before {
         $("libraryList").innerHTML = rows
           .map(
             (e) =>
-              `<div class="exerciseItem" data-library-exid="${e.id}" data-expandable="true" role="button" tabindex="0" aria-expanded="false" style="text-align:left;width:100%"><div class="check done" aria-hidden="true">${e.difficulty[0]}</div><div class="exerciseText"><div class="row"><div><div class="exName">${e.name}</div><div class="exMuscles">${e.primary} · ${e.category}</div></div><span class="exerciseSummaryActions"><span class="pill">${equipmentBadge(e.equipment)}</span>${exerciseChevronMarkup()}</span></div><div class="detail"><p><strong>Description:</strong> ${e.description}</p><p><strong>Technique tips:</strong> ${e.tips}</p><p><strong>Common mistakes:</strong> ${e.mistakes}</p><p><strong>Rest period:</strong> ${e.rest}</p><p><strong>Progression:</strong> ${e.progression}</p><p><strong>Regression:</strong> ${e.regression}</p></div></div></div>`,
+              `<div class="exerciseItem" data-library-exid="${e.id}" data-expandable="true" role="button" tabindex="0" aria-expanded="false" style="text-align:left;width:100%"><div class="check done" aria-hidden="true">${e.difficulty[0]}</div><div class="exerciseText"><div class="row"><div><div class="exName">${e.name}</div><div class="exMuscles">${e.primary} · ${e.category}</div></div><span class="exerciseSummaryActions"><span class="pill">${equipmentBadge(e.equipment)}</span>${exerciseChevronMarkup()}</span></div><div class="detail">${exerciseAnimationMarkup(e)}<p><strong>Description:</strong> ${e.description}</p><p><strong>Technique tips:</strong> ${e.tips}</p><p><strong>Common mistakes:</strong> ${e.mistakes}</p><p><strong>Rest period:</strong> ${e.rest}</p><p><strong>Progression:</strong> ${e.progression}</p><p><strong>Regression:</strong> ${e.regression}</p></div></div></div>`,
           )
           .join("");
 
@@ -6032,6 +6227,8 @@ body::before {
               }
             });
           });
+      
+        scheduleExerciseSvgHydration();
       }
       function renderSettings() {
         $("restDuration").value = state.settings.restDuration;
@@ -6044,7 +6241,6 @@ body::before {
         document.querySelectorAll("[data-equipment-choice]").forEach((input) => {
           input.checked = (state.settings.equipmentProfile || ["none"]).includes(input.value);
         });
-        $("equipmentProfileSummary").textContent = "Active profile: " + equipmentProfileLabel();
 
         if ($("appVersion")) $("appVersion").textContent = APP_INFO.version;
         if ($("appBuildDate")) $("appBuildDate").textContent = APP_INFO.buildDate;
@@ -6190,6 +6386,7 @@ body::before {
         all.forEach(
           (e) => (state.active.exercises[e.id] = { sets: [], done: false }),
         );
+        state.active.currentExerciseId = all.length ? String(all[0].id) : null;
         saveState();
         showPage("active");
         renderActiveWorkout();
@@ -6237,9 +6434,22 @@ body::before {
           a.restRemaining = 0;
           a.restRunning = false;
           a.restEndsAt = null;
+          const current = a.currentExerciseId ? a.exercises[a.currentExerciseId] : null;
+          if (current) {
+            const ex = exercises.find((e) => String(e.id) === String(a.currentExerciseId));
+            const requiredSets = parseInt(ex?.sets) || 1;
+            const allSetsComplete = current.sets.filter(Boolean).length >= requiredSets;
+            if (allSetsComplete) {
+              current.done = true;
+              advanceCurrentExercise();
+            } else {
+              renderActiveWorkout();
+            }
+          } else {
+            renderActiveWorkout();
+          }
           playSound("restComplete");
           toast("Rest complete");
-          renderActiveWorkout();
         }
       }
       function showChangelog() {
@@ -6249,33 +6459,49 @@ body::before {
         );
       }
       function toggleSet(id, i) {
-        const p =
-          state.active.exercises[id] ||
-          (state.active.exercises[id] = { sets: [], done: false });
-        p.sets[i] = !p.sets[i];
+        if (!state.active || state.active.restRunning) return;
+        const p = state.active.exercises[id] || (state.active.exercises[id] = { sets: [], done: false });
+        if (p.done || p.sets[i]) return;
+        p.sets[i] = true;
         const ex = exercises.find((e) => e.id == id);
-        p.done = p.sets.filter(Boolean).length >= (parseInt(ex.sets) || 1);
+        const requiredSets = parseInt(ex?.sets) || 1;
+        if (p.sets.filter(Boolean).length >= requiredSets) p.done = true;
         state.active.restRemaining = state.settings.restDuration;
-        if (p.sets[i]) {
-          playSound("setComplete");
-          startRest(true);
-        } else {
-          state.active.restRunning = false;
-          state.active.restEndsAt = null;
-        }
+        playSound("setComplete");
+        startRest(true);
         saveState();
         renderActiveWorkout();
       }
-      function toggleExercise(id) {
-        const p =
-            state.active.exercises[id] ||
-            (state.active.exercises[id] = { sets: [], done: false }),
-          ex = exercises.find((e) => e.id == id),
-          n = parseInt(ex.sets) || 1;
-        p.done = !p.done;
-        p.sets = Array.from({ length: n }, () => p.done);
+      function advanceCurrentExercise({ skipRest = false } = {}) {
+        const a = state.active;
+        if (!a) return;
+        const w = a.resolvedWorkout || resolveWorkout(workouts.find((x) => x.id === a.workoutId));
+        const ordered = [...w.warm, ...w.main].map(byName).filter(Boolean);
+        const currentIndex = ordered.findIndex((ex) => String(ex.id) === String(a.currentExerciseId));
+        const next = ordered.slice(currentIndex + 1).find((ex) => !(a.exercises[ex.id]?.done));
+        if (skipRest) {
+          a.restRunning = false;
+          a.restRemaining = 0;
+          a.restEndsAt = null;
+        }
+        a.currentExerciseId = next ? String(next.id) : null;
         saveState();
         renderActiveWorkout();
+        if (next) toast(`Next: ${next.name}`);
+      }
+      function completeCurrentExercise(id) {
+        if (!state.active || String(id) !== String(state.active.currentExerciseId)) return;
+        const p = state.active.exercises[id] || (state.active.exercises[id] = { sets: [], done: false });
+        const ex = exercises.find((e) => e.id == id);
+        const requiredSets = parseInt(ex?.sets) || 1;
+        const completedSets = p.sets.filter(Boolean).length;
+        if (completedSets < requiredSets) {
+          toast(`Complete all ${requiredSets} sets first`);
+          return;
+        }
+        p.done = true;
+        advanceCurrentExercise({ skipRest: true });
+        playSound("resume");
       }
       $("resumeWorkoutBtn").onclick = () => {
         if (!state.active || !state.active.restRunning) return;
@@ -6306,8 +6532,10 @@ body::before {
             $("workoutCountdownOverlay")?.classList.remove("active");
             state.active = null;
             saveState();
-            showPage("workouts");
-            toast("Workout reset");
+            clearInterval(workoutInterval);
+            clearInterval(restInterval);
+            showPage("progress");
+            toast("Workout ended");
           },
         );
       $("backToWorkoutsBtn").onclick = () => showPage("workouts");
@@ -6317,15 +6545,6 @@ body::before {
           saveState();
         }
       });
-      $("restResetBtn").onclick = () => {
-        if (state.active) {
-          state.active.restRemaining = state.settings.restDuration;
-          state.active.restRunning = false;
-          state.active.restEndsAt = null;
-          saveState();
-          renderActiveWorkout();
-        }
-      };
       function startRest(automatic = false) {
         if (!state.active) return;
         state.active.restRemaining = state.settings.restDuration;
