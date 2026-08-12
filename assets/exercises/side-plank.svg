@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 160" role="img">
+<style>
+:root{--fg:#111;--pass:#a9adb3;--floor:#c7cbd0}
+line,path,circle,polyline{vector-effect:non-scaling-stroke}
+.floor{stroke:var(--floor);stroke-width:2;stroke-linecap:round}
+.body{stroke:var(--fg);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.passive{stroke:var(--pass);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.head{stroke:var(--fg);stroke-width:3.5;fill:none}
+</style>
+<line class="floor" x1="35" y1="132" x2="286" y2="132"/>
+<circle class="head" cx="88" cy="73" r="11"/>
+<line class="body" x1="100" y1="80" x2="188" y2="102"/>
+<line class="body" x1="111" y1="84" x2="128" y2="108"/>
+<line class="body" x1="128" y1="108" x2="128" y2="132"/>
+<line class="body" x1="112" y1="83" x2="105" y2="51"/>
+<line class="body" x1="105" y1="51" x2="106" y2="26"/>
+<line class="body" x1="188" y1="102" x2="238" y2="118"/>
+<line class="body" x1="238" y1="118" x2="264" y2="132"/>
+</svg>

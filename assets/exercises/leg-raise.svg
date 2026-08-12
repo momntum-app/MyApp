@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 160" role="img" aria-label="Leg raise">
+<style>
+:root{--fg:#111;--floor:#c7cbd0}line,path,circle{vector-effect:non-scaling-stroke}.floor{stroke:var(--floor);stroke-width:2;stroke-linecap:round}.body{stroke:var(--fg);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}.head{stroke:var(--fg);stroke-width:3.5;fill:none}.legs{animation:raise 2.8s ease-in-out infinite;transform-origin:176px 118px}@keyframes raise{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-48deg)}}
+</style>
+<line class="floor" x1="35" y1="132" x2="287" y2="132"/>
+<circle class="head" cx="88" cy="111" r="11"/>
+<line class="body" x1="101" y1="116" x2="176" y2="118"/>
+<line class="body" x1="120" y1="117" x2="90" y2="126"/>
+<g class="legs"><line class="body" x1="176" y1="118" x2="220" y2="118"/><line class="body" x1="220" y1="118" x2="266" y2="118"/><line class="body" x1="176" y1="121" x2="220" y2="121"/><line class="body" x1="220" y1="121" x2="266" y2="121"/></g>
+</svg>

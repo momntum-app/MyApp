@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 160" role="img" aria-label="Superman">
+<style>
+:root{--fg:#111;--pass:#a9adb3;--floor:#c7cbd0}
+line,path,circle{vector-effect:non-scaling-stroke}.floor{stroke:var(--floor);stroke-width:2;stroke-linecap:round}.body{stroke:var(--fg);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}.passive{stroke:var(--pass);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}.head{stroke:var(--fg);stroke-width:3.5;fill:none}
+</style>
+<line class="floor" x1="34" y1="132" x2="286" y2="132"/>
+<circle class="head" cx="88" cy="105" r="10"/>
+<path class="body" d="M99 112 Q142 103 187 114"/>
+<line class="body" x1="187" y1="114" x2="230" y2="122"/>
+<line class="body" x1="230" y1="122" x2="274" y2="128"/>
+<!-- foreground arm smoothly pulls back: elbow rises outward, hand comes toward chest -->
+<path class="body" d="M118 108 L84 102 L49 101">
+  <animate attributeName="d" dur="3.8s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.34;.52;.84;1" keySplines=".33 0 .2 1;.33 0 .2 1;.33 0 .2 1;.33 0 .2 1" values="M118 108 L84 102 L49 101;M118 108 L84 102 L49 101;M118 108 L91 87 L112 100;M118 108 L91 87 L112 100;M118 108 L84 102 L49 101"/>
+</path>
+<!-- background arm mirrors the pull -->
+<path class="passive" d="M124 110 L91 107 L58 106">
+  <animate attributeName="d" dur="3.8s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.34;.52;.84;1" keySplines=".33 0 .2 1;.33 0 .2 1;.33 0 .2 1;.33 0 .2 1" values="M124 110 L91 107 L58 106;M124 110 L91 107 L58 106;M124 110 L98 91 L119 102;M124 110 L98 91 L119 102;M124 110 L91 107 L58 106"/>
+</path>
+</svg>

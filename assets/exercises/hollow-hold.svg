@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 160" role="img">
+<style>
+:root{--fg:#111;--pass:#a9adb3;--floor:#c7cbd0}
+line,path,circle,polyline{vector-effect:non-scaling-stroke}
+.floor{stroke:var(--floor);stroke-width:2;stroke-linecap:round}
+.body{stroke:var(--fg);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.passive{stroke:var(--pass);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.head{stroke:var(--fg);stroke-width:3.5;fill:none}
+</style>
+<line class="floor" x1="32" y1="132" x2="288" y2="132"/>
+<!-- static seated hollow hold / V-sit style -->
+<circle class="head" cx="104" cy="72" r="11"/>
+<line class="body" x1="112" y1="84" x2="154" y2="116"/>
+<line class="body" x1="122" y1="90" x2="157" y2="78"/>
+<line class="body" x1="157" y1="78" x2="191" y2="80"/>
+<!-- legs are active: straight and held clear of floor -->
+<line class="body" x1="154" y1="116" x2="211" y2="102"/>
+<line class="body" x1="211" y1="102" x2="270" y2="99"/>
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 160" role="img" aria-label="Mountain climber">
+<style>
+:root{--fg:#111;--pass:#a9adb3;--floor:#c7cbd0}
+line,path,circle{vector-effect:non-scaling-stroke}.floor{stroke:var(--floor);stroke-width:2;stroke-linecap:round}.body{stroke:var(--fg);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}.passive{stroke:var(--pass);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}.head{stroke:var(--fg);stroke-width:3.5;fill:none}
+</style>
+<line class="floor" x1="30" y1="132" x2="290" y2="132"/>
+<circle class="head" cx="78" cy="70" r="11"/>
+<path class="body" d="M91 78 L187 97"/>
+<path class="body" d="M105 81 L119 107 L123 132"/>
+<!-- active leg: knee drives forward toward chest (left), then extends rearward -->
+<path class="body" d="M187 97 L157 106 L180 130">
+  <animate attributeName="d" dur="2.6s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.38;.52;.90;1" keySplines=".33 0 .2 1;.33 0 .2 1;.33 0 .2 1;.33 0 .2 1" values="M187 97 L157 106 L180 130;M187 97 L157 106 L180 130;M187 97 L231 113 L270 128;M187 97 L231 113 L270 128;M187 97 L157 106 L180 130"/>
+</path>
+<!-- background leg is always opposite and grey -->
+<path class="passive" d="M184 100 L229 114 L268 128">
+  <animate attributeName="d" dur="2.6s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.38;.52;.90;1" keySplines=".33 0 .2 1;.33 0 .2 1;.33 0 .2 1;.33 0 .2 1" values="M184 100 L229 114 L268 128;M184 100 L229 114 L268 128;M184 100 L154 108 L177 130;M184 100 L154 108 L177 130;M184 100 L229 114 L268 128"/>
+</path>
+</svg>

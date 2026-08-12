@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 160" role="img" aria-label="Dead bug">
+<style>
+:root{--fg:#111;--pass:#a9adb3;--floor:#c7cbd0}
+line,path,circle{vector-effect:non-scaling-stroke}.floor{stroke:var(--floor);stroke-width:2;stroke-linecap:round}.body{stroke:var(--fg);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}.passive{stroke:var(--pass);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}.head{stroke:var(--fg);stroke-width:3.5;fill:none}
+</style>
+<line class="floor" x1="35" y1="132" x2="286" y2="132"/>
+<circle class="head" cx="97" cy="113" r="11"/>
+<path class="body" d="M109 116 L177 112"/>
+<!-- left arm: smooth overhead extension close to the head, then returns -->
+<path class="body" d="M132 113 L106 105 L72 104">
+  <animate attributeName="d" dur="4s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.34;.48;.84;1" keySplines=".33 0 .2 1;.33 0 .2 1;.33 0 .2 1;.33 0 .2 1" values="M132 113 L106 105 L72 104;M132 113 L106 105 L72 104;M132 113 L128 86 L110 96;M132 113 L128 86 L110 96;M132 113 L106 105 L72 104"/>
+</path>
+<!-- right arm: opposite phase -->
+<path class="passive" d="M145 112 L141 85 L122 95">
+  <animate attributeName="d" dur="4s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.34;.48;.84;1" keySplines=".33 0 .2 1;.33 0 .2 1;.33 0 .2 1;.33 0 .2 1" values="M145 112 L141 85 L122 95;M145 112 L141 85 L122 95;M145 112 L119 104 L82 103;M145 112 L119 104 L82 103;M145 112 L141 85 L122 95"/>
+</path>
+<!-- left leg: bent, then extends opposite the right arm -->
+<path class="body" d="M177 112 L199 86 L222 106">
+  <animate attributeName="d" dur="4s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.34;.48;.84;1" keySplines=".33 0 .2 1;.33 0 .2 1;.33 0 .2 1;.33 0 .2 1" values="M177 112 L199 86 L222 106;M177 112 L199 86 L222 106;M177 112 L220 116 L263 121;M177 112 L220 116 L263 121;M177 112 L199 86 L222 106"/>
+</path>
+<!-- right leg: opposite phase -->
+<path class="passive" d="M180 115 L221 119 L263 123">
+  <animate attributeName="d" dur="4s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.34;.48;.84;1" keySplines=".33 0 .2 1;.33 0 .2 1;.33 0 .2 1;.33 0 .2 1" values="M180 115 L221 119 L263 123;M180 115 L221 119 L263 123;M180 115 L202 89 L226 108;M180 115 L202 89 L226 108;M180 115 L221 119 L263 123"/>
+</path>
+</svg>
