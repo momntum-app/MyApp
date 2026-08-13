@@ -3647,6 +3647,57 @@ body::before {
         }
       }
 
+    
+      /* v0.8.2 definitive reminder-time sizing fix.
+         Keep type=time for the native iOS picker, but remove Safari's oversized
+         intrinsic field chrome and draw the visible pill ourselves. */
+      .reminderTimeControl {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        overflow: hidden;
+        box-sizing: border-box;
+      }
+
+      #reminderTime.nativeTimePicker {
+        display: block !important;
+        inline-size: 100% !important;
+        width: 100% !important;
+        max-inline-size: 100% !important;
+        max-width: 100% !important;
+        min-inline-size: 0 !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        border: 1px solid var(--divider) !important;
+        border-radius: 12px !important;
+        background: var(--card2) !important;
+        color: var(--control-text) !important;
+        padding: 12px 14px !important;
+        margin: 0 !important;
+        font: inherit;
+        line-height: 1.2;
+        overflow: hidden;
+      }
+
+      #reminderTime.nativeTimePicker::-webkit-date-and-time-value {
+        text-align: left;
+        min-width: 0;
+      }
+
+      #reminderTime.nativeTimePicker::-webkit-calendar-picker-indicator {
+        margin: 0;
+        padding: 0;
+      }
+
+      @supports (-webkit-touch-callout: none) {
+        #reminderTime.nativeTimePicker {
+          font-size: 16px !important;
+        }
+      }
+
     </style>
     <link rel="icon" href="favicon.ico?v=0.8.2" sizes="any" />
     <link rel="icon" href="momntum-mark.svg?v=0.8.2" type="image/svg+xml" />
