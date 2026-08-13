@@ -3623,6 +3623,45 @@ body::before {
         }
       }
 
+    
+      /* v0.8.0 iOS upper-header blur fix — remove lingering launch overlay layers */
+      #launchSplash.isLeaving,
+      body.launchWordmarkLanded #launchSplash {
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+        filter: none !important;
+        -webkit-filter: none !important;
+      }
+
+      /* Never allow the splash to remain as a transparent fixed compositor after handoff. */
+      #launchSplash[hidden],
+      #launchSplash.launchRemoved {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+
+      /* Ensure no launch-only pseudo overlay can sit over the top of the app. */
+      #launchSplash::before,
+      #launchSplash::after,
+      .launchSplash::before,
+      .launchSplash::after {
+        content: none !important;
+        display: none !important;
+      }
+
+      @supports (-webkit-touch-callout: none) {
+        #launchSplash,
+        #launchLogo {
+          -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+          filter: none !important;
+          -webkit-filter: none !important;
+          mix-blend-mode: normal !important;
+        }
+      }
+
     </style>
     <link rel="icon" href="favicon.ico?v=0.8.0" sizes="any" />
     <link rel="icon" href="momntum-mark.svg?v=0.8.0" type="image/svg+xml" />
@@ -4245,7 +4284,7 @@ body::before {
             "launchPending"
           );
           document.body.classList.add("launchReady");
-          document.getElementById("launchSplash")?.remove();
+          removeLaunchLayersCompletely();
           window.setTimeout(() => document.body.classList.remove("launchReady"), 500);
         });
       }
@@ -7371,7 +7410,7 @@ body::before {
 
       function completeLaunchExperience() {
         if (document.body.classList.contains("installGateActive")) {
-          document.getElementById("launchSplash")?.remove();
+          removeLaunchLayersCompletely();
           document.body.classList.remove("launchPending", "launchReady");
           return;
         }
@@ -7402,9 +7441,9 @@ body::before {
           document.body.classList.add("launchReady");
 
           if (reduceMotion) {
-            document.body.classList.add("launchWordmarkLanded");
+            document.body.classList.add("launchWordmarkLanded"); setTimeout(removeLaunchLayersCompletely, 80);
             splash.remove();
-            document.body.classList.remove("launchReady", "launchWordmarkLanded"); forceCrispHeaderAfterLaunch();
+            removeLaunchLayersCompletely(); forceCrispHeaderAfterLaunch();
             openOnboarding(false);
             return;
           }
@@ -7444,7 +7483,7 @@ body::before {
               easing: "cubic-bezier(.22,1,.36,1)"
             }
           ).finished.then(() => {
-            document.body.classList.add("launchWordmarkLanded");
+            document.body.classList.add("launchWordmarkLanded"); setTimeout(removeLaunchLayersCompletely, 80);
             launchLogo.style.opacity = "0";
             splash.animate([{ opacity: 1 }, { opacity: 0 }], {
               duration: 190,
@@ -7452,7 +7491,7 @@ body::before {
               easing: "ease-out"
             }).finished.then(() => {
               splash.remove();
-              document.body.classList.remove("launchReady", "launchWordmarkLanded"); forceCrispHeaderAfterLaunch();
+              removeLaunchLayersCompletely(); forceCrispHeaderAfterLaunch();
               openOnboarding(false);
             });
           });
@@ -7473,7 +7512,7 @@ body::before {
         document.body.classList.remove("launchPending");
         document.body.classList.add("launchReady");
         splash.remove();
-        document.body.classList.remove("launchReady"); forceCrispHeaderAfterLaunch();
+        removeLaunchLayersCompletely(); forceCrispHeaderAfterLaunch();
         openOnboarding(false);
       }, 5000);
 
@@ -7530,6 +7569,54 @@ body::before {
 
       window.addEventListener("pageshow", () => {
         requestAnimationFrame(() => requestAnimationFrame(forceCrispHeaderAfterLaunch));
+      });
+
+
+      function removeLaunchLayersCompletely() {
+        const splash = document.getElementById("launchSplash");
+        const logo = document.getElementById("launchLogo");
+
+        if (logo) {
+          logo.style.removeProperty("transform");
+          logo.style.removeProperty("-webkit-transform");
+          logo.style.removeProperty("filter");
+          logo.style.removeProperty("-webkit-filter");
+          logo.style.removeProperty("opacity");
+          logo.style.removeProperty("will-change");
+        }
+
+        if (splash) {
+          splash.classList.add("launchRemoved");
+          splash.hidden = true;
+          splash.style.display = "none";
+          splash.style.visibility = "hidden";
+          splash.style.opacity = "0";
+          splash.style.pointerEvents = "none";
+
+          // Remove the fixed splash node entirely on the next frame.
+          requestAnimationFrame(() => {
+            if (splash.isConnected) splash.remove();
+          });
+        }
+
+        document.body.classList.remove(
+          "launchPending",
+          "launchReady",
+          "launchWordmarkLanded"
+        );
+      }
+
+      window.addEventListener("pageshow", () => {
+        if (!document.body.classList.contains("installGateActive")) {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              const splash = document.getElementById("launchSplash");
+              if (splash && document.body.classList.contains("launchWordmarkLanded")) {
+                removeLaunchLayersCompletely();
+              }
+            });
+          });
+        }
       });
 
 </script>
