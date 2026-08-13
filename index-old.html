@@ -3261,7 +3261,7 @@ body::before {
       }
 
 
-      /* v0.7.2 proof-of-concept exercise motion */
+      /* v0.8.0 proof-of-concept exercise motion */
       .exerciseMotion {
         width: 100%;
         margin: 12px 0 10px;
@@ -3351,7 +3351,7 @@ body::before {
         75%, 100% { opacity: 0; transform: translateX(-3px); }
       }
 
-      /* v0.7.2 exercise-specific camera strategy */
+      /* v0.8.0 exercise-specific camera strategy */
       .exerciseMotion.motionStatic .exerciseMotionStage { opacity: 1; animation: none !important; }
       .exerciseMotion.motionTwoView .exerciseMotionStage { opacity: 0; }
       .exerciseMotion.motionTwoView .exerciseMotionPrimary { animation: exerciseViewPrimaryTwo 11.6s ease-in-out infinite; }
@@ -3379,13 +3379,296 @@ body::before {
         .exerciseMotionObject { height: 104px; }
       }
 
+    
+      /* v0.8.0 Library filter bar alignment and scroll isolation */
+      #page-library .searchBar {
+        position: sticky;
+        top: 0;
+        z-index: 14;
+        margin: 0 -16px 10px;
+        padding: 8px 16px 11px;
+        background: var(--bg2) !important;
+        border-bottom: 1px solid var(--divider);
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+      }
+
+      #page-library #filterTabs {
+        margin: 0;
+        padding: 10px 0 1px !important;
+        background: var(--bg2);
+      }
+
+      #page-library #filterTabs .chip {
+        background: var(--card2);
+        border: 1px solid var(--divider);
+        color: var(--muted);
+      }
+
+      #page-library #filterTabs .chip.active {
+        background: color-mix(in srgb, var(--accent) 16%, var(--card2));
+        border-color: color-mix(in srgb, var(--accent) 52%, var(--divider));
+        color: var(--heading);
+      }
+
+      html[data-mode="light"] #page-library .searchBar,
+      html[data-mode="light"] #page-library #filterTabs {
+        background: var(--bg2) !important;
+      }
+
+      @media (min-width: 760px) {
+        #page-library .searchBar {
+          margin-left: -26px;
+          margin-right: -26px;
+          padding-left: 26px;
+          padding-right: 26px;
+        }
+      }
+
+    
+      /* v0.8.0 workout-card copy refinement */
+      .workoutFocusAreas p {
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+      .resolvedExerciseList {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+    
+      /* v0.8.0 corrected expanded workout content */
+      .focusExerciseSummary {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid var(--divider);
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.45;
+        font-weight: 650;
+      }
+
+      .regenerateExplainer {
+        margin: 10px 2px 0;
+      }
+
+    
+      /* v0.8.0 iOS header crispness fix
+         Avoid leaving the app/header on a composited translucent layer after launch. */
+      body.launchReady > #app {
+        opacity: 1 !important;
+        transition: none !important;
+      }
+
+      .topbar {
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+        opacity: 1;
+      }
+
+      #headerWordmark,
+      #headerWordmark img,
+      #levelIndicator,
+      #levelIndicator * {
+        opacity: 1;
+        -webkit-filter: none !important;
+        filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+      }
+
+      /* The landing hand-off should be immediate once the flying N reaches its target.
+         Avoid an opacity tween on the SVG wordmark, which can look soft on iOS. */
+      body.launchWordmarkLanded #headerWordmark {
+        opacity: 1 !important;
+        transition: none !important;
+      }
+
+      /* Use an opaque surface for the level pill instead of a translucent wash. */
+      html[data-mode="dark"] .level {
+        background: var(--card2);
+        border-color: rgba(255, 255, 255, 0.12);
+      }
+
+      html[data-mode="light"] .level {
+        background: #ffffff;
+        border-color: rgba(23, 32, 51, 0.18);
+      }
+
+      @supports (-webkit-touch-callout: none) {
+        #headerWordmark img {
+          image-rendering: auto;
+          -webkit-font-smoothing: antialiased;
+        }
+
+        .topbar,
+        .brand,
+        #headerWordmark,
+        #levelIndicator {
+          -webkit-transform: none !important;
+          transform: none !important;
+        }
+      }
+
+    
+      /* v0.8.0 iOS launch compositing correction — definitive fix.
+         Keep the app fully rendered at native sharpness underneath the opaque splash. */
+      body.launchPending > :not(#launchSplash),
+      body.launchReady > :not(#launchSplash) {
+        opacity: 1 !important;
+        transition: none !important;
+      }
+
+      body.launchPending #app,
+      body.launchReady #app,
+      #app {
+        opacity: 1 !important;
+        filter: none !important;
+        -webkit-filter: none !important;
+        transition: none !important;
+      }
+
+      /* Hide only the header wordmark during the flying-N handoff.
+         visibility avoids rasterising the header through an opacity animation. */
+      body.launchPending #headerWordmark,
+      body.launchReady #headerWordmark {
+        visibility: hidden !important;
+        opacity: 1 !important;
+        transition: none !important;
+      }
+
+      body.launchWordmarkLanded #headerWordmark,
+      body:not(.launchPending):not(.launchReady) #headerWordmark {
+        visibility: visible !important;
+        opacity: 1 !important;
+        transition: none !important;
+      }
+
+      /* Keep the rest of the header permanently outside launch animation compositing. */
+      .topbar,
+      .brand,
+      .brand > div,
+      #levelIndicator {
+        opacity: 1 !important;
+        filter: none !important;
+        -webkit-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+        will-change: auto !important;
+      }
+
+      #levelIndicator {
+        transform: none !important;
+        -webkit-transform: none !important;
+      }
+
+    
+      /* v0.8.0 iPhone header rendering fix v3
+         iOS can rasterise the non-scrolling header when the entire application
+         is a position:fixed composited layer. Keep the same internal layout but
+         make the app a normal full-height element on WebKit touch devices. */
+      @supports (-webkit-touch-callout: none) {
+        .app {
+          position: relative !important;
+          inset: auto !important;
+          width: 100% !important;
+          height: 100lvh !important;
+          min-height: 100lvh !important;
+          margin: 0 auto !important;
+          transform: none !important;
+          -webkit-transform: none !important;
+          will-change: auto !important;
+          filter: none !important;
+          -webkit-filter: none !important;
+        }
+
+        .topbar {
+          position: relative !important;
+          z-index: 2;
+          transform: none !important;
+          -webkit-transform: none !important;
+          will-change: auto !important;
+          isolation: auto !important;
+          contain: none !important;
+          -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+        }
+
+        .brand,
+        .brand > div,
+        #headerWordmark,
+        #levelIndicator {
+          transform: none !important;
+          -webkit-transform: none !important;
+          will-change: auto !important;
+          filter: none !important;
+          -webkit-filter: none !important;
+        }
+
+        #headerWordmark img {
+          transform: none !important;
+          -webkit-transform: none !important;
+          filter: none !important;
+          -webkit-filter: none !important;
+          backface-visibility: visible !important;
+          -webkit-backface-visibility: visible !important;
+        }
+
+        #levelText,
+        #todayLine {
+          -webkit-font-smoothing: subpixel-antialiased;
+          text-rendering: optimizeLegibility;
+          text-shadow: none !important;
+        }
+      }
+
+    
+      /* v0.8.0 iOS upper-header blur fix — remove lingering launch overlay layers */
+      #launchSplash.isLeaving,
+      body.launchWordmarkLanded #launchSplash {
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+        filter: none !important;
+        -webkit-filter: none !important;
+      }
+
+      /* Never allow the splash to remain as a transparent fixed compositor after handoff. */
+      #launchSplash[hidden],
+      #launchSplash.launchRemoved {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+
+      /* Ensure no launch-only pseudo overlay can sit over the top of the app. */
+      #launchSplash::before,
+      #launchSplash::after,
+      .launchSplash::before,
+      .launchSplash::after {
+        content: none !important;
+        display: none !important;
+      }
+
+      @supports (-webkit-touch-callout: none) {
+        #launchSplash,
+        #launchLogo {
+          -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+          filter: none !important;
+          -webkit-filter: none !important;
+          mix-blend-mode: normal !important;
+        }
+      }
+
     </style>
-    <link rel="icon" href="favicon.ico?v=0.7.2" sizes="any" />
-    <link rel="icon" href="momntum-mark.svg?v=0.7.2" type="image/svg+xml" />
-    <link rel="icon" href="favicon-32x32.png?v=0.7.2" type="image/png" sizes="32x32" />
-    <link rel="icon" href="favicon-16x16.png?v=0.7.2" type="image/png" sizes="16x16" />
-    <link rel="apple-touch-icon" href="apple-touch-icon.png?v=0.7.2" sizes="180x180" />
-    <link rel="manifest" href="site.webmanifest?v=0.7.2" />
+    <link rel="icon" href="favicon.ico?v=0.8.0" sizes="any" />
+    <link rel="icon" href="momntum-mark.svg?v=0.8.0" type="image/svg+xml" />
+    <link rel="icon" href="favicon-32x32.png?v=0.8.0" type="image/png" sizes="32x32" />
+    <link rel="icon" href="favicon-16x16.png?v=0.8.0" type="image/png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png?v=0.8.0" sizes="180x180" />
+    <link rel="manifest" href="site.webmanifest?v=0.8.0" />
   </head>
 
   <body class="launchPending">
@@ -3420,11 +3703,11 @@ body::before {
     <section id="testerInstallGate" class="testerInstallGate" aria-labelledby="testerInstallTitle">
       <div class="testerInstallCard">
         <div class="testerInstallMark" aria-hidden="true">
-          <img src="momntum-mark.svg?v=0.7.2" alt="" draggable="false" />
+          <img src="momntum-mark.svg?v=0.8.0" alt="" draggable="false" />
         </div>
         <img
           class="testerInstallWordmark"
-          src="momntum-wordmark-dark.svg?v=0.7.2"
+          src="momntum-wordmark-dark.svg?v=0.8.0"
           alt="MOMNTUM"
           draggable="false"
         />
@@ -3461,7 +3744,7 @@ body::before {
         <p class="testerInstallInstalled">MOMNTUM will now be installed to your device.</p>
 
         <p class="testerInstallOpenPrompt">
-          <img src="momntum-mark.svg?v=0.7.2" alt="" draggable="false" />
+          <img src="momntum-mark.svg?v=0.8.0" alt="" draggable="false" />
           <span>Now open MOMNTUM from your home screen</span>
         </p>
 
@@ -3472,19 +3755,19 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.7.2</p>
+        <p class="testerInstallVersion">v0.8.0</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
-      <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.7.2" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.7.2 SVG assets</div>
+      <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.0" alt="" draggable="false" /></div>
+      <div class="launchVersion">v0.8.0 SVG assets</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
       <div class="onboardingShell">
         <div class="onboardingHeader">
-          <div class="onboardingMark"><img src="momntum-mark.svg?v=0.7.2" alt="" draggable="false" /></div>
+          <div class="onboardingMark"><img src="momntum-mark.svg?v=0.8.0" alt="" draggable="false" /></div>
           <div class="kicker">First-time setup</div>
           <h1 id="onboardingTitle" style="margin-top:6px">Make MOMNTUM yours</h1>
           <p class="muted" style="margin-top:8px">Choose a few preferences now. You can change everything later in Settings.</p>
@@ -3532,13 +3815,13 @@ body::before {
             <div class="title momntumWordmark" id="headerWordmark">
               <img
                 class="wordmarkDark"
-                src="momntum-wordmark-dark.svg?v=0.7.2"
+                src="momntum-wordmark-dark.svg?v=0.8.0"
                 alt="MOMNTUM"
                 draggable="false"
               />
               <img
                 class="wordmarkLight"
-                src="momntum-wordmark.svg?v=0.7.2"
+                src="momntum-wordmark.svg?v=0.8.0"
                 alt="MOMNTUM"
                 draggable="false"
               />
@@ -4001,7 +4284,7 @@ body::before {
             "launchPending"
           );
           document.body.classList.add("launchReady");
-          document.getElementById("launchSplash")?.remove();
+          removeLaunchLayersCompletely();
           window.setTimeout(() => document.body.classList.remove("launchReady"), 500);
         });
       }
@@ -4042,7 +4325,7 @@ body::before {
       const STORAGE_KEY = "homeStrength.v1";
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.7.2",
+        version: "0.8.0",
         buildDate: "13 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
@@ -5185,7 +5468,7 @@ body::before {
         sets: e[10], rest: e[11], progression: e[12], regression: e[13],
       }));
 
-      // v0.7.2: keep one canonical entry per exercise name.
+      // v0.8.0: keep one canonical entry per exercise name.
       const seenExerciseNames = new Set();
       for (let i = exercises.length - 1; i >= 0; i--) {
         const name = exercises[i].name;
@@ -5212,7 +5495,7 @@ body::before {
       exercises.forEach((exercise, index) => { exercise.id = index + 1; });
 
 
-      // v0.7.2 canonical MOMNTUM exercise library.
+      // v0.8.0 canonical MOMNTUM exercise library.
       // 108 unique calisthenics-first movements; no fixed anchors or pull-up bar.
       const masterExerciseLibrary072 = [{"name":"Wall Push-up","family":"Push","category":"Upper Body","difficulty":"Beginner","primary":"Chest / triceps","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform wall push-up with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Incline Push-up","family":"Push","category":"Upper Body","difficulty":"Beginner","primary":"Chest / triceps","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform incline push-up with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Knee Push-up","family":"Push","category":"Upper Body","difficulty":"Beginner","primary":"Chest / triceps","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform knee push-up with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Push-up","family":"Push","category":"Upper Body","difficulty":"Beginner","primary":"Chest / triceps","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform push-up with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Wide Push-up","family":"Push","category":"Upper Body","difficulty":"Beginner","primary":"Chest / triceps","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform wide push-up with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Close-grip Push-up","family":"Push","category":"Upper Body","difficulty":"Beginner","primary":"Chest / triceps","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform close-grip push-up with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Diamond Push-up","family":"Push","category":"Upper Body","difficulty":"Intermediate","primary":"Chest / triceps","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform diamond push-up with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Decline Push-up","family":"Push","category":"Upper Body","difficulty":"Intermediate","primary":"Chest / triceps","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform decline push-up with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Pike Push-up","family":"Push","category":"Upper Body","difficulty":"Intermediate","primary":"Chest / triceps","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform pike push-up with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Shoulder Tap Push-up","family":"Push","category":"Upper Body","difficulty":"Beginner","primary":"Chest / triceps","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform shoulder tap push-up with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Scapular Push-up","family":"Push","category":"Upper Body","difficulty":"Beginner","primary":"Chest / triceps","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform scapular push-up with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Hindu Push-up","family":"Push","category":"Upper Body","difficulty":"Intermediate","primary":"Chest / triceps","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform hindu push-up with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Prone Lat Pull","family":"Upper back / pull","category":"Upper Body","difficulty":"Beginner","primary":"Upper back","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform prone lat pull with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Prone Reverse Fly","family":"Upper back / pull","category":"Upper Body","difficulty":"Beginner","primary":"Upper back","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform prone reverse fly with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Prone W Raise","family":"Upper back / pull","category":"Upper Body","difficulty":"Beginner","primary":"Upper back","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform prone w raise with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Prone Y Raise","family":"Upper back / pull","category":"Upper Body","difficulty":"Beginner","primary":"Upper back","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform prone y raise with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Prone T Raise","family":"Upper back / pull","category":"Upper Body","difficulty":"Beginner","primary":"Upper back","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform prone t raise with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Reverse Snow Angel","family":"Upper back / pull","category":"Upper Body","difficulty":"Beginner","primary":"Upper back","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform reverse snow angel with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Superman Pull","family":"Upper back / pull","category":"Upper Body","difficulty":"Beginner","primary":"Upper back","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform superman pull with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Floor Cobra","family":"Upper back / pull","category":"Upper Body","difficulty":"Beginner","primary":"Upper back","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform floor cobra with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Arm Circles","family":"Shoulders / support","category":"Upper Body","difficulty":"Beginner","primary":"Shoulders / stability","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform arm circles with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Plank Shoulder Tap","family":"Shoulders / support","category":"Upper Body","difficulty":"Beginner","primary":"Shoulders / stability","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform plank shoulder tap with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Pike Hold","family":"Shoulders / support","category":"Upper Body","difficulty":"Intermediate","primary":"Shoulders / stability","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform pike hold with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Dolphin Push-up","family":"Shoulders / support","category":"Upper Body","difficulty":"Beginner","primary":"Shoulders / stability","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform dolphin push-up with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Bear Plank","family":"Shoulders / support","category":"Upper Body","difficulty":"Beginner","primary":"Shoulders / stability","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform bear plank with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Bear Shoulder Tap","family":"Shoulders / support","category":"Upper Body","difficulty":"Beginner","primary":"Shoulders / stability","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform bear shoulder tap with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Squat","family":"Squat / lunge","category":"Lower Body","difficulty":"Beginner","primary":"Quads / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform squat with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Narrow Squat","family":"Squat / lunge","category":"Lower Body","difficulty":"Beginner","primary":"Quads / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform narrow squat with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Sumo Squat","family":"Squat / lunge","category":"Lower Body","difficulty":"Beginner","primary":"Quads / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform sumo squat with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Split Squat","family":"Squat / lunge","category":"Lower Body","difficulty":"Beginner","primary":"Quads / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform split squat with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Reverse Lunge","family":"Squat / lunge","category":"Lower Body","difficulty":"Beginner","primary":"Quads / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform reverse lunge with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Forward Lunge","family":"Squat / lunge","category":"Lower Body","difficulty":"Beginner","primary":"Quads / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform forward lunge with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Lateral Lunge","family":"Squat / lunge","category":"Lower Body","difficulty":"Beginner","primary":"Quads / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform lateral lunge with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Curtsy Lunge","family":"Squat / lunge","category":"Lower Body","difficulty":"Beginner","primary":"Quads / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform curtsy lunge with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Bulgarian Split Squat","family":"Squat / lunge","category":"Lower Body","difficulty":"Intermediate","primary":"Quads / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform bulgarian split squat with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Cossack Squat","family":"Squat / lunge","category":"Lower Body","difficulty":"Intermediate","primary":"Quads / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform cossack squat with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Squat Hold","family":"Squat / lunge","category":"Lower Body","difficulty":"Beginner","primary":"Quads / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform squat hold with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Wall Sit","family":"Squat / lunge","category":"Lower Body","difficulty":"Beginner","primary":"Quads / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform wall sit with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Hip Hinge","family":"Hinge / posterior chain","category":"Lower Body","difficulty":"Beginner","primary":"Hamstrings / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform hip hinge with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Good Morning","family":"Hinge / posterior chain","category":"Lower Body","difficulty":"Beginner","primary":"Hamstrings / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform good morning with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Glute Bridge","family":"Hinge / posterior chain","category":"Lower Body","difficulty":"Beginner","primary":"Hamstrings / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform glute bridge with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Single-leg Glute Bridge","family":"Hinge / posterior chain","category":"Lower Body","difficulty":"Intermediate","primary":"Hamstrings / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform single-leg glute bridge with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Hip Thrust","family":"Hinge / posterior chain","category":"Lower Body","difficulty":"Beginner","primary":"Hamstrings / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform hip thrust with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Single-leg Hip Hinge","family":"Hinge / posterior chain","category":"Lower Body","difficulty":"Intermediate","primary":"Hamstrings / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform single-leg hip hinge with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Hamstring Walkout","family":"Hinge / posterior chain","category":"Lower Body","difficulty":"Beginner","primary":"Hamstrings / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform hamstring walkout with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Donkey Kick","family":"Hinge / posterior chain","category":"Lower Body","difficulty":"Beginner","primary":"Hamstrings / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform donkey kick with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Fire Hydrant","family":"Hinge / posterior chain","category":"Lower Body","difficulty":"Beginner","primary":"Hamstrings / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform fire hydrant with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Superman","family":"Hinge / posterior chain","category":"Lower Body","difficulty":"Beginner","primary":"Hamstrings / glutes","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform superman with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Calf Raise","family":"Calves / lower leg","category":"Lower Body","difficulty":"Beginner","primary":"Calves / lower leg","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform calf raise with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Single-leg Calf Raise","family":"Calves / lower leg","category":"Lower Body","difficulty":"Intermediate","primary":"Calves / lower leg","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform single-leg calf raise with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Tibialis Raise","family":"Calves / lower leg","category":"Lower Body","difficulty":"Beginner","primary":"Calves / lower leg","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform tibialis raise with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Toe Raise","family":"Calves / lower leg","category":"Lower Body","difficulty":"Beginner","primary":"Calves / lower leg","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform toe raise with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Dead Bug","family":"Anterior core","category":"Core & Stability","difficulty":"Beginner","primary":"Core","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform dead bug with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Plank","family":"Anterior core","category":"Core & Stability","difficulty":"Beginner","primary":"Core","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform plank with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Forearm Plank","family":"Anterior core","category":"Core & Stability","difficulty":"Beginner","primary":"Core","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform forearm plank with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"High Plank","family":"Anterior core","category":"Core & Stability","difficulty":"Beginner","primary":"Core","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform high plank with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Hollow Hold","family":"Anterior core","category":"Core & Stability","difficulty":"Beginner","primary":"Core","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform hollow hold with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Hollow Rock","family":"Anterior core","category":"Core & Stability","difficulty":"Intermediate","primary":"Core","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform hollow rock with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Leg Raise","family":"Anterior core","category":"Core & Stability","difficulty":"Beginner","primary":"Core","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform leg raise with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Reverse Crunch","family":"Anterior core","category":"Core & Stability","difficulty":"Beginner","primary":"Core","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform reverse crunch with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Crunch","family":"Anterior core","category":"Core & Stability","difficulty":"Beginner","primary":"Core","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform crunch with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Bicycle Crunch","family":"Anterior core","category":"Core & Stability","difficulty":"Beginner","primary":"Core","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform bicycle crunch with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Toe Reach","family":"Anterior core","category":"Core & Stability","difficulty":"Beginner","primary":"Core","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform toe reach with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Side Plank","family":"Lateral / rotational core","category":"Core & Stability","difficulty":"Beginner","primary":"Core / obliques","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform side plank with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Side Plank Reach-through","family":"Lateral / rotational core","category":"Core & Stability","difficulty":"Intermediate","primary":"Core / obliques","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform side plank reach-through with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Side Plank Hip Dip","family":"Lateral / rotational core","category":"Core & Stability","difficulty":"Intermediate","primary":"Core / obliques","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform side plank hip dip with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Bird Dog","family":"Lateral / rotational core","category":"Core & Stability","difficulty":"Beginner","primary":"Core / obliques","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform bird dog with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Bird Dog Crunch","family":"Lateral / rotational core","category":"Core & Stability","difficulty":"Beginner","primary":"Core / obliques","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform bird dog crunch with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Russian Twist","family":"Lateral / rotational core","category":"Core & Stability","difficulty":"Beginner","primary":"Core / obliques","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform russian twist with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Heel Tap","family":"Lateral / rotational core","category":"Core & Stability","difficulty":"Beginner","primary":"Core / obliques","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform heel tap with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Cross-body Mountain Climber","family":"Lateral / rotational core","category":"Core & Stability","difficulty":"Intermediate","primary":"Core / obliques","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform cross-body mountain climber with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Mountain Climber","family":"Dynamic / conditioning","category":"Conditioning","difficulty":"Beginner","primary":"Full body","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform mountain climber with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"30-45s","sets":"3","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Step Jack","family":"Dynamic / conditioning","category":"Conditioning","difficulty":"Beginner","primary":"Full body","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform step jack with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"30-45s","sets":"3","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Jumping Jack","family":"Dynamic / conditioning","category":"Conditioning","difficulty":"Beginner","primary":"Full body","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform jumping jack with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"30-45s","sets":"3","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"High Knees","family":"Dynamic / conditioning","category":"Conditioning","difficulty":"Beginner","primary":"Full body","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform high knees with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"30-45s","sets":"3","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Butt Kicks","family":"Dynamic / conditioning","category":"Conditioning","difficulty":"Beginner","primary":"Full body","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform butt kicks with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"30-45s","sets":"3","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Squat Jump","family":"Dynamic / conditioning","category":"Conditioning","difficulty":"Intermediate","primary":"Full body","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform squat jump with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"30-45s","sets":"3","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Skater","family":"Dynamic / conditioning","category":"Conditioning","difficulty":"Intermediate","primary":"Full body","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform skater with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"30-45s","sets":"3","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Burpee","family":"Dynamic / conditioning","category":"Conditioning","difficulty":"Intermediate","primary":"Full body","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform burpee with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"30-45s","sets":"3","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Half Burpee","family":"Dynamic / conditioning","category":"Conditioning","difficulty":"Intermediate","primary":"Full body","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform half burpee with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"30-45s","sets":"3","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Bear Crawl","family":"Dynamic / conditioning","category":"Conditioning","difficulty":"Intermediate","primary":"Full body","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform bear crawl with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"30-45s","sets":"3","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Crab Walk","family":"Dynamic / conditioning","category":"Conditioning","difficulty":"Intermediate","primary":"Full body","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform crab walk with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"30-45s","sets":"3","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Inchworm","family":"Dynamic / conditioning","category":"Conditioning","difficulty":"Beginner","primary":"Full body","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform inchworm with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"30-45s","sets":"3","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"March in Place","family":"Mobility / preparation","category":"Mobility","difficulty":"Beginner","primary":"Mobility","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform march in place with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"6-10/side","sets":"2","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Cat Cow","family":"Mobility / preparation","category":"Mobility","difficulty":"Beginner","primary":"Mobility","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform cat cow with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"6-10/side","sets":"2","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Ankle Rocks","family":"Mobility / preparation","category":"Mobility","difficulty":"Beginner","primary":"Mobility","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform ankle rocks with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"6-10/side","sets":"2","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Hamstring Sweep","family":"Mobility / preparation","category":"Mobility","difficulty":"Beginner","primary":"Mobility","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform hamstring sweep with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"6-10/side","sets":"2","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"World's Greatest Stretch","family":"Mobility / preparation","category":"Mobility","difficulty":"Beginner","primary":"Mobility","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform world's greatest stretch with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"6-10/side","sets":"2","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Thoracic Rotation","family":"Mobility / preparation","category":"Mobility","difficulty":"Beginner","primary":"Mobility","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform thoracic rotation with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"6-10/side","sets":"2","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Hip Opener","family":"Mobility / preparation","category":"Mobility","difficulty":"Beginner","primary":"Mobility","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform hip opener with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"6-10/side","sets":"2","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Shoulder Rotation","family":"Mobility / preparation","category":"Mobility","difficulty":"Beginner","primary":"Mobility","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform shoulder rotation with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"6-10/side","sets":"2","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Deep Squat Hold","family":"Mobility / preparation","category":"Mobility","difficulty":"Beginner","primary":"Mobility","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform deep squat hold with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"6-10/side","sets":"2","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Lunge & Reach","family":"Mobility / preparation","category":"Mobility","difficulty":"Beginner","primary":"Mobility","secondary":"Core / stabilisers","equipment":"Bodyweight","description":"Perform lunge & reach with controlled, deliberate technique.","tips":"Use a comfortable range, stay controlled and keep the movement smooth.","mistakes":"Rushing the movement; losing alignment; using more range than you can control.","reps":"6-10/side","sets":"2","rest":"30s","progression":"Increase control, range, reps or use the next progression.","regression":"Reduce range, tempo or use an easier variation."},{"name":"Band Pull-apart","family":"Upper back / pull","category":"Upper Body","difficulty":"Beginner","primary":"Upper back","secondary":"Core / stabilisers","equipment":"Resistance Bands","description":"Perform band pull-apart with controlled resistance and a stable body position.","tips":"Keep the resistance controlled throughout the full movement.","mistakes":"Using momentum; losing alignment; allowing the load or band to snap back.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase resistance gradually while preserving technique.","regression":"Use lighter resistance or reduce the range."},{"name":"Band Overhead Press","family":"Shoulders / support","category":"Upper Body","difficulty":"Beginner","primary":"Shoulders / stability","secondary":"Core / stabilisers","equipment":"Resistance Bands","description":"Perform band overhead press with controlled resistance and a stable body position.","tips":"Keep the resistance controlled throughout the full movement.","mistakes":"Using momentum; losing alignment; allowing the load or band to snap back.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase resistance gradually while preserving technique.","regression":"Use lighter resistance or reduce the range."},{"name":"Band Lateral Raise","family":"Shoulders / support","category":"Upper Body","difficulty":"Beginner","primary":"Shoulders / stability","secondary":"Core / stabilisers","equipment":"Resistance Bands","description":"Perform band lateral raise with controlled resistance and a stable body position.","tips":"Keep the resistance controlled throughout the full movement.","mistakes":"Using momentum; losing alignment; allowing the load or band to snap back.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase resistance gradually while preserving technique.","regression":"Use lighter resistance or reduce the range."},{"name":"Band Biceps Curl","family":"Upper back / pull","category":"Upper Body","difficulty":"Beginner","primary":"Upper back","secondary":"Core / stabilisers","equipment":"Resistance Bands","description":"Perform band biceps curl with controlled resistance and a stable body position.","tips":"Keep the resistance controlled throughout the full movement.","mistakes":"Using momentum; losing alignment; allowing the load or band to snap back.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase resistance gradually while preserving technique.","regression":"Use lighter resistance or reduce the range."},{"name":"Seated Band Row","family":"Upper back / pull","category":"Upper Body","difficulty":"Beginner","primary":"Upper back","secondary":"Core / stabilisers","equipment":"Resistance Bands","description":"Perform seated band row with controlled resistance and a stable body position.","tips":"Keep the resistance controlled throughout the full movement.","mistakes":"Using momentum; losing alignment; allowing the load or band to snap back.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase resistance gradually while preserving technique.","regression":"Use lighter resistance or reduce the range."},{"name":"Dumbbell Floor Press","family":"Push","category":"Upper Body","difficulty":"Beginner","primary":"Chest / triceps","secondary":"Core / stabilisers","equipment":"Dumbbells","description":"Perform dumbbell floor press with controlled resistance and a stable body position.","tips":"Keep the resistance controlled throughout the full movement.","mistakes":"Using momentum; losing alignment; allowing the load or band to snap back.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase resistance gradually while preserving technique.","regression":"Use lighter resistance or reduce the range."},{"name":"Dumbbell Shoulder Press","family":"Shoulders / support","category":"Upper Body","difficulty":"Beginner","primary":"Shoulders / stability","secondary":"Core / stabilisers","equipment":"Dumbbells","description":"Perform dumbbell shoulder press with controlled resistance and a stable body position.","tips":"Keep the resistance controlled throughout the full movement.","mistakes":"Using momentum; losing alignment; allowing the load or band to snap back.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase resistance gradually while preserving technique.","regression":"Use lighter resistance or reduce the range."},{"name":"One-arm Dumbbell Row","family":"Upper back / pull","category":"Upper Body","difficulty":"Beginner","primary":"Upper back","secondary":"Core / stabilisers","equipment":"Dumbbell","description":"Perform one-arm dumbbell row with controlled resistance and a stable body position.","tips":"Keep the resistance controlled throughout the full movement.","mistakes":"Using momentum; losing alignment; allowing the load or band to snap back.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase resistance gradually while preserving technique.","regression":"Use lighter resistance or reduce the range."},{"name":"Dumbbell Reverse Fly","family":"Upper back / pull","category":"Upper Body","difficulty":"Beginner","primary":"Upper back","secondary":"Core / stabilisers","equipment":"Dumbbells","description":"Perform dumbbell reverse fly with controlled resistance and a stable body position.","tips":"Keep the resistance controlled throughout the full movement.","mistakes":"Using momentum; losing alignment; allowing the load or band to snap back.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase resistance gradually while preserving technique.","regression":"Use lighter resistance or reduce the range."},{"name":"Dumbbell Biceps Curl","family":"Upper back / pull","category":"Upper Body","difficulty":"Beginner","primary":"Upper back","secondary":"Core / stabilisers","equipment":"Dumbbells","description":"Perform dumbbell biceps curl with controlled resistance and a stable body position.","tips":"Keep the resistance controlled throughout the full movement.","mistakes":"Using momentum; losing alignment; allowing the load or band to snap back.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase resistance gradually while preserving technique.","regression":"Use lighter resistance or reduce the range."},{"name":"Dumbbell Overhead Triceps Extension","family":"Push","category":"Upper Body","difficulty":"Beginner","primary":"Chest / triceps","secondary":"Core / stabilisers","equipment":"Dumbbell","description":"Perform dumbbell overhead triceps extension with controlled resistance and a stable body position.","tips":"Keep the resistance controlled throughout the full movement.","mistakes":"Using momentum; losing alignment; allowing the load or band to snap back.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase resistance gradually while preserving technique.","regression":"Use lighter resistance or reduce the range."},{"name":"Dumbbell Thruster","family":"Dynamic / conditioning","category":"Conditioning","difficulty":"Intermediate","primary":"Full body","secondary":"Core / stabilisers","equipment":"Dumbbells","description":"Perform dumbbell thruster with controlled resistance and a stable body position.","tips":"Keep the resistance controlled throughout the full movement.","mistakes":"Using momentum; losing alignment; allowing the load or band to snap back.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase resistance gradually while preserving technique.","regression":"Use lighter resistance or reduce the range."},{"name":"Kettlebell Swing","family":"Dynamic / conditioning","category":"Conditioning","difficulty":"Intermediate","primary":"Full body","secondary":"Core / stabilisers","equipment":"Kettlebell","description":"Perform kettlebell swing with controlled resistance and a stable body position.","tips":"Keep the resistance controlled throughout the full movement.","mistakes":"Using momentum; losing alignment; allowing the load or band to snap back.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase resistance gradually while preserving technique.","regression":"Use lighter resistance or reduce the range."},{"name":"Kettlebell Clean and Press","family":"Dynamic / conditioning","category":"Conditioning","difficulty":"Intermediate","primary":"Full body","secondary":"Core / stabilisers","equipment":"Kettlebell","description":"Perform kettlebell clean and press with controlled resistance and a stable body position.","tips":"Keep the resistance controlled throughout the full movement.","mistakes":"Using momentum; losing alignment; allowing the load or band to snap back.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase resistance gradually while preserving technique.","regression":"Use lighter resistance or reduce the range."},{"name":"Suitcase March","family":"Lateral / rotational core","category":"Core & Stability","difficulty":"Beginner","primary":"Core / obliques","secondary":"Core / stabilisers","equipment":"Dumbbell or kettlebell","description":"Perform suitcase march with controlled resistance and a stable body position.","tips":"Keep the resistance controlled throughout the full movement.","mistakes":"Using momentum; losing alignment; allowing the load or band to snap back.","reps":"8-15","sets":"3","rest":"60s","progression":"Increase resistance gradually while preserving technique.","regression":"Use lighter resistance or reduce the range."}];
       exercises.splice(0, exercises.length, ...masterExerciseLibrary072.map((e, index) => ({id:index+1,...e})));
@@ -5673,7 +5956,7 @@ body::before {
             loaded.settings.equipmentProfile.push("bands");
           }
           loaded.settings.equipmentProfile = [...new Set(loaded.settings.equipmentProfile)];
-          // v0.7.2: bodyweight is the permanent foundation; equipment is additive.
+          // v0.8.0: bodyweight is the permanent foundation; equipment is additive.
           if (!loaded.settings.equipmentProfile.includes("none")) {
             loaded.settings.equipmentProfile.unshift("none");
           }
@@ -5735,16 +6018,86 @@ body::before {
         }
         return slot.none;
       }
-      function resolveWorkout(workout) {
-        const blueprint = workoutBlueprints[workout.id];
-        if (!blueprint) return { ...workout, activeEquipment: "Bodyweight only" };
-        const available = equipmentEnabledFor(workout.id) ? selectedEquipment() : [];
-        const resolve = (slots) => slots.map((slot) => resolveSlot(slot, available)).filter(Boolean);
-        const activeEquipment = available.length
-          ? available.map((x) => equipmentLabels[x]).join(" • ")
-          : "Bodyweight only";
-        return { ...workout, warm: resolve(blueprint.warm), main: resolve(blueprint.main), activeEquipment };
+
+      // MOMNTUM v0.8.0 dynamic workout engine: controlled variance, not pure randomness.
+      const dynamicWorkoutTemplates = {
+        upper:{warm:[{names:["March in Place","Shoulder Rotation","Arm Circles"]},{names:["Scapular Push-up","Bear Plank","Band Pull-apart"]},{families:["Mobility / preparation","Shoulders / support"]}],main:[{role:"push"},{role:"shoulders"},{role:"pull"},{role:"upperBack"},{role:"upperAccessory"}]},
+        legs:{warm:[{names:["March in Place","Ankle Rocks","Hip Opener"]},{names:["Hip Hinge","Deep Squat Hold","Hamstring Sweep"]},{families:["Mobility / preparation"]}],main:[{role:"squat"},{role:"unilateral"},{role:"hinge"},{role:"glute"},{role:"calves"}]},
+        core:{warm:[{names:["Cat Cow","Inchworm","Thoracic Rotation"]},{names:["Bird Dog","Dead Bug","Bear Plank"]}],main:[{role:"anterior"},{role:"lateral"},{role:"stability"},{role:"rotation"},{role:"coreDynamic"}]},
+        conditioning:{warm:[{names:["March in Place","Step Jack","Arm Circles"]},{names:["Inchworm","Deep Squat Hold","Hip Opener"]},{families:["Mobility / preparation"]}],main:[{role:"engine"},{role:"condLegs"},{role:"locomotion"},{role:"power"},{role:"finisher"}]}
+      };
+      const dynamicRolePreferences={
+        push:["Push-up","Incline Push-up","Knee Push-up","Wide Push-up","Close-grip Push-up","Diamond Push-up","Decline Push-up","Dumbbell Floor Press"],
+        shoulders:["Pike Push-up","Dolphin Push-up","Pike Hold","Bear Shoulder Tap","Band Overhead Press","Band Lateral Raise","Dumbbell Shoulder Press","Kettlebell Clean and Press"],
+        pull:["Prone Lat Pull","Superman Pull","Floor Cobra","Seated Band Row","One-arm Dumbbell Row"],
+        upperBack:["Prone Reverse Fly","Prone W Raise","Prone Y Raise","Prone T Raise","Reverse Snow Angel","Band Pull-apart","Dumbbell Reverse Fly"],
+        upperAccessory:["Scapular Push-up","Bear Shoulder Tap","Close-grip Push-up","Band Biceps Curl","Dumbbell Biceps Curl","Dumbbell Overhead Triceps Extension"],
+        squat:["Squat","Narrow Squat","Sumo Squat","Squat Hold","Wall Sit"],
+        unilateral:["Split Squat","Reverse Lunge","Forward Lunge","Lateral Lunge","Curtsy Lunge","Bulgarian Split Squat","Cossack Squat"],
+        hinge:["Hip Hinge","Good Morning","Single-leg Hip Hinge","Hamstring Walkout"],
+        glute:["Glute Bridge","Single-leg Glute Bridge","Hip Thrust","Donkey Kick","Fire Hydrant"],
+        calves:["Calf Raise","Single-leg Calf Raise","Tibialis Raise","Toe Raise"],
+        anterior:["Dead Bug","Forearm Plank","High Plank","Hollow Hold","Hollow Rock","Leg Raise","Reverse Crunch","Crunch","Bicycle Crunch","Toe Reach"],
+        lateral:["Side Plank","Side Plank Reach-through","Side Plank Hip Dip","Heel Tap"],
+        stability:["Plank","Dead Bug","Hollow Hold","Bird Dog","Bear Plank"],
+        rotation:["Bird Dog Crunch","Russian Twist","Cross-body Mountain Climber","Side Plank Reach-through"],
+        coreDynamic:["Mountain Climber","Cross-body Mountain Climber","Suitcase March"],
+        engine:["Step Jack","Jumping Jack","High Knees","Butt Kicks","Mountain Climber"],
+        condLegs:["Squat Jump","Skater","High Knees","Butt Kicks"],
+        locomotion:["Bear Crawl","Crab Walk","Inchworm","Mountain Climber"],
+        power:["Burpee","Half Burpee","Squat Jump","Kettlebell Swing","Dumbbell Thruster","Kettlebell Clean and Press"],
+        finisher:["Burpee","Half Burpee","Mountain Climber","High Knees","Skater","Kettlebell Swing"]
+      };
+      function dynamicHistoryKey(id){return `momntum_dynamic_history_${id}`;}
+      function dynamicHistory(id){try{const v=JSON.parse(localStorage.getItem(dynamicHistoryKey(id))||"[]");return Array.isArray(v)?v.slice(0,3):[]}catch(_){return[]}}
+      function saveDynamicHistory(id,names){const h=dynamicHistory(id);h.unshift(names.slice());localStorage.setItem(dynamicHistoryKey(id),JSON.stringify(h.slice(0,3)));}
+      function dynamicHash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0;}
+      function dynamicEquipmentAllowed(e,available){
+        const eq=String(e.equipment||"Bodyweight").toLowerCase();
+        if(eq==="bodyweight")return true;
+        if(eq.includes("resistance band"))return available.includes("bands");
+        if(eq.includes("dumbbell"))return available.includes("dumbbells");
+        if(eq.includes("kettlebell"))return available.includes("kettlebell");
+        return false;
       }
+      function dynamicCandidates(slot,available){
+        let pool=exercises.filter(e=>dynamicEquipmentAllowed(e,available));
+        if(slot.names){const s=new Set(slot.names);pool=pool.filter(e=>s.has(e.name));}
+        if(slot.families){const s=new Set(slot.families);pool=pool.filter(e=>s.has(e.family));}
+        if(slot.role&&dynamicRolePreferences[slot.role]){const s=new Set(dynamicRolePreferences[slot.role]);const preferred=pool.filter(e=>s.has(e.name));if(preferred.length)pool=preferred;}
+        return pool;
+      }
+      function dynamicPick(slot,ctx){
+        const pool=dynamicCandidates(slot,ctx.available).filter(e=>!ctx.used.has(e.name));
+        if(!pool.length)return null;
+        const recent=ctx.history.flat(),previous=ctx.history[0]||[];
+        pool.sort((a,b)=>{
+          const score=e=>{
+            let x=(dynamicHash(`${ctx.seed}:${e.name}`)%1000)/1000;
+            if(previous.includes(e.name))x-=2.1;else if(recent.includes(e.name))x-=0.8;
+            if(ctx.carry.has(e.name))x+=0.42;
+            if(String(e.equipment).toLowerCase()!=="bodyweight")x+=0.15;
+            return x;
+          };return score(b)-score(a);
+        });
+        ctx.used.add(pool[0].name);return pool[0].name;
+      }
+      function generateDynamicWorkout(workout,regeneration=0){
+        const template=dynamicWorkoutTemplates[workout.id];if(!template)return null;
+        const available=equipmentEnabledFor(workout.id)?selectedEquipment():[];
+        const history=dynamicHistory(workout.id);
+        const carry=new Set((history[0]||[]).filter((_,i)=>i%2===0));
+        const seed=`${workout.id}:${new Date().toISOString().slice(0,10)}:${available.join(",")}:${regeneration}`;
+        const ctx={available,history,carry,seed,used:new Set()};
+        const build=slots=>slots.map(s=>dynamicPick(s,ctx)).filter(Boolean);
+        return {warm:build(template.warm),main:build(template.main),activeEquipment:available.length?available.map(x=>equipmentLabels[x]).join(" • "):"Bodyweight only"};
+      }
+
+      function resolveWorkout(workout) {
+        const generated = generateDynamicWorkout(workout, workout._regeneration || 0);
+        return generated ? { ...workout, ...generated } : { ...workout, activeEquipment: "Bodyweight only" };
+      }
+
       function equipmentProfileLabel() {
         const selected = selectedEquipment();
         return ["Bodyweight", ...selected.map((x) => equipmentLabels[x]).filter(Boolean)].join(" • ");
@@ -5957,7 +6310,8 @@ body::before {
             const profileAvailable = selectedEquipment().length > 0;
             const enabled = equipmentEnabledFor(w.id);
             const switchLabel = enabled ? rw.activeEquipment : "Bodyweight only";
-            return `<article class="card expandableWorkoutCard" data-workout-card="${w.id}" role="button" tabindex="0" aria-expanded="false"><div class="workoutCardCollapsed"><div class="workoutCardCollapsedTop"><div class="workoutCardCollapsedTitle"><h3>${w.title}</h3></div><button class="cardChevron" type="button" data-workout-expand="${w.id}" aria-label="Expand ${w.title}" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><div class="workoutCardSummaryMeta"><span class="pill">${w.duration} min</span><span class="pill">${rw.main.length} exercises</span><span class="pill">${w.warm.length} warmups</span></div><div class="workoutCardExpanded"><div class="workoutFocusAreas"><span class="kicker">Focus areas</span><p>${w.focusAreas.join(" • ")}</p></div><div class="workoutExpandedEquipmentDetail"><div class="workoutExpandedEquipmentHeader"><div><strong>${enabled ? "Equipment selected" : "Bodyweight"}</strong><small>${switchLabel}${profileAvailable ? "" : " · Add equipment in Settings"}</small></div><label class="workoutExpandedEquipmentToggle" aria-label="Use equipment for ${w.title}"><span>Equipment</span><span class="switchControl"><input type="checkbox" data-equipment-toggle="${w.id}" ${enabled ? "checked" : ""} ${profileAvailable ? "" : "disabled"}><span class="switchTrack"></span></span></label></div></div><p class="muted resolvedExerciseList" style="margin-top:12px">${rw.main.slice(0, 4).join(", ")}${rw.main.length > 4 ? ", and more." : "."}</p></div><div class="workoutCardActions"><button class="btn primary" data-start="${w.id}">Start ${w.title}</button><label class="workoutEquipmentInline" aria-label="Use equipment for ${w.title}"><span>Equipment</span><span class="switchControl"><input type="checkbox" data-equipment-toggle="${w.id}" ${enabled ? "checked" : ""} ${profileAvailable ? "" : "disabled"}><span class="switchTrack"></span></span></label></div></div></article>`;
+            return `<article class="card expandableWorkoutCard" data-workout-card="${w.id}" role="button" tabindex="0" aria-expanded="false"><div class="workoutCardCollapsed"><div class="workoutCardCollapsedTop"><div class="workoutCardCollapsedTitle"><h3>${w.title}</h3></div><button class="cardChevron" type="button" data-workout-expand="${w.id}" aria-label="Expand ${w.title}" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><div class="workoutCardSummaryMeta"><span class="pill">${w.duration} min</span><span class="pill">${rw.main.length} exercises</span><span class="pill">${w.warm.length} warmups</span></div><div class="workoutCardExpanded"><div class="workoutFocusAreas"><span class="kicker">Focus areas</span><p>${w.focusAreas.join(" • ")}</p><div class="focusExerciseSummary">${rw.main.join(" • ")}</div></div><div class="workoutExpandedEquipmentDetail"><div class="workoutExpandedEquipmentHeader"><div><strong>${enabled ? "Equipment selected" : "Bodyweight"}</strong><small>${switchLabel}${profileAvailable ? "" : " · Add equipment in Settings"}</small></div><label class="workoutExpandedEquipmentToggle" aria-label="Use equipment for ${w.title}"><span>Equipment</span><span class="switchControl"><input type="checkbox" data-equipment-toggle="${w.id}" ${enabled ? "checked" : ""} ${profileAvailable ? "" : "disabled"}><span class="switchTrack"></span></span></label></div></div><p class="small muted regenerateExplainer">Regenerate swaps in another balanced mix of exercises.</p></div><div class="workoutCardActions"><button class="btn secondary" data-regenerate="${w.id}" type="button">Regenerate</button>
+                    <button class="btn primary" data-start="${w.id}">Start</button><label class="workoutEquipmentInline" aria-label="Use equipment for ${w.title}"><span>Equipment</span><span class="switchControl"><input type="checkbox" data-equipment-toggle="${w.id}" ${enabled ? "checked" : ""} ${profileAvailable ? "" : "disabled"}><span class="switchTrack"></span></span></label></div></div></article>`;
           })
           .join("");
         document.querySelectorAll("[data-equipment-toggle]").forEach((toggle) => {
@@ -6021,7 +6375,7 @@ body::before {
         return `<span class="exerciseChevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
       }
 
-      /* v0.7.2 external authored SVG exercise asset library.
+      /* v0.8.0 external authored SVG exercise asset library.
          Exercise SVGs are loaded as ordinary external objects rather than with
          fetch(), so the project also works when index.html is opened locally. */
       const EXERCISE_SVG_ASSETS = Object.freeze({
@@ -6032,34 +6386,34 @@ body::before {
         "Lateral Lunge": "assets/exercises/lateral-lunge.svg",
         "Glute Bridge": "assets/exercises/glute-bridge.svg",
         "Calf Raise": "assets/exercises/calf-raise.svg",
-        "Incline Push-up": "assets/exercises/incline-push-up.svg?v=0.7.2-final",
-        "Pike Push-up": "assets/exercises/pike-push-up.svg?v=0.7.2-pike-arm-fix",
+        "Incline Push-up": "assets/exercises/incline-push-up.svg?v=0.8.0-final",
+        "Pike Push-up": "assets/exercises/pike-push-up.svg?v=0.8.0-pike-arm-fix",
         "Band Chest Press": "assets/exercises/band-chest-press.svg",
         "Band Overhead Press": "assets/exercises/band-overhead-press.svg",
         "Band Lateral Raise": "assets/exercises/band-lateral-raise.svg",
-        "Dead Bug": "assets/exercises/dead-bug.svg?v=0.7.2-core",
-        "Plank": "assets/exercises/plank.svg?v=0.7.2-core",
-        "Side Plank": "assets/exercises/side-plank.svg?v=0.7.2-core",
-        "Bird Dog": "assets/exercises/bird-dog.svg?v=0.7.2-core",
-        "Mountain Climber": "assets/exercises/mountain-climber.svg?v=0.7.2-core",
-        "Hollow Hold": "assets/exercises/hollow-hold.svg?v=0.7.2-core",
-        "Superman Pull": "assets/exercises/superman.svg?v=0.7.2-core",
-        "Band Triceps Pressdown": "assets/exercises/band-triceps-pressdown.svg?v=0.7.2-band-v4",
-        "Seated Band Row": "assets/exercises/seated-band-row.svg?v=0.7.2-band-v4",
-        "Band Lat Pulldown": "assets/exercises/band-lat-pulldown.svg?v=0.7.2-band-v4",
-        "Band Face Pull": "assets/exercises/band-face-pull.svg?v=0.7.2-band-v4",
-        "Band Pull-apart": "assets/exercises/band-pull-apart.svg?v=0.7.2-band-v4",
-        "Band Biceps Curl": "assets/exercises/band-biceps-curl.svg?v=0.7.2-band-v4",
-        "Band Hammer Curl": "assets/exercises/band-hammer-curl.svg?v=0.7.2-band-v4",
-        "Band Straight-arm Pulldown": "assets/exercises/band-straight-arm-pulldown.svg?v=0.7.2-band-v4",
-        "Band Good Morning": "assets/exercises/band-good-morning.svg?v=0.7.2-band-v4",
-        "Band Romanian Deadlift": "assets/exercises/band-romanian-deadlift.svg?v=0.7.2-band-v4",
-        "Band Squat": "assets/exercises/band-squat.svg?v=0.7.2-band-v4",
-        "Band Pallof Press": "assets/exercises/band-pallof-press.svg?v=0.7.2-band-v4",
-        "Band Wood Chop": "assets/exercises/band-wood-chop.svg?v=0.7.2-band-v4",
-        "Band Dislocates": "assets/exercises/band-dislocates.svg?v=0.7.2-band-v4",
-        "Band Hip Abduction": "assets/exercises/band-hip-abduction.svg?v=0.7.2-band-v4",
-        "Band Squat to Press": "assets/exercises/band-squat-to-press.svg?v=0.7.2-band-v4",
+        "Dead Bug": "assets/exercises/dead-bug.svg?v=0.8.0-core",
+        "Plank": "assets/exercises/plank.svg?v=0.8.0-core",
+        "Side Plank": "assets/exercises/side-plank.svg?v=0.8.0-core",
+        "Bird Dog": "assets/exercises/bird-dog.svg?v=0.8.0-core",
+        "Mountain Climber": "assets/exercises/mountain-climber.svg?v=0.8.0-core",
+        "Hollow Hold": "assets/exercises/hollow-hold.svg?v=0.8.0-core",
+        "Superman Pull": "assets/exercises/superman.svg?v=0.8.0-core",
+        "Band Triceps Pressdown": "assets/exercises/band-triceps-pressdown.svg?v=0.8.0-band-v4",
+        "Seated Band Row": "assets/exercises/seated-band-row.svg?v=0.8.0-band-v4",
+        "Band Lat Pulldown": "assets/exercises/band-lat-pulldown.svg?v=0.8.0-band-v4",
+        "Band Face Pull": "assets/exercises/band-face-pull.svg?v=0.8.0-band-v4",
+        "Band Pull-apart": "assets/exercises/band-pull-apart.svg?v=0.8.0-band-v4",
+        "Band Biceps Curl": "assets/exercises/band-biceps-curl.svg?v=0.8.0-band-v4",
+        "Band Hammer Curl": "assets/exercises/band-hammer-curl.svg?v=0.8.0-band-v4",
+        "Band Straight-arm Pulldown": "assets/exercises/band-straight-arm-pulldown.svg?v=0.8.0-band-v4",
+        "Band Good Morning": "assets/exercises/band-good-morning.svg?v=0.8.0-band-v4",
+        "Band Romanian Deadlift": "assets/exercises/band-romanian-deadlift.svg?v=0.8.0-band-v4",
+        "Band Squat": "assets/exercises/band-squat.svg?v=0.8.0-band-v4",
+        "Band Pallof Press": "assets/exercises/band-pallof-press.svg?v=0.8.0-band-v4",
+        "Band Wood Chop": "assets/exercises/band-wood-chop.svg?v=0.8.0-band-v4",
+        "Band Dislocates": "assets/exercises/band-dislocates.svg?v=0.8.0-band-v4",
+        "Band Hip Abduction": "assets/exercises/band-hip-abduction.svg?v=0.8.0-band-v4",
+        "Band Squat to Press": "assets/exercises/band-squat-to-press.svg?v=0.8.0-band-v4",
       });
 
       function exerciseAnimationMarkup(ex) {
@@ -6100,7 +6454,7 @@ body::before {
         requestAnimationFrame(() => syncExerciseSvgObjectStyles());
       }
 
-      // v0.7.2 hotfix: restore the active-workout renderer that was
+      // v0.8.0 hotfix: restore the active-workout renderer that was
       // accidentally dropped while integrating the external SVG asset library.
       // Animation markup is deliberately optional so a missing/broken SVG can
       // never prevent the workout, countdown or timer from starting.
@@ -6239,21 +6593,21 @@ body::before {
 
       function renderLibrary() {
         const filters = [
-          "All",
-          "Push",
-          "Pull",
-          "Legs",
-          "Core",
-          "Warm-up",
-          "Mobility",
-          "Band",
-          "Bodyweight",
+          ["All", "All"],
+          ["Upper Body", "Upper Body"],
+          ["Lower Body", "Lower Body"],
+          ["Core & Stability", "Core & Stability"],
+          ["Conditioning", "Conditioning"],
+          ["Bodyweight", "Bodyweight"],
+          ["Resistance Bands", "Resistance Bands"],
+          ["Dumbbells", "Dumbbells"],
+          ["Kettlebell", "Kettlebell"],
         ];
         if (!$("filterTabs").children.length) {
           $("filterTabs").innerHTML = filters
             .map(
-              (f, i) =>
-                `<button class="chip ${i === 0 ? "active" : ""}" data-filter="${f}">${f}</button>`,
+              ([value, label], i) =>
+                `<button class="chip ${i === 0 ? "active" : ""}" data-filter="${value}">${label}</button>`,
             )
             .join("");
           $("filterTabs").onclick = (e) => {
@@ -6274,7 +6628,6 @@ body::before {
         if (value.includes("band")) return "Band";
         if (value.includes("dumbbell")) return "Dumbbell";
         if (value.includes("kettlebell")) return "Kettlebell";
-        if (value.includes("pull-up")) return "Bar";
         return "Body";
       }
       function renderLibraryList() {
@@ -6294,10 +6647,19 @@ body::before {
             " " +
             e.equipment
           ).toLowerCase();
-          return (
-            (!q || hay.includes(q)) &&
-            (f === "All" || e.category.includes(f) || e.equipment.includes(f))
-          );
+          const equipment = String(e.equipment || "").toLowerCase();
+          const category = String(e.category || "");
+          const matchesFilter =
+            f === "All" ||
+            (f === "Upper Body" && category === "Upper Body") ||
+            (f === "Lower Body" && category === "Lower Body") ||
+            (f === "Core & Stability" && category === "Core & Stability") ||
+            (f === "Conditioning" && category === "Conditioning") ||
+            (f === "Bodyweight" && equipment === "bodyweight") ||
+            (f === "Resistance Bands" && equipment.includes("resistance band")) ||
+            (f === "Dumbbells" && equipment.includes("dumbbell")) ||
+            (f === "Kettlebell" && equipment.includes("kettlebell"));
+          return (!q || hay.includes(q)) && matchesFilter;
         });
         $("libraryList").innerHTML = rows
           .map(
@@ -6725,6 +7087,10 @@ body::before {
                 ? "Repeat the same workload and aim for cleaner form."
                 : "Move one exercise to a harder variation or add band tension.",
         };
+        try {
+          const completedResolved = state.active?.resolvedWorkout;
+          if (completedResolved?.id) saveDynamicHistory(completedResolved.id, completedResolved.main || []);
+        } catch (_) {}
         state.history.push(rec);
         state.stats.totalWorkouts = state.history.length;
         state.stats.totalExercises += done.length;
@@ -7044,7 +7410,7 @@ body::before {
 
       function completeLaunchExperience() {
         if (document.body.classList.contains("installGateActive")) {
-          document.getElementById("launchSplash")?.remove();
+          removeLaunchLayersCompletely();
           document.body.classList.remove("launchPending", "launchReady");
           return;
         }
@@ -7075,9 +7441,9 @@ body::before {
           document.body.classList.add("launchReady");
 
           if (reduceMotion) {
-            document.body.classList.add("launchWordmarkLanded");
+            document.body.classList.add("launchWordmarkLanded"); setTimeout(removeLaunchLayersCompletely, 80);
             splash.remove();
-            document.body.classList.remove("launchReady", "launchWordmarkLanded");
+            removeLaunchLayersCompletely(); forceCrispHeaderAfterLaunch();
             openOnboarding(false);
             return;
           }
@@ -7117,7 +7483,7 @@ body::before {
               easing: "cubic-bezier(.22,1,.36,1)"
             }
           ).finished.then(() => {
-            document.body.classList.add("launchWordmarkLanded");
+            document.body.classList.add("launchWordmarkLanded"); setTimeout(removeLaunchLayersCompletely, 80);
             launchLogo.style.opacity = "0";
             splash.animate([{ opacity: 1 }, { opacity: 0 }], {
               duration: 190,
@@ -7125,7 +7491,7 @@ body::before {
               easing: "ease-out"
             }).finished.then(() => {
               splash.remove();
-              document.body.classList.remove("launchReady", "launchWordmarkLanded");
+              removeLaunchLayersCompletely(); forceCrispHeaderAfterLaunch();
               openOnboarding(false);
             });
           });
@@ -7146,9 +7512,112 @@ body::before {
         document.body.classList.remove("launchPending");
         document.body.classList.add("launchReady");
         splash.remove();
-        document.body.classList.remove("launchReady");
+        removeLaunchLayersCompletely(); forceCrispHeaderAfterLaunch();
         openOnboarding(false);
       }, 5000);
+
+
+      document.addEventListener("click", (event) => {
+        const b = event.target.closest("[data-regenerate]");
+        if (!b) return;
+        event.preventDefault();
+        event.stopPropagation();
+
+        const workoutId = b.dataset.regenerate;
+        const currentCard = b.closest("[data-workout-card]");
+        const wasOpen = !!currentCard?.classList.contains("open");
+
+        const w = workouts.find((x) => x.id === workoutId);
+        if (!w) return;
+
+        w._regeneration = (w._regeneration || 0) + 1;
+        renderWorkouts();
+        renderHome();
+
+        if (wasOpen) {
+          const reopenedCard = document.querySelector(`[data-workout-card="${workoutId}"]`);
+          if (reopenedCard) {
+            reopenedCard.classList.add("open");
+            reopenedCard.setAttribute("aria-expanded", "true");
+            const chevron = reopenedCard.querySelector("[data-workout-expand]");
+            if (chevron) chevron.setAttribute("aria-expanded", "true");
+          }
+        }
+
+        toast("Workout regenerated");
+      });
+
+
+      function forceCrispHeaderAfterLaunch() {
+        const app = document.getElementById("app");
+        const topbar = document.querySelector(".topbar");
+        const wordmark = document.getElementById("headerWordmark");
+        const level = document.getElementById("levelIndicator");
+        [app, topbar, wordmark, level].forEach((el) => {
+          if (!el) return;
+          el.style.removeProperty("opacity");
+          el.style.removeProperty("filter");
+          el.style.removeProperty("-webkit-filter");
+          el.style.removeProperty("backdrop-filter");
+          el.style.removeProperty("-webkit-backdrop-filter");
+          el.style.removeProperty("transform");
+          el.style.removeProperty("-webkit-transform");
+          el.style.removeProperty("will-change");
+        });
+        if (wordmark) wordmark.style.visibility = "visible";
+      }
+
+      window.addEventListener("pageshow", () => {
+        requestAnimationFrame(() => requestAnimationFrame(forceCrispHeaderAfterLaunch));
+      });
+
+
+      function removeLaunchLayersCompletely() {
+        const splash = document.getElementById("launchSplash");
+        const logo = document.getElementById("launchLogo");
+
+        if (logo) {
+          logo.style.removeProperty("transform");
+          logo.style.removeProperty("-webkit-transform");
+          logo.style.removeProperty("filter");
+          logo.style.removeProperty("-webkit-filter");
+          logo.style.removeProperty("opacity");
+          logo.style.removeProperty("will-change");
+        }
+
+        if (splash) {
+          splash.classList.add("launchRemoved");
+          splash.hidden = true;
+          splash.style.display = "none";
+          splash.style.visibility = "hidden";
+          splash.style.opacity = "0";
+          splash.style.pointerEvents = "none";
+
+          // Remove the fixed splash node entirely on the next frame.
+          requestAnimationFrame(() => {
+            if (splash.isConnected) splash.remove();
+          });
+        }
+
+        document.body.classList.remove(
+          "launchPending",
+          "launchReady",
+          "launchWordmarkLanded"
+        );
+      }
+
+      window.addEventListener("pageshow", () => {
+        if (!document.body.classList.contains("installGateActive")) {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              const splash = document.getElementById("launchSplash");
+              if (splash && document.body.classList.contains("launchWordmarkLanded")) {
+                removeLaunchLayersCompletely();
+              }
+            });
+          });
+        }
+      });
 
 </script>
   </body>
