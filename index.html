@@ -3604,6 +3604,20 @@ body::before {
         margin-top: 20px;
         flex: 0 0 auto;
       }
+
+      #aboutDialog .aboutClosePill {
+        background: color-mix(in srgb, var(--card2) 86%, transparent);
+        border: 1px solid var(--divider) !important;
+        border-radius: 17px;
+        color: var(--text);
+        box-shadow: none !important;
+      }
+
+      html[data-mode="light"] #aboutDialog .aboutClosePill {
+        background: var(--card2);
+        border-color: rgba(23, 32, 51, 0.18) !important;
+        color: var(--text);
+      }
       .whatsNewContent > .row {
         padding-bottom: 12px;
         border-bottom: 1px solid var(--divider);
@@ -3621,81 +3635,6 @@ body::before {
       }
       .whatsNewItem:last-child {
         border-bottom: 0;
-      }
-
-    
-      /* v0.8.2 reminder time width correction */
-      .reminderTimeControl {
-        min-width: 0;
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-      }
-
-      #reminderTime.nativeTimePicker {
-        display: block;
-        min-width: 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-      }
-
-      @supports (-webkit-touch-callout: none) {
-        #reminderTime.nativeTimePicker {
-          -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-        }
-      }
-
-    
-      /* v0.8.2 definitive reminder-time sizing fix.
-         Keep type=time for the native iOS picker, but remove Safari's oversized
-         intrinsic field chrome and draw the visible pill ourselves. */
-      .reminderTimeControl {
-        display: block !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        min-width: 0 !important;
-        overflow: hidden;
-        box-sizing: border-box;
-      }
-
-      #reminderTime.nativeTimePicker {
-        display: block !important;
-        inline-size: 100% !important;
-        width: 100% !important;
-        max-inline-size: 100% !important;
-        max-width: 100% !important;
-        min-inline-size: 0 !important;
-        min-width: 0 !important;
-        box-sizing: border-box !important;
-        -webkit-appearance: none !important;
-        appearance: none !important;
-        border: 1px solid var(--divider) !important;
-        border-radius: 12px !important;
-        background: var(--card2) !important;
-        color: var(--control-text) !important;
-        padding: 12px 14px !important;
-        margin: 0 !important;
-        font: inherit;
-        line-height: 1.2;
-        overflow: hidden;
-      }
-
-      #reminderTime.nativeTimePicker::-webkit-date-and-time-value {
-        text-align: left;
-        min-width: 0;
-      }
-
-      #reminderTime.nativeTimePicker::-webkit-calendar-picker-indicator {
-        margin: 0;
-        padding: 0;
-      }
-
-      @supports (-webkit-touch-callout: none) {
-        #reminderTime.nativeTimePicker {
-          font-size: 16px !important;
-        }
       }
 
     </style>
@@ -4228,8 +4167,16 @@ body::before {
             <span class="muted">Design &amp; engineering</span>
             <strong id="aboutAppCreator"></strong>
           </div>
+          <div style="text-align:left;padding-top:4px">
+            <a
+              href="https://momntum-app.github.io/MyApp/story.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              style="display:inline !important;width:auto !important;min-width:0 !important;height:auto !important;min-height:0 !important;background:transparent !important;border:none !important;border-top:none !important;border-right:none !important;border-bottom:none !important;border-left:none !important;border-radius:0 !important;padding:0 !important;margin:0 !important;box-shadow:none !important;outline:none;color:var(--accent);font-size:13px;font-weight:700;text-decoration:underline;text-underline-offset:3px"
+            >How it came to this</a>
+          </div>
         </div>
-        <button class="btn ghost full infoDialogClose" id="aboutCloseBtn">Close</button>
+        <button class="btn ghost full infoDialogClose aboutClosePill" id="aboutCloseBtn">Close</button>
       </div>
     </dialog>
 
