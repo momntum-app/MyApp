@@ -6149,6 +6149,141 @@ body::before {
         requestAnimationFrame(() => syncExerciseSvgObjectStyles());
       }
 
+      // v0.7.0 hotfix: restore the active-workout renderer that was
+      // accidentally dropped while integrating the external SVG asset library.
+      // Animation markup is deliberately optional so a missing/broken SVG can
+      // never prevent the workout, countdown or timer from starting.
+      function exCard(ex, { current = false, setsComplete = false, exerciseDone = false } = {}) {
+        if (!ex) return "";
+        const actionLabel = setsComplete ? "Begin next exercise" : "Complete all sets first";
+        let motionMarkup = "";
+        if (current) {
+          try {
+            motionMarkup = exerciseAnimationMarkup(ex) || "";
+          } catch (error) {
+            console.warn("MOMNTUM exercise animation unavailable", ex.name, error);
+          }
+        }
+        return `<div class="exerciseItem${current ? " currentExercise" : ""}" data-exid="${ex.id}" data-expandable="true" role="button" tabindex="0" aria-expanded="false"><div class="exerciseText"><div class="row"><div><div class="exName">${ex.name}</div><div class="exMuscles">${ex.primary} · ${ex.equipment}</div></div><span class="exerciseSummaryActions"><span class="pill">${ex.sets} x ${ex.reps}</span>${exerciseChevronMarkup()}</span></div>${motionMarkup}<div class="setGrid">${Array.from({ length: parseInt(ex.sets) || 1 }, (_, i) => `<button class="setBtn" data-set="${i}">Complete Set ${i + 1}</button>`).join("")}</div>${current ? `<button class="currentExerciseComplete" type="button" data-complete-current="${ex.id}" ${setsComplete ? "" : "disabled"}><span class="currentExerciseCompleteBox" aria-hidden="true">→</span><span>${actionLabel}</span></button>` : ""}<div class="detail"><p><strong>Description:</strong> ${ex.description}</p><p><strong>Tips:</strong> ${ex.tips}</p><p><strong>Common mistakes:</strong> ${ex.mistakes}</p><p><strong>Progression:</strong> ${ex.progression}</p><p><strong>Regression:</strong> ${ex.regression}</p></div></div></div>`;
+      }
+
+      function renderActiveWorkout() {
+        const a = state.active;
+        if (!a) return;
+
+        const baseWorkout = workouts.find((x) => x.id === a.workoutId);
+        const w = a.resolvedWorkout || (baseWorkout ? resolveWorkout(baseWorkout) : null);
+        if (!w) {
+          console.error("MOMNTUM active workout could not be resolved", a.workoutId);
+          return;
+        }
+
+        $("activeWorkoutTitle").textContent = w.day + " - " + w.title;
+        $("activeMeta").textContent = w.duration + " min · " + (w.activeEquipment || "Bodyweight only");
+        $("workoutTimer").textContent = fmtTime(a.elapsed || 0);
+        $("restTimer").textContent = fmtTime(Math.max(0, a.restRemaining ?? state.settings.restDuration));
+        $("pauseWorkoutBtn").textContent = a.paused ? "Resume" : "Pause";
+        $("resumeWorkoutBtn").classList.toggle("hidden", !a.restRunning);
+        $("timerStatus").textContent = a.paused ? "Paused" : a.restRunning ? "Resting" : "Training";
+        const targetSeconds = Math.max(1, (w.duration || 20) * 60);
+        $("timerProgressFill").style.width = Math.min(100, ((a.elapsed || 0) / targetSeconds) * 100) + "%";
+        $("workoutNotes").value = a.notes || "";
+
+        const orderedExercises = [...w.warm, ...w.main].map(byName).filter(Boolean);
+        if (!a.currentExerciseId || !orderedExercises.some((ex) => String(ex.id) === String(a.currentExerciseId) && !a.exercises[ex.id]?.done)) {
+          const firstPending = orderedExercises.find((ex) => !(a.exercises[ex.id]?.done));
+          a.currentExerciseId = firstPending ? String(firstPending.id) : null;
+        }
+        const currentEx = orderedExercises.find((ex) => String(ex.id) === String(a.currentExerciseId)) || null;
+        const nextCurrentId = currentEx ? String(currentEx.id) : null;
+        const currentChanged = nextCurrentId !== activeCurrentExerciseId;
+        activeCurrentExerciseId = nextCurrentId;
+
+        const cardForName = (name) => {
+          const ex = byName(name);
+          if (!ex) return "";
+          const progress = a.exercises[ex.id] || (a.exercises[ex.id] = { sets: [], done: false });
+          const requiredSets = parseInt(ex.sets) || 1;
+          return exCard(ex, {
+            current: !!currentEx && ex.id === currentEx.id,
+            setsComplete: progress.sets.filter(Boolean).length >= requiredSets,
+            exerciseDone: progress.done,
+          });
+        };
+
+        $("warmupContainer").innerHTML = w.warm.map(cardForName).join("");
+        $("activeExercises").innerHTML = w.main.map(cardForName).join("");
+
+        document.querySelectorAll("#page-active .exerciseItem").forEach((item) => {
+          const id = item.dataset.exid;
+          const p = a.exercises[id] || (a.exercises[id] = { sets: [], done: false });
+          item.classList.toggle("exerciseDone", !!p.done);
+
+          const ex = exercises.find((e) => String(e.id) === String(id));
+          const requiredSets = parseInt(ex?.sets) || 1;
+          const firstIncompleteSet = Array.from({ length: requiredSets }, (_, index) => index).find((index) => !p.sets[index]);
+          const restLocked = !!a.restRunning;
+
+          item.querySelectorAll(".setBtn").forEach((btn) => {
+            const setIndex = +btn.dataset.set;
+            const setDone = !!p.sets[setIndex];
+            btn.classList.toggle("done", setDone);
+            btn.classList.toggle("inProgress", !restLocked && !p.done && !setDone && setIndex === firstIncompleteSet);
+            btn.classList.toggle("restLocked", restLocked && !setDone);
+            btn.textContent = setDone ? `Set ${setIndex + 1} complete` : `Complete Set ${setIndex + 1}`;
+            btn.disabled = !!p.done || setDone || restLocked;
+            btn.onclick = (event) => {
+              event.stopPropagation();
+              toggleSet(id, setIndex);
+            };
+          });
+
+          const complete = item.querySelector("[data-complete-current]");
+          if (complete) {
+            complete.onclick = (event) => {
+              event.stopPropagation();
+              completeCurrentExercise(id);
+            };
+          }
+
+          const setExpanded = (shouldOpen) => {
+            document.querySelectorAll("#page-active .exerciseItem.open").forEach((other) => {
+              if (other !== item) {
+                other.classList.remove("open");
+                other.setAttribute("aria-expanded", "false");
+              }
+            });
+            item.classList.toggle("open", shouldOpen);
+            item.setAttribute("aria-expanded", String(shouldOpen));
+            activeExpandedExerciseId = shouldOpen ? id : null;
+          };
+
+          if (activeExpandedExerciseId === id) {
+            item.classList.add("open");
+            item.setAttribute("aria-expanded", "true");
+          }
+          item.onclick = (event) => {
+            if (event.target.closest("button")) return;
+            setExpanded(!item.classList.contains("open"));
+          };
+          item.onkeydown = (event) => {
+            if ((event.key === "Enter" || event.key === " ") && !event.target.closest("button")) {
+              event.preventDefault();
+              setExpanded(!item.classList.contains("open"));
+            }
+          };
+        });
+
+        scheduleExerciseSvgHydration();
+        saveState();
+
+        if (currentChanged && nextCurrentId) {
+          window.requestAnimationFrame(() => window.setTimeout(() => {
+            document.querySelector(`#page-active .exerciseItem[data-exid="${nextCurrentId}"]`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+          }, 80));
+        }
+      }
+
       function renderLibrary() {
         const filters = [
           "All",
