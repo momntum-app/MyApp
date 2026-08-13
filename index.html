@@ -3563,6 +3563,66 @@ body::before {
         -webkit-transform: none !important;
       }
 
+    
+      /* v0.8.0 iPhone header rendering fix v3
+         iOS can rasterise the non-scrolling header when the entire application
+         is a position:fixed composited layer. Keep the same internal layout but
+         make the app a normal full-height element on WebKit touch devices. */
+      @supports (-webkit-touch-callout: none) {
+        .app {
+          position: relative !important;
+          inset: auto !important;
+          width: 100% !important;
+          height: 100lvh !important;
+          min-height: 100lvh !important;
+          margin: 0 auto !important;
+          transform: none !important;
+          -webkit-transform: none !important;
+          will-change: auto !important;
+          filter: none !important;
+          -webkit-filter: none !important;
+        }
+
+        .topbar {
+          position: relative !important;
+          z-index: 2;
+          transform: none !important;
+          -webkit-transform: none !important;
+          will-change: auto !important;
+          isolation: auto !important;
+          contain: none !important;
+          -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+        }
+
+        .brand,
+        .brand > div,
+        #headerWordmark,
+        #levelIndicator {
+          transform: none !important;
+          -webkit-transform: none !important;
+          will-change: auto !important;
+          filter: none !important;
+          -webkit-filter: none !important;
+        }
+
+        #headerWordmark img {
+          transform: none !important;
+          -webkit-transform: none !important;
+          filter: none !important;
+          -webkit-filter: none !important;
+          backface-visibility: visible !important;
+          -webkit-backface-visibility: visible !important;
+        }
+
+        #levelText,
+        #todayLine {
+          -webkit-font-smoothing: subpixel-antialiased;
+          text-rendering: optimizeLegibility;
+          text-shadow: none !important;
+        }
+      }
+
     </style>
     <link rel="icon" href="favicon.ico?v=0.8.0" sizes="any" />
     <link rel="icon" href="momntum-mark.svg?v=0.8.0" type="image/svg+xml" />
