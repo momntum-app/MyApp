@@ -3511,6 +3511,58 @@ body::before {
         }
       }
 
+    
+      /* v0.8.0 iOS launch compositing correction — definitive fix.
+         Keep the app fully rendered at native sharpness underneath the opaque splash. */
+      body.launchPending > :not(#launchSplash),
+      body.launchReady > :not(#launchSplash) {
+        opacity: 1 !important;
+        transition: none !important;
+      }
+
+      body.launchPending #app,
+      body.launchReady #app,
+      #app {
+        opacity: 1 !important;
+        filter: none !important;
+        -webkit-filter: none !important;
+        transition: none !important;
+      }
+
+      /* Hide only the header wordmark during the flying-N handoff.
+         visibility avoids rasterising the header through an opacity animation. */
+      body.launchPending #headerWordmark,
+      body.launchReady #headerWordmark {
+        visibility: hidden !important;
+        opacity: 1 !important;
+        transition: none !important;
+      }
+
+      body.launchWordmarkLanded #headerWordmark,
+      body:not(.launchPending):not(.launchReady) #headerWordmark {
+        visibility: visible !important;
+        opacity: 1 !important;
+        transition: none !important;
+      }
+
+      /* Keep the rest of the header permanently outside launch animation compositing. */
+      .topbar,
+      .brand,
+      .brand > div,
+      #levelIndicator {
+        opacity: 1 !important;
+        filter: none !important;
+        -webkit-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+        will-change: auto !important;
+      }
+
+      #levelIndicator {
+        transform: none !important;
+        -webkit-transform: none !important;
+      }
+
     </style>
     <link rel="icon" href="favicon.ico?v=0.8.0" sizes="any" />
     <link rel="icon" href="momntum-mark.svg?v=0.8.0" type="image/svg+xml" />
@@ -7292,7 +7344,7 @@ body::before {
           if (reduceMotion) {
             document.body.classList.add("launchWordmarkLanded");
             splash.remove();
-            document.body.classList.remove("launchReady", "launchWordmarkLanded");
+            document.body.classList.remove("launchReady", "launchWordmarkLanded"); forceCrispHeaderAfterLaunch();
             openOnboarding(false);
             return;
           }
@@ -7340,7 +7392,7 @@ body::before {
               easing: "ease-out"
             }).finished.then(() => {
               splash.remove();
-              document.body.classList.remove("launchReady", "launchWordmarkLanded");
+              document.body.classList.remove("launchReady", "launchWordmarkLanded"); forceCrispHeaderAfterLaunch();
               openOnboarding(false);
             });
           });
@@ -7361,7 +7413,7 @@ body::before {
         document.body.classList.remove("launchPending");
         document.body.classList.add("launchReady");
         splash.remove();
-        document.body.classList.remove("launchReady");
+        document.body.classList.remove("launchReady"); forceCrispHeaderAfterLaunch();
         openOnboarding(false);
       }, 5000);
 
@@ -7394,6 +7446,30 @@ body::before {
         }
 
         toast("Workout regenerated");
+      });
+
+
+      function forceCrispHeaderAfterLaunch() {
+        const app = document.getElementById("app");
+        const topbar = document.querySelector(".topbar");
+        const wordmark = document.getElementById("headerWordmark");
+        const level = document.getElementById("levelIndicator");
+        [app, topbar, wordmark, level].forEach((el) => {
+          if (!el) return;
+          el.style.removeProperty("opacity");
+          el.style.removeProperty("filter");
+          el.style.removeProperty("-webkit-filter");
+          el.style.removeProperty("backdrop-filter");
+          el.style.removeProperty("-webkit-backdrop-filter");
+          el.style.removeProperty("transform");
+          el.style.removeProperty("-webkit-transform");
+          el.style.removeProperty("will-change");
+        });
+        if (wordmark) wordmark.style.visibility = "visible";
+      }
+
+      window.addEventListener("pageshow", () => {
+        requestAnimationFrame(() => requestAnimationFrame(forceCrispHeaderAfterLaunch));
       });
 
 </script>
