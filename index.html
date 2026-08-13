@@ -3623,6 +3623,30 @@ body::before {
         border-bottom: 0;
       }
 
+    
+      /* v0.8.2 reminder time width correction */
+      .reminderTimeControl {
+        min-width: 0;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      #reminderTime.nativeTimePicker {
+        display: block;
+        min-width: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      @supports (-webkit-touch-callout: none) {
+        #reminderTime.nativeTimePicker {
+          -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+        }
+      }
+
     </style>
     <link rel="icon" href="favicon.ico?v=0.8.2" sizes="any" />
     <link rel="icon" href="momntum-mark.svg?v=0.8.2" type="image/svg+xml" />
