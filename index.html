@@ -3453,6 +3453,64 @@ body::before {
         margin: 10px 2px 0;
       }
 
+    
+      /* v0.8.0 iOS header crispness fix
+         Avoid leaving the app/header on a composited translucent layer after launch. */
+      body.launchReady > #app {
+        opacity: 1 !important;
+        transition: none !important;
+      }
+
+      .topbar {
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+        opacity: 1;
+      }
+
+      #headerWordmark,
+      #headerWordmark img,
+      #levelIndicator,
+      #levelIndicator * {
+        opacity: 1;
+        -webkit-filter: none !important;
+        filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+      }
+
+      /* The landing hand-off should be immediate once the flying N reaches its target.
+         Avoid an opacity tween on the SVG wordmark, which can look soft on iOS. */
+      body.launchWordmarkLanded #headerWordmark {
+        opacity: 1 !important;
+        transition: none !important;
+      }
+
+      /* Use an opaque surface for the level pill instead of a translucent wash. */
+      html[data-mode="dark"] .level {
+        background: var(--card2);
+        border-color: rgba(255, 255, 255, 0.12);
+      }
+
+      html[data-mode="light"] .level {
+        background: #ffffff;
+        border-color: rgba(23, 32, 51, 0.18);
+      }
+
+      @supports (-webkit-touch-callout: none) {
+        #headerWordmark img {
+          image-rendering: auto;
+          -webkit-font-smoothing: antialiased;
+        }
+
+        .topbar,
+        .brand,
+        #headerWordmark,
+        #levelIndicator {
+          -webkit-transform: none !important;
+          transform: none !important;
+        }
+      }
+
     </style>
     <link rel="icon" href="favicon.ico?v=0.8.0" sizes="any" />
     <link rel="icon" href="momntum-mark.svg?v=0.8.0" type="image/svg+xml" />
