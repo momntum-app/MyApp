@@ -3567,20 +3567,32 @@ body::before {
         outline-offset: 2px;
       }
       .reminderTimeControl {
-        display: grid;
-        gap: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
         margin-top: 16px;
+        min-width: 0;
+      }
+      .reminderTimeControl > .small {
+        flex: 1 1 auto;
+        min-width: 0;
       }
       #reminderTime.nativeTimePicker {
-        display: block;
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        inline-size: 100%;
-        max-inline-size: 100%;
-        min-inline-size: 0;
-        min-height: 52px;
+        display: inline-flex;
+        flex: 0 0 auto;
+        width: auto !important;
+        max-width: 132px !important;
+        min-width: 108px !important;
+        inline-size: auto !important;
+        max-inline-size: 132px !important;
+        min-inline-size: 108px !important;
+        min-height: 42px;
+        padding: 7px 10px !important;
+        margin: 0;
         box-sizing: border-box;
+        border-radius: 999px !important;
+        text-align: center;
         overflow: hidden;
         -webkit-appearance: auto !important;
         appearance: auto !important;
