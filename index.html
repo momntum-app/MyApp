@@ -3572,8 +3572,16 @@ body::before {
         margin-top: 16px;
       }
       #reminderTime.nativeTimePicker {
+        display: block;
         width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        inline-size: 100%;
+        max-inline-size: 100%;
+        min-inline-size: 0;
         min-height: 52px;
+        box-sizing: border-box;
+        overflow: hidden;
         -webkit-appearance: auto !important;
         appearance: auto !important;
         color-scheme: light dark;
@@ -6899,6 +6907,9 @@ body::before {
           toast("Rest started");
         }
       }
+      // v0.8.2 hotfix: restore the Home Quick Start binding lost during the latest integration.
+      $("quickStartBtn").onclick = () => startWorkout(suggestedWorkout().id, false);
+
       $("finishWorkoutBtn").onclick = finishWorkout;
       function finishWorkout() {
         if (!state.active) return;
