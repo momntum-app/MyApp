@@ -3793,6 +3793,199 @@ body::before {
       .postWorkoutExercise { display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--divider);border-radius:15px;background:var(--card2); }
       @media (max-width:430px){ .difficultyChoices{grid-template-columns:repeat(2,1fr)} }
 
+    
+      /* v0.8.4.1 integrated MOMNTUM story */
+      .aboutStoryLink {
+        display: inline !important;
+        width: auto !important;
+        min-width: 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        background: transparent !important;
+        border: none !important;
+        border-top: none !important;
+        border-right: none !important;
+        border-bottom: none !important;
+        border-left: none !important;
+        border-radius: 0 !important;
+        outline: none !important;
+        color: var(--accent) !important;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: inherit;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        box-shadow: none !important;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .aboutStoryLink:hover,
+      .aboutStoryLink:active,
+      .aboutStoryLink:focus,
+      .aboutStoryLink:focus-visible {
+        background: transparent !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+      }
+      .storyDialog {
+        width: min(100vw, 1100px);
+        height: 100dvh;
+        max-width: none;
+        max-height: none;
+        margin: 0 auto;
+        padding: 0;
+        border-radius: 0;
+        background: var(--bg);
+        color: var(--text);
+        overflow: hidden;
+      }
+      .storyDialog::backdrop { background: rgba(0,0,0,.72); }
+      .storyDialogShell {
+        height: 100%;
+        min-height: 0;
+        display: grid;
+        grid-template-rows: auto minmax(0,1fr);
+        background:
+          radial-gradient(circle at 50% -10%, color-mix(in srgb, var(--brand-copper) 12%, transparent), transparent 34rem),
+          linear-gradient(180deg,var(--bg),var(--bg2));
+      }
+      .storyDialogHeader {
+        position: relative;
+        z-index: 3;
+        min-height: 64px;
+        padding: max(12px, env(safe-area-inset-top)) 18px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        border-bottom: 1px solid var(--divider);
+        background: color-mix(in srgb,var(--bg) 92%, transparent);
+      }
+      .storyDialogBrand { display:flex; align-items:center; gap:10px; letter-spacing:.14em; font-size:13px; }
+      .storyDialogBrand img { width:30px; height:30px; display:block; object-fit:contain; }
+      .storyDialogClose { min-height:38px; }
+      .storyDialogScroll {
+        min-height:0;
+        overflow-y:auto;
+        overscroll-behavior-y:contain;
+        -webkit-overflow-scrolling:touch;
+        width:min(calc(100% - 36px),780px);
+        margin:0 auto;
+        padding:34px 0 max(52px,calc(env(safe-area-inset-bottom) + 30px));
+      }
+      .storyHero { padding:12px 0 56px; }
+      .storyEyebrow { margin:0 0 16px; color:var(--brand-copper-hi); font-size:12px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
+      .storyHero h1 { max-width:720px; margin:0; font-size:clamp(42px,8vw,72px); line-height:.98; letter-spacing:-.055em; font-weight:850; }
+      .storyHero h1 span { color:var(--brand-copper-hi); }
+      .storyLead { max-width:650px; margin:28px 0 0; color:var(--muted); font-size:clamp(19px,3vw,23px); line-height:1.48; letter-spacing:-.015em; }
+      .storySections { border-top:1px solid var(--divider); }
+      .storySection { padding:46px 0; border-bottom:1px solid var(--divider); }
+      .storySectionNumber { margin-bottom:13px; color:var(--muted); font-size:11px; font-weight:750; letter-spacing:.14em; text-transform:uppercase; }
+      .storySection h2,.storyManifesto h2 { margin:0 0 20px; font-size:clamp(27px,5vw,36px); line-height:1.08; letter-spacing:-.035em; }
+      .storySection p,.storyManifesto p { margin:0 0 20px; color:color-mix(in srgb,var(--text) 76%,var(--muted)); font-size:17px; line-height:1.72; }
+      .storySection p:last-child,.storyManifesto p:last-child { margin-bottom:0; }
+      .storyEvolution { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:28px 0 4px; }
+      .storyStage { min-height:92px; padding:15px 13px; border:1px solid var(--divider); border-radius:15px; background:var(--card); }
+      .storyStage span { display:block; margin-bottom:9px; color:var(--brand-copper-hi); font-size:10px; font-weight:800; letter-spacing:.12em; }
+      .storyStage b { font-size:14px; line-height:1.25; }
+      .storyPrinciple { margin:30px 0; padding:26px; border:1px solid color-mix(in srgb,var(--brand-copper) 38%,var(--divider)); border-radius:20px; background:linear-gradient(145deg,color-mix(in srgb,var(--brand-copper) 15%,transparent),color-mix(in srgb,var(--card) 62%,transparent)); }
+      .storyPrinciple p { color:var(--text); font-size:clamp(22px,4vw,29px); line-height:1.35; letter-spacing:-.025em; font-weight:700; }
+      .storyQuestion { padding-left:22px; border-left:3px solid var(--brand-copper-hi); color:var(--text) !important; font-size:21px !important; line-height:1.5 !important; font-weight:650; }
+      .storyManifesto { padding:64px 0 26px; text-align:center; }
+      .storyManifesto img { width:72px; height:72px; display:block; object-fit:contain; margin:0 auto 24px; }
+      .storyManifesto h2 { max-width:690px; margin-left:auto; margin-right:auto; font-size:clamp(31px,6vw,48px); }
+      .storyManifesto p { max-width:620px; margin-left:auto; margin-right:auto; }
+      .storyTagline { margin-top:42px; padding-top:30px; border-top:1px solid var(--divider); color:var(--text); font-size:clamp(18px,4vw,23px); font-weight:800; letter-spacing:-.02em; }
+      .storyTagline span { color:var(--brand-copper-hi); }
+      .storyFooter { padding-top:54px; color:var(--muted); text-align:center; font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
+      @media (max-width:620px) {
+        .storyDialogScroll { width:min(calc(100% - 30px),780px); }
+        .storyHero { padding-bottom:50px; }
+        .storySection { padding:39px 0; }
+        .storyEvolution { grid-template-columns:repeat(2,1fr); }
+        .storyStage { min-height:84px; }
+      }
+
+      /* v0.8.4.1 brand promise + story timeline refinement */
+      .momntumPromiseLine {
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+        flex-wrap:wrap;
+        color:#000 !important;
+      }
+      .momntumPromiseLine > span:not(.promiseSeparator) { color:#000 !important; }
+      .momntumPromiseLine .promiseSeparator {
+        color:var(--brand-copper) !important;
+        font-weight:950;
+      }
+      .storyTagline { color:#000 !important; }
+      .storyTagline span { color:#000 !important; }
+      .storyTagline .promiseSeparator { color:var(--brand-copper) !important; }
+
+      .storyEvolution {
+        position:relative;
+        display:grid;
+        grid-template-columns:1fr;
+        gap:0;
+        margin:30px 0 6px 4px;
+        padding-left:34px;
+      }
+      .storyEvolution::before {
+        content:"";
+        position:absolute;
+        left:10px;
+        top:9px;
+        bottom:9px;
+        width:2px;
+        background:color-mix(in srgb,var(--brand-copper) 56%,var(--divider));
+      }
+      .storyStage {
+        position:relative;
+        min-height:0;
+        padding:0 0 24px;
+        border:0;
+        border-radius:0;
+        background:transparent;
+        display:grid;
+        grid-template-columns:34px minmax(0,1fr);
+        align-items:baseline;
+        gap:10px;
+      }
+      .storyStage:last-child { padding-bottom:0; }
+      .storyStage::before {
+        content:"";
+        position:absolute;
+        left:-28px;
+        top:5px;
+        width:10px;
+        height:10px;
+        border-radius:50%;
+        background:var(--brand-copper);
+        box-shadow:0 0 0 4px var(--card);
+      }
+      .storyStage span {
+        display:block;
+        margin:0;
+        color:var(--brand-copper-hi);
+        font-size:11px;
+        font-weight:850;
+        letter-spacing:.10em;
+      }
+      .storyStage b {
+        font-size:15px;
+        line-height:1.35;
+      }
+      @media (max-width:620px) {
+        .storyEvolution { grid-template-columns:1fr; }
+        .storyStage { min-height:0; }
+      }
+
     </style>
     <link rel="icon" href="favicon.ico?v=0.8.3" sizes="any" />
     <link rel="icon" href="momntum-mark.svg?v=0.8.3" type="image/svg+xml" />
@@ -3886,13 +4079,13 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.8.4</p>
+        <p class="testerInstallVersion">v0.8.4.1</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
       <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.8.4 SVG assets</div>
+      <div class="launchVersion">v0.8.4.1 SVG assets</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
@@ -4236,8 +4429,8 @@ body::before {
                 class="small muted"
                 style="text-align:left;margin:6px 0 0;"
               ></p>
-              <div class="aboutPromise">
-                No Ads • No Subscriptions • Yours Forever
+              <div class="aboutPromise momntumPromiseLine">
+                <span>No Ads</span><span class="promiseSeparator" aria-hidden="true">&gt;</span><span>No Subscriptions</span><span class="promiseSeparator" aria-hidden="true">&gt;</span><span>Yours Forever</span>
               </div>
               <div class="row" style="margin-top:14px">
                 <span class="muted">Version</span>
@@ -4359,15 +4552,131 @@ body::before {
             <strong id="aboutAppCreator"></strong>
           </div>
           <div style="text-align:left;padding-top:4px">
-            <a
-              href="https://momntum-app.github.io/MyApp/story.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              style="display:inline !important;width:auto !important;min-width:0 !important;height:auto !important;min-height:0 !important;background:transparent !important;border:none !important;border-top:none !important;border-right:none !important;border-bottom:none !important;border-left:none !important;border-radius:0 !important;padding:0 !important;margin:0 !important;box-shadow:none !important;outline:none;color:var(--accent);font-size:13px;font-weight:700;text-decoration:underline;text-underline-offset:3px"
-            >How it came to this</a>
+            <button
+              id="openStoryBtn"
+              type="button"
+              class="aboutStoryLink"
+            >How it came to this</button>
           </div>
         </div>
         <button class="btn ghost full infoDialogClose aboutClosePill" id="aboutCloseBtn">Close</button>
+      </div>
+    </dialog>
+
+
+    <dialog id="storyDialog" class="storyDialog">
+      <div class="storyDialogShell">
+        <header class="storyDialogHeader">
+          <div class="storyDialogBrand">
+            <img src="momntum-mark.svg?v=0.8.4.1" alt="" aria-hidden="true" />
+            <strong>MOMNTUM</strong>
+          </div>
+          <button class="btn sm ghost storyDialogClose" id="storyCloseBtn" type="button">Close</button>
+        </header>
+
+        <div class="storyDialogScroll">
+          <section class="storyHero">
+            <p class="storyEyebrow">Why MOMNTUM exists</p>
+            <h1>Home training shouldn't need to be <span>complicated.</span></h1>
+            <p class="storyLead">
+              MOMNTUM started with a simple frustration: getting fitter at home shouldn't
+              mean expensive memberships, cluttered apps or another monthly subscription.
+            </p>
+          </section>
+
+          <div class="storySections">
+            <section class="storySection">
+              <div class="storySectionNumber">01 — The beginning</div>
+              <h2>It wasn't supposed to become an app.</h2>
+              <p>
+                The original idea was simply to create a useful collection of structured
+                calisthenics workouts that could be followed at home.
+              </p>
+              <p>
+                That idea became a PDF, then an interactive PowerPoint, then a browser-based
+                training tool. Eventually, almost organically, it grew into <strong>MOMNTUM</strong>.
+              </p>
+              <div class="storyEvolution" aria-label="MOMNTUM development evolution">
+                <div class="storyStage"><span>01</span><b>Workout PDF</b></div>
+                <div class="storyStage"><span>02</span><b>Interactive PowerPoint</b></div>
+                <div class="storyStage"><span>03</span><b>Browser training tool</b></div>
+                <div class="storyStage"><span>04</span><b>MOMNTUM</b></div>
+              </div>
+            </section>
+
+            <section class="storySection">
+              <div class="storySectionNumber">02 — Built through iteration</div>
+              <h2>Hundreds of hours. Dozens of iterations.</h2>
+              <p>
+                Almost every part of the experience has been designed, tested, questioned
+                and rebuilt — workout generation, equipment-aware training, timers,
+                progression, onboarding, visual design, sound and a bespoke exercise
+                animation system.
+              </p>
+              <p>
+                MOMNTUM wasn't conceived as a finished software product. It became one
+                through iteration: keeping what worked, rebuilding what didn't and removing
+                things that didn't earn their place.
+              </p>
+            </section>
+
+            <section class="storySection">
+              <div class="storySectionNumber">03 — Ownership</div>
+              <h2>Fitness shouldn't be rented forever.</h2>
+              <p>
+                Fitness apps increasingly turn exercise into a service: accounts, adverts,
+                premium tiers, locked features and subscriptions that continue for as long
+                as you want access.
+              </p>
+              <div class="storyPrinciple"><p>Buy it once. Own it. Train with it.</p></div>
+              <p>
+                MOMNTUM was created as an alternative. <strong>No advertising. No recurring
+                subscription.</strong> No artificial feature restrictions designed to push
+                an upgrade.
+              </p>
+            </section>
+
+            <section class="storySection">
+              <div class="storySectionNumber">04 — The product ethos</div>
+              <h2>Every feature has to justify its place.</h2>
+              <p>
+                MOMNTUM isn't trying to become a social network, a lifestyle platform or a
+                replacement for a personal trainer. It doesn't need feeds, leaderboards or
+                endless metrics.
+              </p>
+              <p class="storyQuestion">
+                Does this make it easier to start a workout, complete it and come back again?
+              </p>
+              <p>
+                That question has shaped the app. Keep the interface focused. Keep decisions
+                simple. Use equipment if you have it; train without it if you don't. Provide
+                enough guidance to keep someone moving without burying them beneath information.
+              </p>
+            </section>
+
+            <section class="storySection">
+              <div class="storySectionNumber">05 — Knowing what to leave out</div>
+              <h2>More features don't automatically make a better app.</h2>
+              <p>
+                Features have been added, removed, redesigned and sometimes deliberately
+                parked when they didn't improve the core experience.
+              </p>
+              <p>
+                MOMNTUM hasn't been built by continually adding more. Much of its identity
+                has come from deciding <strong>what it doesn't need to be.</strong>
+              </p>
+            </section>
+          </div>
+
+          <section class="storyManifesto">
+            <img src="momntum-mark.svg?v=0.8.4.1" alt="MOMNTUM logo" />
+            <h2>From a personal workout guide to an independent fitness app.</h2>
+            <p>The technology changed. The ambition grew. The original idea didn't.</p>
+            <p><strong>Make home training simple enough to start, useful enough to stick with, and something you can actually own.</strong></p>
+            <div class="storyTagline momntumPromiseLine"><span>No Ads</span><span class="promiseSeparator" aria-hidden="true">&gt;</span><span>No Subscriptions</span><span class="promiseSeparator" aria-hidden="true">&gt;</span><span>Yours Forever</span></div>
+          </section>
+          <footer class="storyFooter">MOMNTUM</footer>
+        </div>
       </div>
     </dialog>
 
@@ -4461,13 +4770,14 @@ body::before {
       const STORAGE_KEY = "homeStrength.v1";
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.8.4",
+        version: "0.8.4.1",
         buildDate: "17 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
         description: "Personal offline calisthenics training companion."
       };
       const CHANGELOG = [
+        "Integrated How it came to this directly into MOMNTUM so the story is available offline without opening a website",
         "Added family-level favourite exercises across Library, active workouts and post-workout review",
         "Added per-variant favourite exclusions so users can keep a movement family starred while excluding individual variants from favourite-driven selection",
         "Added optional exercise difficulty tailoring with Easy, Medium and Hard settings",
@@ -7581,6 +7891,13 @@ body::before {
         $("aboutDialog").showModal();
       };
       $("aboutCloseBtn").onclick = () => $("aboutDialog").close();
+      $("openStoryBtn").onclick = () => {
+        $("aboutDialog").close();
+        $("storyDialog").showModal();
+        const storyScroll = $("storyDialog")?.querySelector(".storyDialogScroll");
+        if (storyScroll) storyScroll.scrollTop = 0;
+      };
+      $("storyCloseBtn").onclick = () => $("storyDialog").close();
       $("whatsNewCloseBtn").onclick = () => $("whatsNewDialog").close();
 
       $("onboardingBackBtn").onclick = () => { onboardingStep = Math.max(0, onboardingStep - 1); renderOnboarding(); };
