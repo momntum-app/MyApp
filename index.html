@@ -21,7 +21,7 @@
           const mode = preference === "light" || preference === "dark"
             ? preference
             : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
-          const allowedHues = ["midnight", "ember", "forest", "slate", "carbon"];
+          const allowedHues = ["midnight", "ember", "forest", "slate"];
           const hue = allowedHues.includes(settings.themeHue) ? settings.themeHue : "midnight";
           document.documentElement.dataset.mode = mode;
           document.documentElement.dataset.hue = hue;
@@ -108,10 +108,6 @@
         --accent2: #9aa8ba;
       }
 
-      [data-hue="carbon"] {
-        --accent: #46505f;
-        --accent2: #707b8c;
-      }
       * {
         box-sizing: border-box;
       }
@@ -4093,6 +4089,189 @@ body::before {
         background: #f7f8fa !important;
         border-color: rgba(111,127,150,.34) !important;
       }
+
+
+      /* v0.9.1.9 iOS-inspired neutral glass theme */
+      :root {
+        --system-bg: #f2f2f7;
+        --system-bg-elevated: #ffffff;
+        --system-bg-secondary: #f7f7fa;
+        --glass: rgba(255,255,255,.66);
+        --glass-strong: rgba(255,255,255,.82);
+        --glass-border: rgba(60,60,67,.14);
+        --accent-frost: color-mix(in srgb, var(--accent) 6%, transparent);
+        --accent-frost-strong: color-mix(in srgb, var(--accent) 10%, transparent);
+        --accent-heading: color-mix(in srgb, var(--accent) 78%, var(--text));
+        --surface-shadow: 0 8px 28px rgba(0,0,0,.06);
+      }
+      html[data-mode="dark"] {
+        --system-bg: #000000;
+        --system-bg-elevated: #1c1c1e;
+        --system-bg-secondary: #111113;
+        --glass: rgba(28,28,30,.68);
+        --glass-strong: rgba(28,28,30,.84);
+        --glass-border: rgba(255,255,255,.10);
+        --accent-frost: color-mix(in srgb, var(--accent) 5%, transparent);
+        --accent-frost-strong: color-mix(in srgb, var(--accent) 9%, transparent);
+        --accent-heading: color-mix(in srgb, var(--accent) 72%, #ffffff);
+        --surface-shadow: 0 12px 34px rgba(0,0,0,.24);
+      }
+      html[data-mode="light"] {
+        --bg: var(--system-bg);
+        --bg2: #f8f8fb;
+        --card: rgba(255,255,255,.72);
+        --card2: rgba(255,255,255,.54);
+        --soft: rgba(118,118,128,.12);
+        --text: #1c1c1e;
+        --heading: #111113;
+        --muted: #6e6e73;
+        --control-text: #1c1c1e;
+        --divider: rgba(60,60,67,.15);
+        --nav-bg: rgba(248,248,250,.78);
+      }
+      html[data-mode="dark"] {
+        --bg: var(--system-bg);
+        --bg2: #08080a;
+        --card: rgba(28,28,30,.72);
+        --card2: rgba(44,44,46,.58);
+        --soft: rgba(118,118,128,.18);
+        --text: #f2f2f7;
+        --heading: #ffffff;
+        --muted: #98989d;
+        --control-text: #f2f2f7;
+        --divider: rgba(84,84,88,.42);
+        --nav-bg: rgba(20,20,22,.76);
+      }
+
+      html, body, .app, .topbar {
+        background: var(--system-bg) !important;
+      }
+      body::before {
+        background: linear-gradient(180deg, var(--system-bg), var(--bg2)) !important;
+      }
+      .app {
+        background: linear-gradient(180deg, var(--system-bg), var(--bg2)) !important;
+      }
+      .topbar {
+        background: color-mix(in srgb, var(--system-bg) 92%, transparent) !important;
+        -webkit-backdrop-filter: blur(26px) saturate(150%);
+        backdrop-filter: blur(26px) saturate(150%);
+      }
+
+      h1, h2, .healthCardTitle, .kicker, .timerEyebrow,
+      .workoutCardCollapsedTitle .kicker, .collapsedWorkoutPct,
+      .healthMetricLabel, .guidanceLine strong {
+        color: var(--accent-heading) !important;
+      }
+      h3 { color: var(--heading); }
+
+      .hero, .card, .exerciseItem, .canvasCard, .panel, dialog,
+      .onboardingCard, .storyStage, .testerInstallStep {
+        background:
+          linear-gradient(145deg, var(--accent-frost), transparent 48%),
+          var(--glass) !important;
+        border-color: var(--glass-border) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(145%);
+        backdrop-filter: blur(24px) saturate(145%);
+        box-shadow: var(--surface-shadow) !important;
+      }
+      .hero {
+        background:
+          linear-gradient(145deg, var(--accent-frost-strong), transparent 58%),
+          var(--glass-strong) !important;
+      }
+      #page-home .hero,
+      html[data-mode="light"] #page-home .hero,
+      html[data-mode="dark"] #page-home .hero {
+        background:
+          linear-gradient(145deg, var(--accent-frost-strong), transparent 58%),
+          var(--glass-strong) !important;
+        border-color: color-mix(in srgb, var(--accent) 18%, var(--glass-border)) !important;
+        box-shadow: var(--surface-shadow) !important;
+      }
+
+      .btn, .ghost, .secondary, .weeklyTargetStepper, .equipmentOption,
+      .homeEquipmentControl, .workoutExpandedEquipmentDetail, .pill, .chip,
+      .setBtn, .favouriteLimitButton, .difficultyChoice, .reminderDay span,
+      .postWorkoutExercise, .input, select, textarea {
+        background:
+          linear-gradient(145deg, var(--accent-frost), transparent 62%),
+          color-mix(in srgb, var(--glass-strong) 82%, transparent) !important;
+        border: 1px solid var(--glass-border) !important;
+        color: var(--text);
+        box-shadow: none !important;
+        -webkit-backdrop-filter: blur(18px) saturate(140%);
+        backdrop-filter: blur(18px) saturate(140%);
+      }
+      .primary, .primaryButton, .btnPrimary, button.primary,
+      .timerPanel .btn.primaryTimer {
+        background:
+          linear-gradient(145deg, var(--accent-frost-strong), transparent 62%),
+          var(--glass-strong) !important;
+        color: var(--accent-heading) !important;
+        border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--glass-border)) !important;
+        box-shadow: none !important;
+      }
+      .primary:active, .btn:active {
+        background:
+          linear-gradient(145deg, color-mix(in srgb, var(--accent) 13%, transparent), transparent 62%),
+          var(--glass-strong) !important;
+      }
+
+      .chip.active, .onboardingChoice.selected, .favouriteLimitButton.active,
+      .difficultyChoice.active, .reminderDay input:checked + span, .bodyBalancePill.done {
+        background: color-mix(in srgb, var(--accent) 11%, var(--glass-strong)) !important;
+        color: var(--accent-heading) !important;
+        border-color: color-mix(in srgb, var(--accent) 34%, var(--glass-border)) !important;
+      }
+
+      .nav {
+        background: var(--nav-bg) !important;
+        border-top-color: var(--glass-border) !important;
+        box-shadow: none !important;
+        -webkit-backdrop-filter: blur(28px) saturate(160%);
+        backdrop-filter: blur(28px) saturate(160%);
+      }
+      .navBtn.active {
+        background: color-mix(in srgb, var(--accent) 7%, transparent) !important;
+        color: var(--accent) !important;
+      }
+
+      #page-library .searchBar, #page-library #filterTabs,
+      html[data-mode="light"] #page-library .searchBar,
+      html[data-mode="light"] #page-library #filterTabs {
+        background: color-mix(in srgb, var(--system-bg) 88%, transparent) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(145%) !important;
+        backdrop-filter: blur(24px) saturate(145%) !important;
+      }
+
+      /* Preserve stronger accent hierarchy for active states */
+      #page-active .timerPanel,
+      body.workoutActive #page-active .timerPanel {
+        background:
+          linear-gradient(145deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 58%),
+          var(--glass-strong) !important;
+        border: 2px solid color-mix(in srgb, var(--accent) 78%, var(--glass-border)) !important;
+      }
+      #page-active .exerciseItem.currentExercise {
+        background:
+          linear-gradient(145deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 58%),
+          var(--glass-strong) !important;
+        border-color: color-mix(in srgb, var(--accent) 78%, var(--glass-border)) !important;
+      }
+      #page-workouts #workoutList > .expandableWorkoutCard.open,
+      #page-library .exerciseItem.open {
+        background:
+          linear-gradient(145deg, color-mix(in srgb, var(--accent) 9%, transparent), transparent 58%),
+          var(--glass-strong) !important;
+      }
+
+      .storyDialogShell {
+        background: linear-gradient(180deg, var(--system-bg), var(--bg2)) !important;
+      }
+      .onboardingOverlay {
+        background: linear-gradient(180deg, var(--system-bg), var(--bg2)) !important;
+      }
 </style>
     <link rel="icon" href="favicon.ico?v=0.8.3" sizes="any" />
     <link rel="icon" href="momntum-mark.svg?v=0.8.3" type="image/svg+xml" />
@@ -4186,13 +4365,13 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.9.1.7</p>
+        <p class="testerInstallVersion">v0.9.1.9</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
       <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.9.1.7 animation build</div>
+      <div class="launchVersion">v0.9.1.9 UI build</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
@@ -4450,7 +4629,6 @@ body::before {
                     <option value="ember">Ember</option>
                     <option value="forest">Forest</option>
                     <option value="slate">Slate</option>
-                    <option value="carbon">Carbon</option>
                   </select></label
                 ><label
                   >Sound<select id="soundSelect">
@@ -4879,8 +5057,8 @@ body::before {
       function canonicalExerciseName(name){ return EXERCISE_NAME_ALIASES[name] || name; }
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.9.1.7",
-        buildDate: "17 August 2026",
+        version: "0.9.1.9",
+        buildDate: "20 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
         description: "Personal offline calisthenics training companion."
@@ -6328,7 +6506,7 @@ body::before {
         ].map(([value, label]) =>
           `<button class="onboardingChoice onboardingThemePreview" type="button" data-onboarding-theme="${value}"><span>${label}</span><span class="onboardingChoiceTick">✓</span></button>`
         ).join("");
-        const accents = { midnight: ["Midnight Blue", "#4f78c8"], ember: ["Ember", "#ff7a2f"], forest: ["Forest", "#3f9a71"], slate: ["Slate", "#6f7f96"], carbon: ["Carbon", "#46505f"] };
+        const accents = { midnight: ["Midnight Blue", "#4f78c8"], ember: ["Ember", "#ff7a2f"], forest: ["Forest", "#3f9a71"], slate: ["Slate", "#6f7f96"] };
         $("onboardingAccentChoices").innerHTML = Object.entries(accents).map(([value, item]) =>
           `<button class="onboardingSwatch" type="button" data-onboarding-accent="${value}" style="--swatch:${item[1]}" aria-label="${item[0]}"></button>`
         ).join("");
@@ -6809,7 +6987,7 @@ body::before {
 
       function applyAppearance() {
         const mode = resolvedThemeMode();
-        const hue = ["midnight", "ember", "forest", "slate", "carbon"].includes(
+        const hue = ["midnight", "ember", "forest", "slate"].includes(
           state.settings.themeHue,
         )
           ? state.settings.themeHue
