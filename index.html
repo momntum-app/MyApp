@@ -4091,7 +4091,7 @@ body::before {
       }
 
 
-      /* v0.9.1.9 iOS-inspired neutral glass theme */
+      /* v0.9.2.0 iOS-inspired neutral glass theme */
       :root {
         --system-bg: #f2f2f7;
         --system-bg-elevated: #ffffff;
@@ -4116,6 +4116,17 @@ body::before {
         --accent-heading: color-mix(in srgb, var(--accent) 72%, #ffffff);
         --surface-shadow: 0 12px 34px rgba(0,0,0,.24);
       }
+      /* Midnight and Slate need a little more visible tint than the warmer accents. */
+      html[data-hue="midnight"], html[data-hue="slate"] {
+        --accent-frost: color-mix(in srgb, var(--accent) 9%, transparent);
+        --accent-frost-strong: color-mix(in srgb, var(--accent) 14%, transparent);
+      }
+      html[data-mode="dark"][data-hue="midnight"],
+      html[data-mode="dark"][data-hue="slate"] {
+        --accent-frost: color-mix(in srgb, var(--accent) 8%, transparent);
+        --accent-frost-strong: color-mix(in srgb, var(--accent) 13%, transparent);
+      }
+
       html[data-mode="light"] {
         --bg: var(--system-bg);
         --bg2: #f8f8fb;
@@ -4153,6 +4164,7 @@ body::before {
         background: linear-gradient(180deg, var(--system-bg), var(--bg2)) !important;
       }
       .topbar {
+        padding-bottom: 16px !important;
         background: color-mix(in srgb, var(--system-bg) 92%, transparent) !important;
         -webkit-backdrop-filter: blur(26px) saturate(150%);
         backdrop-filter: blur(26px) saturate(150%);
@@ -4365,13 +4377,13 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.9.1.9</p>
+        <p class="testerInstallVersion">v0.9.2.0</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
       <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.9.1.9 UI build</div>
+      <div class="launchVersion">v0.9.2.0 UI build</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
@@ -4437,7 +4449,6 @@ body::before {
               />
               <span id="headerNLandingTarget" class="headerNLandingTarget" aria-hidden="true"></span>
             </div>
-            <div class="sub" id="todayLine">Personal offline calisthenics training companion.</div>
           </div>
         </div>
       </header>
@@ -4625,7 +4636,7 @@ body::before {
                   </select></label
                 ><label
                   >Accent<select id="themeHueSelect">
-                    <option value="midnight">Midnight Blue</option>
+                    <option value="midnight">Midnight</option>
                     <option value="ember">Ember</option>
                     <option value="forest">Forest</option>
                     <option value="slate">Slate</option>
@@ -5057,7 +5068,7 @@ body::before {
       function canonicalExerciseName(name){ return EXERCISE_NAME_ALIASES[name] || name; }
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.9.1.9",
+        version: "0.9.2.0",
         buildDate: "20 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
@@ -6506,7 +6517,7 @@ body::before {
         ].map(([value, label]) =>
           `<button class="onboardingChoice onboardingThemePreview" type="button" data-onboarding-theme="${value}"><span>${label}</span><span class="onboardingChoiceTick">✓</span></button>`
         ).join("");
-        const accents = { midnight: ["Midnight Blue", "#4f78c8"], ember: ["Ember", "#ff7a2f"], forest: ["Forest", "#3f9a71"], slate: ["Slate", "#6f7f96"] };
+        const accents = { midnight: ["Midnight", "#4f78c8"], ember: ["Ember", "#ff7a2f"], forest: ["Forest", "#3f9a71"], slate: ["Slate", "#6f7f96"] };
         $("onboardingAccentChoices").innerHTML = Object.entries(accents).map(([value, item]) =>
           `<button class="onboardingSwatch" type="button" data-onboarding-accent="${value}" style="--swatch:${item[1]}" aria-label="${item[0]}"></button>`
         ).join("");
@@ -7012,11 +7023,6 @@ body::before {
       function renderAll() {
         applyAppearance();
         document.body.classList.toggle("workoutActive", !!state.active);
-        $("todayLine").textContent = new Date().toLocaleDateString("en-GB", {
-          weekday: "long",
-          day: "numeric",
-          month: "short",
-        });
         renderHome();
         renderWorkouts();
         renderLibrary();
