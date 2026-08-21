@@ -4314,6 +4314,131 @@ body::before {
         border-color: rgba(210, 38, 31, 0.50) !important;
         color: #c62822 !important;
       }
+
+
+      /* v0.9.3.1 workout outcome screen */
+      .workoutResultDialog {
+        width: min(92vw, 470px);
+        max-width: 470px;
+        padding: 0;
+        border: 0;
+        border-radius: 30px;
+        background: transparent;
+        color: var(--text);
+        overflow: visible;
+      }
+      .workoutResultDialog::backdrop {
+        background: rgba(0,0,0,.62);
+        -webkit-backdrop-filter: blur(10px) saturate(90%);
+        backdrop-filter: blur(10px) saturate(90%);
+      }
+      .workoutResultCard {
+        padding: 24px;
+        border-radius: 30px;
+        background:
+          linear-gradient(145deg, var(--accent-frost-strong), transparent 58%),
+          var(--glass-strong);
+        border: 1px solid var(--glass-border);
+        box-shadow: 0 24px 70px rgba(0,0,0,.28);
+        -webkit-backdrop-filter: blur(28px) saturate(150%);
+        backdrop-filter: blur(28px) saturate(150%);
+      }
+      .workoutResultMark {
+        width: 58px;
+        height: 58px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 18px;
+        border-radius: 19px;
+        border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--glass-border));
+        background: color-mix(in srgb, var(--accent) 9%, var(--glass-strong));
+      }
+      .workoutResultMark img { width: 42px; height: 42px; object-fit: contain; }
+      .workoutResultDialog.partial .workoutResultMark {
+        border-color: rgba(255,159,10,.35);
+        background: rgba(255,159,10,.09);
+      }
+      .workoutResultKicker {
+        color: var(--accent-heading);
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: .13em;
+        text-transform: uppercase;
+      }
+      .workoutResultDialog.partial .workoutResultKicker { color: #ff9f0a; }
+      html[data-mode="light"] .workoutResultDialog.partial .workoutResultKicker { color: #a86100; }
+      .workoutResultHeading {
+        margin-top: 6px;
+        font-size: clamp(30px, 8vw, 40px);
+        line-height: 1.02;
+        letter-spacing: -.045em;
+      }
+      .workoutResultWorkout {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 15px;
+        font-weight: 750;
+      }
+      .workoutResultMetrics {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0,1fr));
+        margin-top: 24px;
+        padding: 15px 0;
+        border-top: 1px solid var(--divider);
+        border-bottom: 1px solid var(--divider);
+      }
+      .workoutResultMetric { min-width: 0; padding: 2px 12px; }
+      .workoutResultMetric + .workoutResultMetric { border-left: 1px solid var(--divider); }
+      .workoutResultMetric strong {
+        display: block;
+        font-size: clamp(21px, 6vw, 29px);
+        line-height: 1;
+        letter-spacing: -.035em;
+        white-space: nowrap;
+      }
+      .workoutResultMetric span {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .07em;
+      }
+      .workoutResultMessage {
+        margin-top: 17px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.48;
+      }
+      .workoutResultQualification {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        margin-top: 14px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        border: 1px solid var(--divider);
+        background: color-mix(in srgb, var(--card2) 72%, transparent);
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+      }
+      .workoutResultDialog.partial .workoutResultQualification { display: flex; }
+      .workoutResultQualification.counts {
+        border-color: color-mix(in srgb, var(--green) 32%, var(--divider));
+        background: color-mix(in srgb, var(--green) 8%, var(--card2));
+        color: color-mix(in srgb, var(--green) 64%, var(--text));
+      }
+      .workoutResultActions { display: grid; gap: 9px; margin-top: 20px; }
+      .workoutResultActions .btn { min-height: 52px; }
+      #workoutResultSecondary { display: none; }
+      .workoutResultDialog.partial #workoutResultSecondary { display: inline-flex; }
+      @media (max-width: 390px) {
+        .workoutResultCard { padding: 20px; }
+        .workoutResultMetric { padding-inline: 8px; }
+      }
+
 </style>
     <link rel="icon" href="favicon.ico?v=0.8.3" sizes="any" />
     <link rel="icon" href="momntum-mark.svg?v=0.8.3" type="image/svg+xml" />
@@ -4407,13 +4532,13 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.9.2.8</p>
+        <p class="testerInstallVersion">v0.9.3.1</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
       <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.9.2.8 UI build</div>
+      <div class="launchVersion">v0.9.3.1 UI build</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
@@ -5014,6 +5139,27 @@ body::before {
         <button class="btn ghost full infoDialogClose" id="whatsNewCloseBtn">Close</button>
       </div>
     </dialog>
+
+    <dialog id="workoutResultDialog" class="workoutResultDialog" aria-labelledby="workoutResultHeading">
+      <div class="workoutResultCard">
+        <div class="workoutResultMark" aria-hidden="true"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
+        <div class="workoutResultKicker" id="workoutResultKicker">Workout complete</div>
+        <h2 class="workoutResultHeading" id="workoutResultHeading">Momentum maintained.</h2>
+        <div class="workoutResultWorkout" id="workoutResultWorkout">Workout</div>
+        <div class="workoutResultMetrics" aria-label="Workout summary">
+          <div class="workoutResultMetric"><strong id="workoutResultDuration">0:00</strong><span>Duration</span></div>
+          <div class="workoutResultMetric"><strong id="workoutResultSets">0 / 0</strong><span>Sets</span></div>
+          <div class="workoutResultMetric"><strong id="workoutResultExercises">0 / 0</strong><span>Exercises</span></div>
+        </div>
+        <p class="workoutResultMessage" id="workoutResultMessage">Session complete.</p>
+        <div class="workoutResultQualification" id="workoutResultQualification"></div>
+        <div class="workoutResultActions">
+          <button class="btn primary full" id="workoutResultPrimary" type="button">Done</button>
+          <button class="btn ghost full" id="workoutResultSecondary" type="button">Discard</button>
+        </div>
+      </div>
+    </dialog>
+
     <dialog id="postWorkoutDialog" class="infoDialog">
       <div class="dialogInner infoDialogInner">
         <div class="kicker">Workout complete</div>
@@ -5098,13 +5244,15 @@ body::before {
       function canonicalExerciseName(name){ return EXERCISE_NAME_ALIASES[name] || name; }
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.9.2.8",
+        version: "0.9.3.1",
         buildDate: "21 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
         description: "Personal offline calisthenics training companion."
       };
       const CHANGELOG = [
+        "Added distinct Workout Complete and manually ended workout result screens with optional partial-session saving",
+        "Partial sessions now record actual completed sets and only count toward weekly sessions after 5 minutes and 25% of planned sets",
         "Added a dedicated low-latency glass cue for manually pausing a workout while retaining Rest Complete for resume",
         "Rebuilt workout audio for near-instant response using preloaded, in-memory Web Audio buffers and trimmed WAV lead-ins",
         "Added a subtle glass-break cue to confirmed manual End Workout actions",
@@ -6925,7 +7073,7 @@ body::before {
         monday.setDate(now.getDate() - day);
         monday.setHours(0, 0, 0, 0);
         return state.history.filter(
-          (h) => new Date(h.date + "T12:00:00") >= monday,
+          (h) => h.countsTowardTarget !== false && new Date(h.date + "T12:00:00") >= monday,
         ).length;
       }
       function suggestedWorkout() {
@@ -6938,7 +7086,7 @@ body::before {
         clearTimeout(t._to);
         t._to = setTimeout(() => t.classList.remove("show"), 2200);
       }
-      // v0.9.2.8 MOMNTUM low-latency authored workout sound set.
+      // v0.9.3.1 MOMNTUM low-latency authored workout sound set.
       // The packaged WAVs are trimmed to the audible transient. Files are fetched
       // early, decoded into memory after the first user interaction, and then
       // played with Web Audio for near-instant response. HTMLAudio remains a fallback.
@@ -7939,24 +8087,27 @@ body::before {
           return d >= start && d < end;
         });
       }
+      function qualifyingWorkoutsInWeek(start) {
+        return workoutsInWeek(start).filter(h => h.countsTowardTarget !== false);
+      }
       function consistencyWeekStreak() {
         if (!state.history.length) return 0;
         const current = mondayStart();
-        const currentCount = workoutsInWeek(current).length;
+        const currentCount = qualifyingWorkoutsInWeek(current).length;
         const target = Math.min(7, Math.max(1, Number(state.settings.weeklyTarget) || 3));
         // Current week can maintain an existing streak while still in progress.
         let cursor = new Date(current);
         if (currentCount >= target) {
           let streak = 1;
           cursor.setDate(cursor.getDate()-7);
-          while (workoutsInWeek(cursor).length >= target) {
+          while (qualifyingWorkoutsInWeek(cursor).length >= target) {
             streak++; cursor.setDate(cursor.getDate()-7);
           }
           return streak;
         }
         cursor.setDate(cursor.getDate()-7);
         let streak = 0;
-        while (workoutsInWeek(cursor).length >= target) {
+        while (qualifyingWorkoutsInWeek(cursor).length >= target) {
           streak++; cursor.setDate(cursor.getDate()-7);
         }
         return streak;
@@ -7994,19 +8145,19 @@ body::before {
 
         const cadence = lastWeeks(6);
         if ($("cadenceStrip")) {
-          $("cadenceStrip").innerHTML = cadence.map((week, index) => {
+          $("cadenceStrip").innerHTML = [...cadence].reverse().map((week, index) => {
             const ratio = Math.min(1, week.value / target);
             const pct = Math.round(ratio * 100);
             const hit = week.value >= target;
-            const isNow = index === cadence.length - 1;
-            return `<div class="cadenceWeek ${hit ? "targetHit" : ""}" title="${week.value} of ${target} sessions"><div class="cadenceTrack"><span style="height:${pct}%"></span></div><strong>${week.value}</strong><small>${isNow ? "Now" : week.label}</small></div>`;
+            const isThisWeek = index === 0;
+            return `<div class="cadenceWeek ${hit ? "targetHit" : ""}" title="${week.value} of ${target} sessions"><div class="cadenceTrack"><span style="height:${pct}%"></span></div><strong>${week.value}</strong><small>${isThisWeek ? "This week" : week.label}</small></div>`;
           }).join("");
         }
 
         const hist = state.history.slice(-12).reverse();
         $("historyList").innerHTML = hist.length
           ? hist.map(h =>
-              `<div class="card compact"><div class="row"><h3>${h.title}</h3><span class="pill">${new Date(h.date+"T12:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short"})}</span></div><p class="small" style="margin-top:6px">${Math.round((h.duration||0)/60)} min · ${h.exercisesCompleted||0} exercises</p></div>`
+              `<div class="card compact"><div class="row"><div><h3>${h.title}</h3>${h.status === "partial" ? '<span class="small" style="display:inline-block;margin-top:4px;color:#ff9f0a">◐ Partial</span>' : ''}</div><span class="pill">${new Date(h.date+"T12:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short"})}</span></div><p class="small" style="margin-top:6px">${Math.round((h.duration||0)/60)} min · ${h.setsCompleted != null && h.plannedSets ? `${h.setsCompleted} / ${h.plannedSets} sets · ` : ''}${h.exercisesCompleted||0} exercises</p></div>`
             ).join("")
           : `<div class="card"><p class="muted">No completed workouts yet. Your recent activity will appear here.</p></div>`;
       }
@@ -8285,20 +8436,14 @@ body::before {
       };
       $("resetWorkoutBtn").onclick = () =>
         askConfirm(
-          "End workout?",
-          "This clears the current workout progress without saving it.",
+          "Finish here?",
+          "Your completed sets can still be saved.",
           () => {
             playEndWorkoutSound();
-            clearTimeout(workoutCountdownTimer);
-            document.querySelector("#page-active .timerPanel")?.classList.remove("countdownActive");
-            $("workoutCountdownOverlay")?.classList.remove("active");
-            state.active = null;
-            saveState();
-            clearInterval(workoutInterval);
-            clearInterval(restInterval);
-            showPage("progress");
-            toast("Workout ended");
+            preparePartialWorkoutResult();
           },
+          "Finish here",
+          "Keep going",
         );
       $("backToWorkoutsBtn").onclick = () => showPage("workouts");
       $("workoutNotes").addEventListener("input", () => {
@@ -8332,62 +8477,163 @@ body::before {
         workoutCompletePressPrimed = false;
         finishWorkout();
       };
-      function finishWorkout() {
-        if (!state.active) return;
-        const a = state.active,
-          w = workouts.find((x) => x.id === a.workoutId),
-          ids = Object.keys(a.exercises),
-          done = ids.filter((id) => a.exercises[id].done),
-          totalReps = done.reduce((sum, id) => {
-            const ex = exercises.find((e) => e.id == id);
-            return sum + (parseInt(ex.reps) || 10) * (parseInt(ex.sets) || 1);
-          }, 0),
-          effort = Math.min(
-            10,
-            Math.max(
-              4,
-              Math.round(
-                5 +
-                  (done.length / ids.length) * 3 +
-                  (a.elapsed / (w.duration * 60)) * 2,
-              ),
-            ),
-          ),
-          date = todayISO();
-        updateStreak(date);
-        const rec = {
+      let pendingWorkoutResult = null;
+
+      function workoutOutcomeSummary(a = state.active) {
+        if (!a) return null;
+        const w = a.resolvedWorkout || resolveWorkout(workouts.find((x) => x.id === a.workoutId));
+        const mainExercises = (w?.main || []).map(byName).filter(Boolean);
+        const plannedSets = mainExercises.reduce((sum, ex) => sum + (parseInt(ex.sets) || 1), 0);
+        let completedSets = 0;
+        let exercisesCompleted = 0;
+        const exerciseNames = [];
+        mainExercises.forEach(ex => {
+          const progress = a.exercises?.[ex.id] || { sets: [], done: false };
+          const required = parseInt(ex.sets) || 1;
+          const setsDone = Math.min(required, (progress.sets || []).filter(Boolean).length);
+          completedSets += setsDone;
+          if (setsDone >= required || progress.done) exercisesCompleted += 1;
+          if (setsDone > 0) exerciseNames.push(ex.name);
+        });
+        const setRatio = plannedSets ? completedSets / plannedSets : 0;
+        const qualifiesForTarget = a.elapsed >= 300 && setRatio >= .25;
+        return {
+          active: a,
+          workout: w,
+          title: w?.title || "Workout",
+          duration: a.elapsed || 0,
+          plannedSets,
+          completedSets,
+          plannedExercises: mainExercises.length,
+          exercisesCompleted,
+          exerciseNames,
+          setRatio,
+          qualifiesForTarget,
+        };
+      }
+
+      function buildWorkoutRecord(summary, status = "complete") {
+        const a = summary.active;
+        const date = todayISO();
+        const totalReps = summary.exerciseNames.reduce((sum, name) => {
+          const ex = byName(name);
+          const progress = ex ? a.exercises?.[ex.id] : null;
+          const setsDone = (progress?.sets || []).filter(Boolean).length;
+          return sum + (parseInt(ex?.reps) || 10) * setsDone;
+        }, 0);
+        const effort = Math.min(10, Math.max(4, Math.round(5 + summary.setRatio * 3 + (summary.duration / Math.max(1, (summary.workout?.duration || 20) * 60)) * 2)));
+        return {
           date,
-          title: w.title,
-          workoutId: w.id,
-          duration: a.elapsed,
-          exercisesCompleted: done.length,
+          title: summary.title,
+          workoutId: summary.workout?.id,
+          duration: summary.duration,
+          exercisesCompleted: summary.exercisesCompleted,
+          plannedExercises: summary.plannedExercises,
+          setsCompleted: summary.completedSets,
+          plannedSets: summary.plannedSets,
           totalReps,
           effort,
           notes: a.notes || "",
-          exerciseNames: done.map(ex=>ex.name),
-          suggestion:
-            effort <= 6
-              ? "Increase reps next time or reduce rest slightly."
-              : effort >= 9
-                ? "Repeat the same workload and aim for cleaner form."
-                : "Move one exercise to a harder variation or add band tension.",
+          exerciseNames: summary.exerciseNames.slice(),
+          status,
+          countsTowardTarget: status === "complete" ? true : summary.qualifiesForTarget,
+          suggestion: status === "partial" ? "Partial session saved." : "Session complete.",
         };
+      }
+
+      function commitWorkoutResult(summary, status) {
+        const rec = buildWorkoutRecord(summary, status);
+        if (rec.countsTowardTarget) updateStreak(rec.date);
         try {
-          const completedResolved = state.active?.resolvedWorkout;
+          const completedResolved = summary.active?.resolvedWorkout;
           if (completedResolved?.id) saveDynamicHistory(completedResolved.id, completedResolved.main || []);
         } catch (_) {}
         state.history.push(rec);
         state.stats.totalWorkouts = state.history.length;
-        state.stats.totalExercises += done.length;
-        state.stats.totalReps += totalReps;
-        state.stats.totalTime += a.elapsed;
+        state.stats.totalExercises += rec.exercisesCompleted;
+        state.stats.totalReps += rec.totalReps;
+        state.stats.totalTime += rec.duration;
         state.active = null;
         saveState();
+        clearTimeout(workoutCountdownTimer);
         clearInterval(workoutInterval);
         clearInterval(restInterval);
+        return rec;
+      }
+
+      function showWorkoutResult(summary, status = "complete", savedRecord = null) {
+        const dialog = $("workoutResultDialog");
+        if (!dialog || !summary) return;
+        const partial = status === "partial";
+        pendingWorkoutResult = { summary, status, savedRecord };
+        dialog.classList.toggle("partial", partial);
+        $("workoutResultKicker").textContent = partial ? "Workout ended" : "Workout complete";
+        $("workoutResultHeading").textContent = partial ? "Session ended." : "Momentum maintained.";
+        $("workoutResultWorkout").textContent = summary.title;
+        $("workoutResultDuration").textContent = fmtTime(summary.duration);
+        $("workoutResultSets").textContent = `${summary.completedSets} / ${summary.plannedSets}`;
+        $("workoutResultExercises").textContent = `${summary.exercisesCompleted} / ${summary.plannedExercises}`;
+        $("workoutResultMessage").textContent = partial
+          ? "Save what you completed or discard this session."
+          : "Another session in the bank.";
+        const q = $("workoutResultQualification");
+        if (partial) {
+          q.classList.toggle("counts", summary.qualifiesForTarget);
+          q.textContent = summary.qualifiesForTarget
+            ? "✓ This session is substantial enough to count towards your weekly sessions."
+            : "This can be saved to activity, but it won’t count towards your weekly session target.";
+        }
+        $("workoutResultPrimary").textContent = partial ? "Save workout" : "Done";
+        $("workoutResultSecondary").textContent = "Discard";
+        if (!dialog.open) dialog.showModal();
+      }
+
+      function preparePartialWorkoutResult() {
+        if (!state.active) return;
+        state.active.paused = true;
+        state.active.lastWorkoutTickAt = Date.now();
+        clearTimeout(workoutCountdownTimer);
+        clearInterval(workoutInterval);
+        clearInterval(restInterval);
+        saveState();
+        showWorkoutResult(workoutOutcomeSummary(state.active), "partial");
+      }
+
+      $("workoutResultDialog")?.addEventListener("cancel", (event) => event.preventDefault());
+      $("workoutResultPrimary").onclick = () => {
+        if (!pendingWorkoutResult) return;
+        const { summary, status, savedRecord } = pendingWorkoutResult;
+        if (status === "partial") {
+          commitWorkoutResult(summary, "partial");
+          $("workoutResultDialog").close();
+          pendingWorkoutResult = null;
+          showPage("progress");
+          toast(summary.qualifiesForTarget ? "Partial workout saved" : "Partial activity saved");
+          return;
+        }
+        $("workoutResultDialog").close();
+        pendingWorkoutResult = null;
         showPage("progress");
-        toast("Workout complete");
-        showPostWorkoutFavourites(rec.exerciseNames || []);
+        if (savedRecord?.exerciseNames?.length) showPostWorkoutFavourites(savedRecord.exerciseNames);
+      };
+      $("workoutResultSecondary").onclick = () => {
+        if (!pendingWorkoutResult || pendingWorkoutResult.status !== "partial") return;
+        state.active = null;
+        saveState();
+        clearTimeout(workoutCountdownTimer);
+        clearInterval(workoutInterval);
+        clearInterval(restInterval);
+        $("workoutResultDialog").close();
+        pendingWorkoutResult = null;
+        showPage("progress");
+        toast("Workout discarded");
+      };
+
+      function finishWorkout() {
+        if (!state.active) return;
+        const summary = workoutOutcomeSummary(state.active);
+        const rec = commitWorkoutResult(summary, "complete");
+        showWorkoutResult(summary, "complete", rec);
       }
       let lastCompletedExerciseNames=[];
       function renderPostWorkoutFavourites(){
@@ -8439,7 +8685,7 @@ body::before {
             label: "W" + (n - i),
             value: state.history.filter((h) => {
               const x = new Date(h.date + "T12:00:00");
-              return x >= s && x < e;
+              return h.countsTowardTarget !== false && x >= s && x < e;
             }).length,
           });
         }
@@ -8666,13 +8912,18 @@ body::before {
             toast("All settings reset");
           },
         );
-      function askConfirm(t, m, a) {
+      function askConfirm(t, m, a, okLabel = "Confirm", cancelLabel = "Cancel") {
         confirmAction = a;
         $("confirmTitle").textContent = t;
         $("confirmText").textContent = m;
+        $("confirmOk").textContent = okLabel;
+        $("confirmCancel").textContent = cancelLabel;
         $("confirmDialog").showModal();
       }
-      $("confirmCancel").onclick = () => $("confirmDialog").close();
+      $("confirmCancel").onclick = () => {
+        confirmAction = null;
+        $("confirmDialog").close();
+      };
       $("confirmOk").onclick = () => {
         const fn = confirmAction;
         $("confirmDialog").close();
