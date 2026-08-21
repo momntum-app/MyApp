@@ -4316,7 +4316,7 @@ body::before {
       }
 
 
-      /* v0.9.3.2 workout outcome screen */
+      /* v0.9.3.3 workout outcome screen */
       .workoutResultDialog {
         width: min(92vw, 470px);
         max-width: 470px;
@@ -4532,13 +4532,13 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.9.3.2</p>
+        <p class="testerInstallVersion">v0.9.3.3</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
       <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.9.3.2 UI build</div>
+      <div class="launchVersion">v0.9.3.3 UI build</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
@@ -4717,7 +4717,7 @@ body::before {
           <div class="stack" id="activeExercises"></div>
           <div class="grid two" style="margin-top: 16px">
             <button class="btn ghost full" id="backToWorkoutsBtn">Back</button
-            ><button class="btn green full" id="finishWorkoutBtn">
+            ><button class="btn green full hidden" id="finishWorkoutBtn" aria-hidden="true" tabindex="-1">
               Finish Workout
             </button>
           </div>
@@ -5241,13 +5241,16 @@ body::before {
       function canonicalExerciseName(name){ return EXERCISE_NAME_ALIASES[name] || name; }
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.9.3.2",
+        version: "0.9.3.3",
         buildDate: "21 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
         description: "Personal offline calisthenics training companion."
       };
       const CHANGELOG = [
+        "Added a Favourites filter to the Exercise Library",
+        "Workouts now complete automatically on the final set of the final exercise",
+        "Simplified active-workout set controls to Set 1, Set 2 and so on, with colour indicating completion",
         "Moved Exercise difficulty into the Preferences card as a compact pull-down setting",
         "Added distinct Workout Complete and manually ended workout result screens with optional partial-session saving",
         "Partial sessions now record actual completed sets and only count toward weekly sessions after 5 minutes and 25% of planned sets",
@@ -7084,7 +7087,7 @@ body::before {
         clearTimeout(t._to);
         t._to = setTimeout(() => t.classList.remove("show"), 2200);
       }
-      // v0.9.3.2 MOMNTUM low-latency authored workout sound set.
+      // v0.9.3.3 MOMNTUM low-latency authored workout sound set.
       // The packaged WAVs are trimmed to the audible transient. Files are fetched
       // early, decoded into memory after the first user interaction, and then
       // played with Web Audio for near-instant response. HTMLAudio remains a fallback.
@@ -7783,7 +7786,7 @@ body::before {
             console.warn("MOMNTUM exercise animation unavailable", ex.name, error);
           }
         }
-        return `<div class="exerciseItem${current ? " currentExercise" : ""}" data-exid="${ex.id}" data-expandable="true" role="button" tabindex="0" aria-expanded="false"><div class="exerciseText"><div class="row"><div><div class="exName">${ex.name}</div><div class="exMuscles">${ex.primary} · ${ex.equipment}</div></div><span class="exerciseSummaryActions">${favouriteButtonMarkup(ex)}<span class="pill">${ex.sets} x ${ex.reps}</span>${exerciseChevronMarkup()}</span></div>${motionMarkup}<div class="setGrid">${Array.from({ length: parseInt(ex.sets) || 1 }, (_, i) => `<button class="setBtn" data-set="${i}">Complete Set ${i + 1}</button>`).join("")}</div>${current ? `<button class="currentExerciseComplete${setsComplete ? "" : " setsPending"}" type="button" data-complete-current="${ex.id}" ${setsComplete ? "" : "disabled"}><span class="currentExerciseCompleteBox" aria-hidden="true">→</span><span>${actionLabel}</span></button>` : ""}<div class="detail">${guidanceMarkup(ex)}<p style="margin-top:10px"><strong>Common mistakes:</strong> ${ex.mistakes}</p>${variantFavouriteMarkup(ex)}</div></div></div>`;
+        return `<div class="exerciseItem${current ? " currentExercise" : ""}" data-exid="${ex.id}" data-expandable="true" role="button" tabindex="0" aria-expanded="false"><div class="exerciseText"><div class="row"><div><div class="exName">${ex.name}</div><div class="exMuscles">${ex.primary} · ${ex.equipment}</div></div><span class="exerciseSummaryActions">${favouriteButtonMarkup(ex)}<span class="pill">${ex.sets} x ${ex.reps}</span>${exerciseChevronMarkup()}</span></div>${motionMarkup}<div class="setGrid">${Array.from({ length: parseInt(ex.sets) || 1 }, (_, i) => `<button class="setBtn" data-set="${i}">Set ${i + 1}</button>`).join("")}</div>${current ? `<button class="currentExerciseComplete${setsComplete ? "" : " setsPending"}" type="button" data-complete-current="${ex.id}" ${setsComplete ? "" : "disabled"}><span class="currentExerciseCompleteBox" aria-hidden="true">→</span><span>${actionLabel}</span></button>` : ""}<div class="detail">${guidanceMarkup(ex)}<p style="margin-top:10px"><strong>Common mistakes:</strong> ${ex.mistakes}</p>${variantFavouriteMarkup(ex)}</div></div></div>`;
       }
 
       function renderActiveWorkout() {
@@ -7853,7 +7856,7 @@ body::before {
             btn.classList.toggle("done", setDone);
             btn.classList.toggle("inProgress", !restLocked && !p.done && !setDone && isCurrentSet);
             btn.classList.toggle("restLocked", restLocked && !setDone);
-            btn.textContent = setDone ? `Set ${setIndex + 1} complete` : `Complete Set ${setIndex + 1}`;
+            btn.textContent = `Set ${setIndex + 1}`;
             btn.disabled = !!p.done || setDone || restLocked || !isCurrentSet;
             btn.onclick = (event) => {
               event.stopPropagation();
@@ -7920,6 +7923,7 @@ body::before {
       function renderLibrary() {
         const filters = [
           ["All", "All"],
+          ["Favourites", "Favourites"],
           ["Upper Body", "Upper Body"],
           ["Lower Body", "Lower Body"],
           ["Core & Stability", "Core & Stability"],
@@ -7982,6 +7986,7 @@ body::before {
           const category = String(e.category || "");
           const matchesFilter =
             f === "All" ||
+            (f === "Favourites" && isFavouriteFamily(e.movementFamily)) ||
             (f === "Upper Body" && category === "Upper Body") ||
             (f === "Lower Body" && category === "Lower Body") ||
             (f === "Core & Stability" && category === "Core & Stability") ||
@@ -8376,6 +8381,24 @@ body::before {
         const ex = exercises.find((e) => e.id == id);
         const requiredSets = parseInt(ex?.sets) || 1;
         if (p.sets.filter(Boolean).length >= requiredSets) p.done = true;
+
+        const activeWorkout = state.active.resolvedWorkout ||
+          resolveWorkout(workouts.find((x) => x.id === state.active.workoutId));
+        const orderedExercises = [...(activeWorkout?.warm || []), ...(activeWorkout?.main || [])]
+          .map(byName)
+          .filter(Boolean);
+        const isFinalExercise =
+          orderedExercises.length > 0 &&
+          String(orderedExercises[orderedExercises.length - 1].id) === String(id);
+        const finalSetJustCompleted = isFinalExercise && p.done;
+
+        if (finalSetJustCompleted) {
+          saveState();
+          playWorkoutCompleteSound();
+          finishWorkout();
+          return;
+        }
+
         state.active.restRemaining = state.settings.restDuration;
         playSound("setComplete");
         startRest(true);
@@ -9091,3 +9114,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
 </script>
   </body>
 </html>
+
+<style>
+  #page-active #backToWorkoutsBtn { grid-column: 1 / -1; }
+</style>
