@@ -4284,6 +4284,36 @@ body::before {
       .onboardingOverlay {
         background: linear-gradient(180deg, var(--system-bg), var(--bg2)) !important;
       }
+
+      /* v0.9.2.4 active workout semantic controls — authoritative glass overrides */
+      #page-active .timerPrimaryActions #pauseWorkoutBtn {
+        background: rgba(255, 159, 10, 0.18) !important;
+        border: 1px solid rgba(255, 159, 10, 0.58) !important;
+        color: #ff9f0a !important;
+        box-shadow: none !important;
+      }
+      #page-active .timerPrimaryActions #pauseWorkoutBtn:active {
+        background: rgba(255, 159, 10, 0.28) !important;
+      }
+      #page-active .timerPrimaryActions #resetWorkoutBtn {
+        background: rgba(255, 69, 58, 0.18) !important;
+        border: 1px solid rgba(255, 69, 58, 0.62) !important;
+        color: #ff453a !important;
+        box-shadow: none !important;
+      }
+      #page-active .timerPrimaryActions #resetWorkoutBtn:active {
+        background: rgba(255, 69, 58, 0.28) !important;
+      }
+      html[data-mode="light"] #page-active .timerPrimaryActions #pauseWorkoutBtn {
+        background: rgba(255, 149, 0, 0.15) !important;
+        border-color: rgba(190, 112, 0, 0.56) !important;
+        color: #a86100 !important;
+      }
+      html[data-mode="light"] #page-active .timerPrimaryActions #resetWorkoutBtn {
+        background: rgba(255, 59, 48, 0.13) !important;
+        border-color: rgba(210, 38, 31, 0.50) !important;
+        color: #c62822 !important;
+      }
 </style>
     <link rel="icon" href="favicon.ico?v=0.8.3" sizes="any" />
     <link rel="icon" href="momntum-mark.svg?v=0.8.3" type="image/svg+xml" />
@@ -4377,13 +4407,13 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.9.2.0</p>
+        <p class="testerInstallVersion">v0.9.2.8</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
       <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.9.2.0 UI build</div>
+      <div class="launchVersion">v0.9.2.8 UI build</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
@@ -5068,13 +5098,20 @@ body::before {
       function canonicalExerciseName(name){ return EXERCISE_NAME_ALIASES[name] || name; }
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.9.2.1",
-        buildDate: "20 August 2026",
+        version: "0.9.2.8",
+        buildDate: "21 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
         description: "Personal offline calisthenics training companion."
       };
       const CHANGELOG = [
+        "Added a dedicated low-latency glass cue for manually pausing a workout while retaining Rest Complete for resume",
+        "Rebuilt workout audio for near-instant response using preloaded, in-memory Web Audio buffers and trimmed WAV lead-ins",
+        "Added a subtle glass-break cue to confirmed manual End Workout actions",
+        "Added the Rest Complete glass cue to manual Pause and Resume actions",
+        "Made Workout Complete audio start on the initial Finish Workout press using an independent playback instance for iOS/PWA reliability",
+        "Added the MOMNTUM crystalline workout sound set for countdown, start, set complete, rest complete and workout complete",
+        "Restored clear active-workout control hierarchy with an amber Pause button and red End button in both light and dark modes",
         "Expanded the canonical exercise library from 102 to 133 movements after a structured calisthenics and practical home-equipment audit",
         "Added established household-support movements including Sit-up, Triceps Dip, Step-up, Elevated Glute Bridge and Pistol Squat progressions",
         "Expanded resistance-band, dumbbell and kettlebell options as practical progressions from MOMNTUM bodyweight movement patterns",
@@ -6901,70 +6938,123 @@ body::before {
         clearTimeout(t._to);
         t._to = setTimeout(() => t.classList.remove("show"), 2200);
       }
+      // v0.9.2.8 MOMNTUM low-latency authored workout sound set.
+      // The packaged WAVs are trimmed to the audible transient. Files are fetched
+      // early, decoded into memory after the first user interaction, and then
+      // played with Web Audio for near-instant response. HTMLAudio remains a fallback.
+      const MOMNTUM_SOUND_FILES = Object.freeze({
+        countdown: "sounds/countdown.wav",
+        go: "sounds/start.wav",
+        setComplete: "sounds/set-complete.wav",
+        restComplete: "sounds/rest-complete.wav",
+        restStart: "sounds/rest-start.wav",
+        workoutComplete: "sounds/workout-complete.wav",
+        endWorkout: "sounds/end.wav"
+      });
+
+      const momntumAudio = Object.fromEntries(
+        Object.entries(MOMNTUM_SOUND_FILES).map(([name, src]) => {
+          const audio = new Audio(src);
+          audio.preload = "auto";
+          audio.setAttribute("playsinline", "");
+          audio.load();
+          return [name, audio];
+        })
+      );
+
+      // Start network/file reads immediately; this does not require an audio gesture.
+      const momntumAudioBytes = Object.fromEntries(
+        Object.entries(MOMNTUM_SOUND_FILES).map(([name, src]) => [
+          name,
+          fetch(src, { cache: "force-cache" })
+            .then((response) => {
+              if (!response.ok) throw new Error(`Audio fetch failed: ${response.status}`);
+              return response.arrayBuffer();
+            })
+            .catch(() => null)
+        ])
+      );
+
+      const MOMNTUM_AUDIO_CONTEXT = window.AudioContext || window.webkitAudioContext;
       let momntumAudioContext = null;
-      function getMomntumAudioContext() {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContextClass) return null;
-        if (!momntumAudioContext) momntumAudioContext = new AudioContextClass();
-        if (momntumAudioContext.state === "suspended") momntumAudioContext.resume();
-        return momntumAudioContext;
+      const momntumAudioBuffers = Object.create(null);
+      let momntumAudioDecodePromise = null;
+
+      async function primeMomntumAudio() {
+        if (state.settings.sound !== "on" || !MOMNTUM_AUDIO_CONTEXT) return;
+        try {
+          if (!momntumAudioContext) {
+            momntumAudioContext = new MOMNTUM_AUDIO_CONTEXT({ latencyHint: "interactive" });
+          }
+          if (momntumAudioContext.state === "suspended") {
+            await momntumAudioContext.resume();
+          }
+
+          // Explicitly unlock the output path on iOS using a one-sample silent buffer.
+          const unlock = momntumAudioContext.createBuffer(1, 1, momntumAudioContext.sampleRate);
+          const unlockSource = momntumAudioContext.createBufferSource();
+          unlockSource.buffer = unlock;
+          unlockSource.connect(momntumAudioContext.destination);
+          unlockSource.start(0);
+
+          if (!momntumAudioDecodePromise) {
+            momntumAudioDecodePromise = Promise.allSettled(
+              Object.keys(MOMNTUM_SOUND_FILES).map(async (name) => {
+                const bytes = await momntumAudioBytes[name];
+                if (!bytes) return;
+                momntumAudioBuffers[name] = await momntumAudioContext.decodeAudioData(bytes.slice(0));
+              })
+            );
+          }
+          await momntumAudioDecodePromise;
+        } catch (error) {
+          console.warn("MOMNTUM audio priming unavailable", error);
+        }
       }
-      function playTone({ frequency = 440, endFrequency = frequency, duration = 0.16, gain = 0.045, type = "sine", delay = 0 }) {
-        if (state.settings.sound !== "on") return;
-        const context = getMomntumAudioContext();
-        if (!context) return;
-        const startAt = context.currentTime + delay;
-        const oscillator = context.createOscillator();
-        const envelope = context.createGain();
-        oscillator.type = type;
-        oscillator.frequency.setValueAtTime(frequency, startAt);
-        oscillator.frequency.exponentialRampToValueAtTime(Math.max(20, endFrequency), startAt + duration);
-        envelope.gain.setValueAtTime(0.0001, startAt);
-        envelope.gain.exponentialRampToValueAtTime(gain, startAt + Math.min(0.025, duration * 0.2));
-        envelope.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
-        oscillator.connect(envelope);
-        envelope.connect(context.destination);
-        oscillator.start(startAt);
-        oscillator.stop(startAt + duration + 0.03);
-      }
+
+      // Any first tap primes/unlocks the Web Audio path. Starting a workout also
+      // calls primeMomntumAudio so timer-driven sounds are decoded before use.
+      document.addEventListener("pointerdown", () => { primeMomntumAudio(); }, { once: true, passive: true });
+      document.addEventListener("touchstart", () => { primeMomntumAudio(); }, { once: true, passive: true });
+
       function playSound(name) {
         if (state.settings.sound !== "on") return;
-        try {
-          switch (name) {
-            case "countdown":
-              playTone({ frequency: 520, endFrequency: 460, duration: 0.13, gain: 0.055, type: "sine" });
-              playTone({ frequency: 1040, endFrequency: 920, duration: 0.08, gain: 0.018, type: "sine", delay: 0.015 });
-              break;
-            case "go":
-              playTone({ frequency: 620, endFrequency: 930, duration: 0.24, gain: 0.06, type: "sine" });
-              playTone({ frequency: 930, endFrequency: 1240, duration: 0.20, gain: 0.035, type: "triangle", delay: 0.08 });
-              break;
-            case "setComplete":
-              playTone({ frequency: 720, endFrequency: 860, duration: 0.16, gain: 0.045, type: "sine" });
-              break;
-            case "restStart":
-              playTone({ frequency: 430, endFrequency: 360, duration: 0.20, gain: 0.042, type: "sine" });
-              break;
-            case "restComplete":
-              playTone({ frequency: 660, endFrequency: 880, duration: 0.19, gain: 0.05, type: "sine" });
-              playTone({ frequency: 880, endFrequency: 990, duration: 0.16, gain: 0.035, type: "triangle", delay: 0.11 });
-              break;
-            case "pause":
-              playTone({ frequency: 440, endFrequency: 390, duration: 0.13, gain: 0.032, type: "triangle" });
-              break;
-            case "resume":
-              playTone({ frequency: 500, endFrequency: 680, duration: 0.15, gain: 0.04, type: "triangle" });
-              break;
-            case "workoutComplete":
-              playTone({ frequency: 523, endFrequency: 523, duration: 0.22, gain: 0.05, type: "sine" });
-              playTone({ frequency: 659, endFrequency: 659, duration: 0.22, gain: 0.05, type: "sine", delay: 0.15 });
-              playTone({ frequency: 784, endFrequency: 880, duration: 0.34, gain: 0.06, type: "sine", delay: 0.30 });
-              break;
+
+        const ctx = momntumAudioContext;
+        const buffer = momntumAudioBuffers[name];
+        if (ctx && buffer && ctx.state === "running") {
+          try {
+            const source = ctx.createBufferSource();
+            source.buffer = buffer;
+            source.connect(ctx.destination);
+            source.start(0);
+            return;
+          } catch (error) {
+            console.warn("MOMNTUM Web Audio playback unavailable", error);
           }
+        }
+
+        // Fallback for the very first interaction before decoding has completed.
+        const audio = momntumAudio[name];
+        if (!audio) return;
+        try {
+          audio.pause();
+          audio.currentTime = 0;
+          const playback = audio.play();
+          if (playback?.catch) playback.catch((error) => {
+            if (error?.name !== "AbortError" && error?.name !== "NotAllowedError") {
+              console.warn("MOMNTUM audio unavailable", error);
+            }
+          });
         } catch (error) {
           console.warn("MOMNTUM audio unavailable", error);
         }
       }
+
+      // Dedicated wrappers keep semantic call sites readable while using the same
+      // in-memory low-latency engine.
+      function playWorkoutCompleteSound() { playSound("workoutComplete"); }
+      function playEndWorkoutSound() { playSound("endWorkout"); }
       function beep() { playSound("restComplete"); }
 
       document
@@ -7972,11 +8062,7 @@ body::before {
             overlay.style.transition = "";
 
             if (!state.active) return;
-            state.active.paused = false;
-            state.active.lastWorkoutTickAt = Date.now();
-            saveState();
             renderActiveWorkout();
-            startClock();
             toast("Workout started");
           }, 190);
         };
@@ -8001,6 +8087,15 @@ body::before {
           number.style.animation = "workoutCountdownBeat 0.82s cubic-bezier(.2,.78,.24,1) both";
 
           playSound(value === "GO" ? "go" : "countdown");
+
+          // GO is the start line: begin the elapsed workout clock at the same
+          // instant as the GO visual/audio cue, while the overlay dissolves.
+          if (value === "GO" && state.active) {
+            state.active.paused = false;
+            state.active.lastWorkoutTickAt = Date.now();
+            saveState();
+            startClock();
+          }
           index += 1;
 
           if (index < sequence.length) {
@@ -8015,6 +8110,7 @@ body::before {
 
 
       function startWorkout(id, cont) {
+        primeMomntumAudio();
         if (cont && state.active) {
           showPage("active");
           startClock();
@@ -8166,25 +8262,25 @@ body::before {
         }
         p.done = true;
         advanceCurrentExercise({ skipRest: true });
-        playSound("resume");
       }
       $("resumeWorkoutBtn").onclick = () => {
         if (!state.active || !state.active.restRunning) return;
+        playSound("restComplete");
         state.active.restRunning = false;
         state.active.restRemaining = 0;
         state.active.restEndsAt = null;
         saveState();
         renderActiveWorkout();
-        playSound("resume");
         toast("Workout resumed");
       };
       $("pauseWorkoutBtn").onclick = () => {
         if (!state.active) return;
-        state.active.paused = !state.active.paused;
+        const willPause = !state.active.paused;
+        playSound(willPause ? "restStart" : "restComplete");
+        state.active.paused = willPause;
         state.active.lastWorkoutTickAt = Date.now();
         saveState();
         renderActiveWorkout();
-        playSound(state.active.paused ? "pause" : "resume");
         toast(state.active.paused ? "Workout paused" : "Workout resumed");
       };
       $("resetWorkoutBtn").onclick = () =>
@@ -8192,6 +8288,7 @@ body::before {
           "End workout?",
           "This clears the current workout progress without saving it.",
           () => {
+            playEndWorkoutSound();
             clearTimeout(workoutCountdownTimer);
             document.querySelector("#page-active .timerPanel")?.classList.remove("countdownActive");
             $("workoutCountdownOverlay")?.classList.remove("active");
@@ -8218,14 +8315,23 @@ body::before {
         saveState();
         renderActiveWorkout();
         if (automatic) {
-          playSound("restStart");
           toast("Rest started");
         }
       }
       // v0.8.4 hotfix: restore the Home Quick Start binding lost during the latest integration.
       $("quickStartBtn").onclick = () => startWorkout(suggestedWorkout().id, false);
 
-      $("finishWorkoutBtn").onclick = finishWorkout;
+      let workoutCompletePressPrimed = false;
+      $("finishWorkoutBtn").addEventListener("pointerdown", () => {
+        if (!state.active) return;
+        workoutCompletePressPrimed = true;
+        playWorkoutCompleteSound();
+      }, { passive: true });
+      $("finishWorkoutBtn").onclick = () => {
+        if (!workoutCompletePressPrimed) playWorkoutCompleteSound();
+        workoutCompletePressPrimed = false;
+        finishWorkout();
+      };
       function finishWorkout() {
         if (!state.active) return;
         const a = state.active,
@@ -8280,7 +8386,6 @@ body::before {
         clearInterval(workoutInterval);
         clearInterval(restInterval);
         showPage("progress");
-        playSound("workoutComplete");
         toast("Workout complete");
         showPostWorkoutFavourites(rec.exerciseNames || []);
       }
