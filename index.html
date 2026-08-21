@@ -4316,7 +4316,7 @@ body::before {
       }
 
 
-      /* v0.9.3.1 workout outcome screen */
+      /* v0.9.3.2 workout outcome screen */
       .workoutResultDialog {
         width: min(92vw, 470px);
         max-width: 470px;
@@ -4532,13 +4532,13 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.9.3.1</p>
+        <p class="testerInstallVersion">v0.9.3.2</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
       <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.9.3.1 UI build</div>
+      <div class="launchVersion">v0.9.3.2 UI build</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
@@ -4801,6 +4801,13 @@ body::before {
                     <option value="on">On</option>
                     <option value="off">Off</option>
                   </select></label
+                ><label
+                  >Exercise difficulty<select id="exerciseDifficultySelect">
+                    <option value="off">Off</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                  </select></label
                 >
               </div>
             </div>
@@ -4842,16 +4849,6 @@ body::before {
                   <button type="button" class="favouriteLimitButton" data-favourite-limit="2">2</button>
                   <button type="button" class="favouriteLimitButton" data-favourite-limit="3">3</button>
                 </div>
-              </div>
-            </div>
-            <div class="card" id="difficultySettingsCard">
-              <h3>Exercise difficulty</h3>
-              <p class="small muted" style="margin-top:6px">Optionally tailor exercise variants to your ability. This does not create levels or progression targets.</p>
-              <div class="difficultyChoices" id="difficultyChoices">
-                <button type="button" class="difficultyChoice" data-difficulty="off">Off</button>
-                <button type="button" class="difficultyChoice" data-difficulty="easy">Easy</button>
-                <button type="button" class="difficultyChoice" data-difficulty="medium">Medium</button>
-                <button type="button" class="difficultyChoice" data-difficulty="hard">Hard</button>
               </div>
             </div>
             <div class="card">
@@ -5244,13 +5241,14 @@ body::before {
       function canonicalExerciseName(name){ return EXERCISE_NAME_ALIASES[name] || name; }
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.9.3.1",
+        version: "0.9.3.2",
         buildDate: "21 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
         description: "Personal offline calisthenics training companion."
       };
       const CHANGELOG = [
+        "Moved Exercise difficulty into the Preferences card as a compact pull-down setting",
         "Added distinct Workout Complete and manually ended workout result screens with optional partial-session saving",
         "Partial sessions now record actual completed sets and only count toward weekly sessions after 5 minutes and 25% of planned sets",
         "Added a dedicated low-latency glass cue for manually pausing a workout while retaining Rest Complete for resume",
@@ -7086,7 +7084,7 @@ body::before {
         clearTimeout(t._to);
         t._to = setTimeout(() => t.classList.remove("show"), 2200);
       }
-      // v0.9.3.1 MOMNTUM low-latency authored workout sound set.
+      // v0.9.3.2 MOMNTUM low-latency authored workout sound set.
       // The packaged WAVs are trimmed to the audible transient. Files are fetched
       // early, decoded into memory after the first user interaction, and then
       // played with Web Audio for near-instant response. HTMLAudio remains a fallback.
@@ -8050,10 +8048,10 @@ body::before {
         $("themeModeSelect").value = state.settings.themeMode;
         $("themeHueSelect").value = state.settings.themeHue;
         $("soundSelect").value = state.settings.sound;
+        $("exerciseDifficultySelect").value = state.settings.exerciseDifficulty || "off";
         $("useFavouritesToggle").checked = !!state.settings.useFavourites;
         $("favouriteLimitSection").classList.toggle("hiddenControl", !state.settings.useFavourites);
         document.querySelectorAll("[data-favourite-limit]").forEach(btn=>btn.classList.toggle("active", Number(btn.dataset.favouriteLimit)===(Number(state.settings.favouriteLimit)||2)));
-        document.querySelectorAll("[data-difficulty]").forEach(btn=>btn.classList.toggle("active", btn.dataset.difficulty===(state.settings.exerciseDifficulty||"off")));
         document.querySelectorAll("[data-reminder-day]").forEach((input) => {
           input.checked = (state.settings.reminderDays || []).includes(input.value);
         });
@@ -8828,6 +8826,7 @@ body::before {
         state.settings.themeMode = $("themeModeSelect").value;
         state.settings.themeHue = $("themeHueSelect").value;
         state.settings.sound = $("soundSelect").value;
+        state.settings.exerciseDifficulty = $("exerciseDifficultySelect").value;
         state.settings.useFavourites = $("useFavouritesToggle").checked;
         state.settings.reminderDays = [...document.querySelectorAll("[data-reminder-day]:checked")]
           .map((input) => input.value);
@@ -8844,6 +8843,7 @@ body::before {
         "themeModeSelect",
         "themeHueSelect",
         "soundSelect",
+        "exerciseDifficultySelect",
         "useFavouritesToggle",
         "reminderTime",
       ].forEach((id) => $(id).addEventListener("change", saveSettings));
@@ -8852,7 +8852,6 @@ body::before {
       );
 
       document.querySelectorAll("[data-favourite-limit]").forEach(btn=>btn.addEventListener("click",()=>{ state.settings.favouriteLimit=Number(btn.dataset.favouriteLimit); saveState(); renderAll(); toast(`Up to ${state.settings.favouriteLimit} favourite${state.settings.favouriteLimit===1?"":"s"} per workout`); }));
-      document.querySelectorAll("[data-difficulty]").forEach(btn=>btn.addEventListener("click",()=>{ state.settings.exerciseDifficulty=btn.dataset.difficulty; saveState(); renderAll(); toast(state.settings.exerciseDifficulty==="off"?"Difficulty tailoring off":`Difficulty: ${state.settings.exerciseDifficulty}`); }));
 
       function changeWeeklyTarget(delta) {
         const current = Math.min(7, Math.max(1, Number(state.settings.weeklyTarget) || 3));
