@@ -4605,13 +4605,13 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.9.4.5</p>
+        <p class="testerInstallVersion">v0.9.4.7</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
       <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.9.4.5 UI build</div>
+      <div class="launchVersion">v0.9.4.7 UI build</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
@@ -4884,19 +4884,7 @@ body::before {
                 >
               </div>
             </div>
-            <div class="card weeklyTargetCard">
-              <div class="weeklyTargetRow">
-                <div>
-                  <h3>Weekly sessions</h3>
-                  <p class="small muted" style="margin-top:6px">Choose how many sessions you’d like to complete each week.</p>
-                </div>
-                <div class="weeklyTargetStepper" aria-label="Weekly session target">
-                  <button class="weeklyTargetButton" id="weeklyTargetMinus" type="button" aria-label="Decrease weekly target">−</button>
-                  <output id="weeklyTargetValue" aria-live="polite">3</output>
-                  <button class="weeklyTargetButton" id="weeklyTargetPlus" type="button" aria-label="Increase weekly target">+</button>
-                </div>
-              </div>
-            </div>
+            
             <div class="card" id="equipmentSettingsCard">
               <h3>My equipment</h3>
               <p class="small" style="margin-top:6px">Bodyweight is always included. Add any portable equipment you have available.</p>
@@ -4911,18 +4899,31 @@ body::before {
               <div class="settingsToggleHeader">
                 <div>
                   <h3>Use favourites in workouts</h3>
-                  <p class="small muted" style="margin-top:6px">Favourite exercises can be quietly weighted into generated workouts.</p>
+                  <p class="small muted" style="margin-top:6px">Include favourite exercises in MOMNTUM's workout generator.</p>
                 </div>
-                <label class="switchControl" aria-label="Use favourites in workouts"><input type="checkbox" id="useFavouritesToggle"><span class="switchTrack"></span></label>
+                <label class="switchControl" aria-label="Include favourite exercises in MOMNTUM's workout generator"><input type="checkbox" id="useFavouritesToggle"><span class="switchTrack"></span></label>
               </div>
               <div class="settingsSubcontrol" id="favouriteLimitSection">
-                <p class="small muted">Favourites are weighted, never forced. MOMNTUM still keeps workouts balanced and varied.</p>
+                <p class="small muted">MOMNTUM can bias your favourite exercises when generating workouts.</p>
                 <strong style="display:block;margin-top:12px">Maximum per workout</strong>
-                <p class="small muted" style="margin-top:3px">Limits how much of a generated workout can come from your favourites.</p>
+                <p class="small muted" style="margin-top:3px">Limit how many favourites to include when generating a workout.</p>
                 <div class="favouriteLimitControl" id="favouriteLimitControl">
                   <button type="button" class="favouriteLimitButton" data-favourite-limit="1">1</button>
                   <button type="button" class="favouriteLimitButton" data-favourite-limit="2">2</button>
                   <button type="button" class="favouriteLimitButton" data-favourite-limit="3">3</button>
+                </div>
+              </div>
+            </div>
+            <div class="card weeklyTargetCard">
+              <div class="weeklyTargetRow">
+                <div>
+                  <h3>Weekly sessions</h3>
+                  <p class="small muted" style="margin-top:6px">Choose how many sessions you’d like to complete each week.</p>
+                </div>
+                <div class="weeklyTargetStepper" aria-label="Weekly session target">
+                  <button class="weeklyTargetButton" id="weeklyTargetMinus" type="button" aria-label="Decrease weekly target">−</button>
+                  <output id="weeklyTargetValue" aria-live="polite">3</output>
+                  <button class="weeklyTargetButton" id="weeklyTargetPlus" type="button" aria-label="Increase weekly target">+</button>
                 </div>
               </div>
             </div>
@@ -5321,11 +5322,11 @@ body::before {
       function canonicalExerciseName(name){ return EXERCISE_NAME_ALIASES[name] || name; }
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.9.4.5",
+        version: "0.9.4.7",
         buildDate: "24 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
-        description: "Personal offline calisthenics training companion."
+        description: "Consistency over intensity, simple workouts, lasting MOMNTUM"
       };
       const CHANGELOG = [
         "Integrated all 131 reviewed Motion Engine animations, including authored multi-step sequences, split views, hidden-limb presentation and card framing",
@@ -7505,7 +7506,7 @@ body::before {
          retained. Apply the same projection here at render time. */
       function reviewedDisplayPose(rawPose, requestedPerspective = 1) {
         if (!rawPose) return rawPose;
-        // v0.9.4.5: Studio coordinates are already the reviewed display geometry.
+        // v0.9.4.7: Studio coordinates are already the reviewed display geometry.
         // presentation.*.perspective is retained for backwards-compatible data loading
         // but must never compress the authored torso/shins a second time.
         return JSON.parse(JSON.stringify(rawPose));
@@ -7585,7 +7586,7 @@ body::before {
         const bounds=frames.map(kf=>poseBounds(kf.pose));
         if(!bounds.length)return{x:0,y:0,w:760,h:198};
         const raw={minX:Math.min(...bounds.map(b=>b.minX)),maxX:Math.max(...bounds.map(b=>b.maxX)),minY:Math.min(...bounds.map(b=>b.minY)),maxY:Math.max(...bounds.map(b=>b.maxY))};
-        // v0.9.4.5: exact authored sequence bounds. reviewedCameraViewBox()
+        // v0.9.4.7: exact authored sequence bounds. reviewedCameraViewBox()
         // already applies the same one authoritative safety gutter as Studio.
         return{x:raw.minX,y:raw.minY,w:(raw.maxX-raw.minX),h:(raw.maxY-raw.minY)};
       }
@@ -9177,4 +9178,41 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
         min-height: 50px;
         font-weight: 900;
       }
+
+/* v0.9.4.7 — Library search focus should sit above filter pills */
+#libraryPage .librarySearchWrap,
+#libraryPage .searchPill,
+.libraryPage .librarySearchWrap,
+.libraryPage .searchPill{
+  position:relative;
+  z-index:4;
+}
+#libraryPage .librarySearchWrap:focus-within,
+#libraryPage .searchPill:focus-within,
+.libraryPage .librarySearchWrap:focus-within,
+.libraryPage .searchPill:focus-within{
+  z-index:6;
+  margin-bottom:2px;
+}
+#libraryPage .libraryFilters,
+.libraryPage .libraryFilters{
+  position:relative;
+  z-index:2;
+}
+
+
+/* v0.9.4.7 Library search focus-ring visibility */
+#page-library #exerciseSearch {
+  position: relative;
+  z-index: 3;
+  margin-bottom: 3px;
+}
+#page-library #exerciseSearch:focus-visible {
+  z-index: 5;
+}
+#page-library #filterTabs {
+  position: relative;
+  z-index: 1;
+}
+
 </style>
