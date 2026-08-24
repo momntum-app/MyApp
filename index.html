@@ -4605,13 +4605,13 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.9.4.0</p>
+        <p class="testerInstallVersion">v0.9.4.3</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
       <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.9.4.0 UI build</div>
+      <div class="launchVersion">v0.9.4.3 UI build</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
@@ -5321,7 +5321,7 @@ body::before {
       function canonicalExerciseName(name){ return EXERCISE_NAME_ALIASES[name] || name; }
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.9.3.9",
+        version: "0.9.4.3",
         buildDate: "24 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
@@ -7494,7 +7494,7 @@ body::before {
          retained. Apply the same projection here at render time. */
       function reviewedDisplayPose(rawPose, requestedPerspective = 1) {
         if (!rawPose) return rawPose;
-        // v0.9.4.2: Studio coordinates are already the reviewed display geometry.
+        // v0.9.4.3: Studio coordinates are already the reviewed display geometry.
         // presentation.*.perspective is retained for backwards-compatible data loading
         // but must never compress the authored torso/shins a second time.
         return JSON.parse(JSON.stringify(rawPose));
@@ -7574,7 +7574,9 @@ body::before {
         const bounds=frames.map(kf=>poseBounds(kf.pose));
         if(!bounds.length)return{x:0,y:0,w:760,h:198};
         const raw={minX:Math.min(...bounds.map(b=>b.minX)),maxX:Math.max(...bounds.map(b=>b.maxX)),minY:Math.min(...bounds.map(b=>b.minY)),maxY:Math.max(...bounds.map(b=>b.maxY))};
-        return{x:raw.minX-6,y:raw.minY-8,w:(raw.maxX-raw.minX)+12,h:(raw.maxY-raw.minY)+14};
+        // v0.9.4.3: exact authored sequence bounds. reviewedCameraViewBox()
+        // already applies the same one authoritative safety gutter as Studio.
+        return{x:raw.minX,y:raw.minY,w:(raw.maxX-raw.minX),h:(raw.maxY-raw.minY)};
       }
 
       function reviewedAnimate(attribute, values, durMs, segmentCount) {
