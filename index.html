@@ -4605,13 +4605,13 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.9.4.4</p>
+        <p class="testerInstallVersion">v0.9.4.5</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
       <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.9.4.4 UI build</div>
+      <div class="launchVersion">v0.9.4.5 UI build</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
@@ -5321,7 +5321,7 @@ body::before {
       function canonicalExerciseName(name){ return EXERCISE_NAME_ALIASES[name] || name; }
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.9.4.4",
+        version: "0.9.4.5",
         buildDate: "24 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
@@ -7113,9 +7113,20 @@ body::before {
       }
       function dynamicPick(slot,ctx,isMain=false){
         const usedFamilies=isMain?ctx.mainUsedFamilies:ctx.warmUsedFamilies;
-        let pool=dynamicCandidates(slot,ctx.available).filter(e=>!usedFamilies.has(e.movementFamily));
+        const usedExercises=isMain?ctx.mainUsedExercises:ctx.warmUsedExercises;
+
+        let pool=dynamicCandidates(slot,ctx.available)
+          .filter(e=>!usedFamilies.has(e.movementFamily) && !usedExercises.has(e.name));
         pool=difficultyFilteredPool(pool,ctx.difficulty);
+
+        let usedFamilyFallback=false;
+        if(!pool.length){
+          pool=dynamicCandidates(slot,ctx.available).filter(e=>!usedExercises.has(e.name));
+          pool=difficultyFilteredPool(pool,ctx.difficulty);
+          usedFamilyFallback=!!pool.length;
+        }
         if(!pool.length)return null;
+
         const recent=ctx.history.flat(),previous=ctx.history[0]||[];
         const canFavouriteBoost=isMain && ctx.useFavourites && ctx.favouriteBoostsUsed<ctx.favouriteLimit;
         const scored=pool.map(e=>{
@@ -7127,9 +7138,12 @@ body::before {
           if(favouriteBoosted)score+=3.2;
           return {e,score,favouriteBoosted};
         }).sort((a,b)=>b.score-a.score);
+
         const picked=scored[0],chosen=picked.e;
         usedFamilies.add(chosen.movementFamily);
+        usedExercises.add(chosen.name);
         if(picked.favouriteBoosted)ctx.favouriteBoostsUsed++;
+        if(usedFamilyFallback)ctx.familyFallbacksUsed++;
         return chosen.name;
       }
       function generateDynamicWorkout(workout,regeneration=0){
@@ -7138,10 +7152,10 @@ body::before {
         const history=dynamicHistory(workout.id);
         const carry=new Set((history[0]||[]).filter((_,i)=>i%2===0));
         const seed=`${workout.id}:${new Date().toISOString().slice(0,10)}:${available.join(",")}:${regeneration}:${state.settings.exerciseDifficulty}`;
-        const ctx={available,history,carry,seed,warmUsedFamilies:new Set(),mainUsedFamilies:new Set(),difficulty:state.settings.exerciseDifficulty||"off",useFavourites:!!state.settings.useFavourites,favouriteLimit:Math.min(3,Math.max(1,Number(state.settings.favouriteLimit)||2)),favouriteBoostsUsed:0};
+        const ctx={available,history,carry,seed,warmUsedFamilies:new Set(),mainUsedFamilies:new Set(),warmUsedExercises:new Set(),mainUsedExercises:new Set(),difficulty:state.settings.exerciseDifficulty||"off",useFavourites:!!state.settings.useFavourites,favouriteLimit:Math.min(3,Math.max(1,Number(state.settings.favouriteLimit)||2)),favouriteBoostsUsed:0,familyFallbacksUsed:0};
         const warm=template.warm.map(s=>dynamicPick(s,ctx,false)).filter(Boolean);
         const main=template.main.map(s=>dynamicPick(s,ctx,true)).filter(Boolean);
-        return {warm,main,favouritesIncluded:ctx.favouriteBoostsUsed,activeEquipment:available.length?available.map(x=>equipmentLabels[x]).join(" • "):"Bodyweight only"};
+        return {warm,main,favouritesIncluded:ctx.favouriteBoostsUsed,familyFallbacksUsed:ctx.familyFallbacksUsed,activeEquipment:available.length?available.map(x=>equipmentLabels[x]).join(" • "):"Bodyweight only"};
       }
 
       function resolveWorkout(workout) {
@@ -7491,7 +7505,7 @@ body::before {
          retained. Apply the same projection here at render time. */
       function reviewedDisplayPose(rawPose, requestedPerspective = 1) {
         if (!rawPose) return rawPose;
-        // v0.9.4.4: Studio coordinates are already the reviewed display geometry.
+        // v0.9.4.5: Studio coordinates are already the reviewed display geometry.
         // presentation.*.perspective is retained for backwards-compatible data loading
         // but must never compress the authored torso/shins a second time.
         return JSON.parse(JSON.stringify(rawPose));
@@ -7571,7 +7585,7 @@ body::before {
         const bounds=frames.map(kf=>poseBounds(kf.pose));
         if(!bounds.length)return{x:0,y:0,w:760,h:198};
         const raw={minX:Math.min(...bounds.map(b=>b.minX)),maxX:Math.max(...bounds.map(b=>b.maxX)),minY:Math.min(...bounds.map(b=>b.minY)),maxY:Math.max(...bounds.map(b=>b.maxY))};
-        // v0.9.4.4: exact authored sequence bounds. reviewedCameraViewBox()
+        // v0.9.4.5: exact authored sequence bounds. reviewedCameraViewBox()
         // already applies the same one authoritative safety gutter as Studio.
         return{x:raw.minX,y:raw.minY,w:(raw.maxX-raw.minX),h:(raw.maxY-raw.minY)};
       }
