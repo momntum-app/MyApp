@@ -4605,13 +4605,13 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.9.4.3</p>
+        <p class="testerInstallVersion">v0.9.4.4</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
       <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.9.4.3 UI build</div>
+      <div class="launchVersion">v0.9.4.4 UI build</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
@@ -5321,7 +5321,7 @@ body::before {
       function canonicalExerciseName(name){ return EXERCISE_NAME_ALIASES[name] || name; }
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.9.4.3",
+        version: "0.9.4.4",
         buildDate: "24 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
@@ -7058,10 +7058,10 @@ body::before {
         conditioning:{warm:[{names:["March in Place","Step Jack","Arm Circles"]},{names:["Inchworm","Squat Hold","Hip Opener"]},{families:["Mobility / preparation"]}],main:[{role:"engine"},{role:"condLegs"},{role:"locomotion"},{role:"power"},{role:"finisher"}]}
       };
       const dynamicRolePreferences={
-        push:["Push-up","Incline Push-up","Knee Push-up","Wide Push-up","Close-grip Push-up","Diamond Push-up","Decline Push-up","Dumbbell Floor Press"],
+        push:["Wall Push-up","Push-up","Incline Push-up","Knee Push-up","Wide Push-up","Close-grip Push-up","Diamond Push-up","Decline Push-up","Hindu Push-up","Shoulder Tap Push-up","Dumbbell Floor Press"],
         shoulders:["Pike Push-up","Dolphin Push-up","Pike Hold","Bear Shoulder Tap","Band Overhead Press","Band Lateral Raise","Dumbbell Shoulder Press","Dumbbell Lateral Raise","Kettlebell Overhead Press","Kettlebell Clean and Press"],
         pull:["Prone Lat Pull","Superman Pull","Floor Cobra","Seated Band Row","One-arm Dumbbell Row"],
-        upperBack:["Prone T Raise","Prone W Raise","Prone Y Raise","Prone T Raise","Reverse Snow Angel","Band Pull-apart","Dumbbell Reverse Fly"],
+        upperBack:["Prone T Raise","Prone W Raise","Prone Y Raise","Reverse Snow Angel","Superman","Band Pull-apart","Dumbbell Reverse Fly"],
         upperAccessory:["Scapular Push-up","Bear Shoulder Tap","Close-grip Push-up","Triceps Dip","Band Biceps Curl","Band Hammer Curl","Band Triceps Extension","Dumbbell Biceps Curl","Dumbbell Hammer Curl","Dumbbell Overhead Triceps Extension"],
         squat:["Squat","Narrow Squat","Sumo Squat","Squat Hold","Wall Sit","Pistol Squat","Band Squat","Goblet Squat","Kettlebell Goblet Squat"],
         unilateral:["Split Squat","Reverse Lunge","Forward Lunge","Lateral Lunge","Curtsy Lunge","Bulgarian Split Squat","Cossack Squat","Step-up","Pistol Squat","Dumbbell Reverse Lunge","Dumbbell Bulgarian Split Squat","Kettlebell Reverse Lunge"],
@@ -7112,27 +7112,24 @@ body::before {
         return chosen;
       }
       function dynamicPick(slot,ctx,isMain=false){
-        let pool=dynamicCandidates(slot,ctx.available).filter(e=>!ctx.usedFamilies.has(e.movementFamily));
+        const usedFamilies=isMain?ctx.mainUsedFamilies:ctx.warmUsedFamilies;
+        let pool=dynamicCandidates(slot,ctx.available).filter(e=>!usedFamilies.has(e.movementFamily));
         pool=difficultyFilteredPool(pool,ctx.difficulty);
-        if(isMain && ctx.useFavourites && ctx.favouritesUsed>=ctx.favouriteLimit){
-          const nonFavourite=pool.filter(e=>!isFavouriteEligible(e));
-          if(nonFavourite.length) pool=nonFavourite;
-        }
         if(!pool.length)return null;
         const recent=ctx.history.flat(),previous=ctx.history[0]||[];
-        pool.sort((a,b)=>{
-          const score=e=>{
-            let x=(dynamicHash(`${ctx.seed}:${e.name}`)%1000)/1000;
-            if(previous.includes(e.name))x-=2.1;else if(recent.includes(e.name))x-=0.8;
-            if(ctx.carry.has(e.name))x+=0.42;
-            if(String(e.equipment).toLowerCase()!=="bodyweight")x+=0.15;
-            if(isMain && ctx.useFavourites && isFavouriteEligible(e) && ctx.favouritesUsed<ctx.favouriteLimit)x+=3.2;
-            return x;
-          };return score(b)-score(a);
-        });
-        const chosen=pool[0];
-        ctx.usedFamilies.add(chosen.movementFamily);
-        if(isMain && ctx.useFavourites && isFavouriteEligible(chosen))ctx.favouritesUsed++;
+        const canFavouriteBoost=isMain && ctx.useFavourites && ctx.favouriteBoostsUsed<ctx.favouriteLimit;
+        const scored=pool.map(e=>{
+          let score=(dynamicHash(`${ctx.seed}:${e.name}`)%1000)/1000;
+          if(previous.includes(e.name))score-=2.1;else if(recent.includes(e.name))score-=0.8;
+          if(ctx.carry.has(e.name))score+=0.42;
+          if(String(e.equipment).toLowerCase()!=="bodyweight")score+=0.15;
+          const favouriteBoosted=canFavouriteBoost && isFavouriteEligible(e);
+          if(favouriteBoosted)score+=3.2;
+          return {e,score,favouriteBoosted};
+        }).sort((a,b)=>b.score-a.score);
+        const picked=scored[0],chosen=picked.e;
+        usedFamilies.add(chosen.movementFamily);
+        if(picked.favouriteBoosted)ctx.favouriteBoostsUsed++;
         return chosen.name;
       }
       function generateDynamicWorkout(workout,regeneration=0){
@@ -7141,10 +7138,10 @@ body::before {
         const history=dynamicHistory(workout.id);
         const carry=new Set((history[0]||[]).filter((_,i)=>i%2===0));
         const seed=`${workout.id}:${new Date().toISOString().slice(0,10)}:${available.join(",")}:${regeneration}:${state.settings.exerciseDifficulty}`;
-        const ctx={available,history,carry,seed,usedFamilies:new Set(),difficulty:state.settings.exerciseDifficulty||"off",useFavourites:!!state.settings.useFavourites,favouriteLimit:Math.min(3,Math.max(1,Number(state.settings.favouriteLimit)||2)),favouritesUsed:0};
+        const ctx={available,history,carry,seed,warmUsedFamilies:new Set(),mainUsedFamilies:new Set(),difficulty:state.settings.exerciseDifficulty||"off",useFavourites:!!state.settings.useFavourites,favouriteLimit:Math.min(3,Math.max(1,Number(state.settings.favouriteLimit)||2)),favouriteBoostsUsed:0};
         const warm=template.warm.map(s=>dynamicPick(s,ctx,false)).filter(Boolean);
         const main=template.main.map(s=>dynamicPick(s,ctx,true)).filter(Boolean);
-        return {warm,main,favouritesIncluded:ctx.favouritesUsed,activeEquipment:available.length?available.map(x=>equipmentLabels[x]).join(" • "):"Bodyweight only"};
+        return {warm,main,favouritesIncluded:ctx.favouriteBoostsUsed,activeEquipment:available.length?available.map(x=>equipmentLabels[x]).join(" • "):"Bodyweight only"};
       }
 
       function resolveWorkout(workout) {
@@ -7494,7 +7491,7 @@ body::before {
          retained. Apply the same projection here at render time. */
       function reviewedDisplayPose(rawPose, requestedPerspective = 1) {
         if (!rawPose) return rawPose;
-        // v0.9.4.3: Studio coordinates are already the reviewed display geometry.
+        // v0.9.4.4: Studio coordinates are already the reviewed display geometry.
         // presentation.*.perspective is retained for backwards-compatible data loading
         // but must never compress the authored torso/shins a second time.
         return JSON.parse(JSON.stringify(rawPose));
@@ -7574,7 +7571,7 @@ body::before {
         const bounds=frames.map(kf=>poseBounds(kf.pose));
         if(!bounds.length)return{x:0,y:0,w:760,h:198};
         const raw={minX:Math.min(...bounds.map(b=>b.minX)),maxX:Math.max(...bounds.map(b=>b.maxX)),minY:Math.min(...bounds.map(b=>b.minY)),maxY:Math.max(...bounds.map(b=>b.maxY))};
-        // v0.9.4.3: exact authored sequence bounds. reviewedCameraViewBox()
+        // v0.9.4.4: exact authored sequence bounds. reviewedCameraViewBox()
         // already applies the same one authoritative safety gutter as Studio.
         return{x:raw.minX,y:raw.minY,w:(raw.maxX-raw.minX),h:(raw.maxY-raw.minY)};
       }
