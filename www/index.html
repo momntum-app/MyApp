@@ -4520,7 +4520,7 @@ body::before {
     <link rel="apple-touch-icon" href="apple-touch-icon.png?v=0.8.3" sizes="180x180" />
     <link rel="manifest" href="site.webmanifest?v=0.8.3" />
       <script>
-      /* v0.9.6.0: mark the Capacitor shell before layout settles. */
+      /* v0.9.6.1: mark the Capacitor shell before layout settles. */
       (function markNativeShell() {
         try {
           const native =
@@ -4553,7 +4553,7 @@ body::before {
           /iPad|iPhone|iPod/.test(navigator.userAgent) ||
           (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-        // v0.9.6.0: Capacitor is already a native installed app, so the
+        // v0.9.6.1: Capacitor is already a native installed app, so the
         // temporary Safari/PWA install gate must never appear inside it.
         const isCapacitorNative =
           window.Capacitor?.isNativePlatform?.() === true ||
@@ -4624,13 +4624,13 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.9.6.0</p>
+        <p class="testerInstallVersion">v0.9.6.1</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
       <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.9.6.0 UI build</div>
+      <div class="launchVersion">v0.9.6.1 UI build</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
@@ -5349,7 +5349,7 @@ body::before {
       function canonicalExerciseName(name){ return EXERCISE_NAME_ALIASES[name] || name; }
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.9.6.0",
+        version: "0.9.6.1",
         buildDate: "24 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
@@ -6800,6 +6800,7 @@ body::before {
         activeCurrentExerciseId = null,
         libraryExpandedExerciseId = null,
         onboardingStep = 0,
+        onboardingFirstRun = false,
         appTourStep = 0,
         appTourContextOnly = false,
         appTourStepsActive = [];
@@ -6831,9 +6832,9 @@ body::before {
         return localStorage.getItem(ONBOARDING_KEY) === "true";
       }
       function buildOnboardingControls() {
-        const restValues = [30, 45, 60, 75, 90, 120];
+        const restValues = [10, 20, 30, 60];
         $("onboardingRestChoices").innerHTML = restValues.map((value) =>
-          `<button class="onboardingChoice" type="button" data-onboarding-rest="${value}"><span>${value} seconds${value === 60 ? " · Recommended" : ""}</span><span class="onboardingChoiceTick">✓</span></button>`
+          `<button class="onboardingChoice" type="button" data-onboarding-rest="${value}"><span>${value} seconds${value === 30 ? " · Recommended" : ""}</span><span class="onboardingChoiceTick">✓</span></button>`
         ).join("");
         $("onboardingThemeChoices").innerHTML = [
           ["system", "System"], ["dark", "Dark"], ["light", "Light"]
@@ -6883,17 +6884,24 @@ body::before {
       }
       function openOnboarding(force = false) {
         if (!force && (!isStandalonePWA() || onboardingIsComplete())) { scheduleAppTour(); return; }
+        onboardingFirstRun = !force && !onboardingIsComplete();
         onboardingStep = 0;
         buildOnboardingControls(); renderOnboarding();
         document.body.classList.add("onboardingActive");
       }
       function closeOnboarding(markComplete = true) {
+        const shouldStartFirstRunTour = onboardingFirstRun && markComplete;
         if (markComplete) localStorage.setItem(ONBOARDING_KEY, "true");
+        if (shouldStartFirstRunTour) localStorage.removeItem(TOUR_KEY);
+        onboardingFirstRun = false;
         document.body.classList.remove("onboardingActive");
         renderAll();
         if (typeof showPage === "function") showPage("home");
-        window.scrollTo({ top: 0, behavior: "instant" });
-        window.setTimeout(() => startAppTour(), 450);
+        const content = $("content");
+        if (content) content.scrollTo({ top: 0, behavior: "instant" });
+        else window.scrollTo({ top: 0, behavior: "instant" });
+        if (shouldStartFirstRunTour) window.setTimeout(() => startAppTour(), 450);
+        else scheduleAppTour();
       }
 
       const APP_TOUR_STEPS = [
@@ -6939,7 +6947,9 @@ body::before {
         const step = appTourStepsActive[appTourStep];
         if (!step) return finishAppTour();
         if (typeof showPage === "function" && step.page) showPage(step.page);
-        window.scrollTo({ top: 0, behavior: "instant" });
+        const tourScroller = $("content");
+        if (tourScroller) tourScroller.scrollTo({ top: 0, behavior: "instant" });
+        else window.scrollTo({ top: 0, behavior: "instant" });
         $("appTourKicker").textContent = appTourContextOnly ? "Quick explanation" : "App tour";
         $("appTourTitle").textContent = step.title;
         $("appTourText").textContent = step.text;
@@ -7242,7 +7252,7 @@ body::before {
         return workouts[Math.min(weeklyCompleted(), 3)] || workouts[0];
       }
       function toast(m) {
-        // v0.9.6.0: keep active workouts visually quiet.
+        // v0.9.6.1: keep active workouts visually quiet.
         // Set completion/rest/workout interactions already have dedicated
         // in-workout feedback, so suppress the global bottom toast while
         // a workout session is active.
@@ -7563,7 +7573,7 @@ body::before {
         ["thighR","hip","kneeR"],
         ["shinR","kneeR","ankleR"]
       ]);
-      // v0.9.6.0: this is the canonical Studio rig topology.
+      // v0.9.6.1: this is the canonical Studio rig topology.
       // Do not derive separate shoulder anchors at render time: authored upper
       // arms begin at neckPivot exactly as they do in Motion Studio.
 
@@ -7573,7 +7583,7 @@ body::before {
          retained. Apply the same projection here at render time. */
       function reviewedDisplayPose(rawPose, requestedPerspective = 1) {
         if (!rawPose) return rawPose;
-        // v0.9.6.0: Studio coordinates are already the reviewed display geometry.
+        // v0.9.6.1: Studio coordinates are already the reviewed display geometry.
         // presentation.*.perspective is retained for backwards-compatible data loading
         // but must never compress the authored torso/shins a second time.
         return JSON.parse(JSON.stringify(rawPose));
@@ -7617,7 +7627,7 @@ body::before {
         const neck = pose.neckPivot, hip = pose.hip;
         let dx = neck.x - hip.x, dy = neck.y - hip.y;
         const len = Math.hypot(dx,dy);
-        // v0.9.6.0: a fully collapsed torso is an authored axial/top-down
+        // v0.9.6.1: a fully collapsed torso is an authored axial/top-down
         // view. Centre the head on neckPivot so the bilateral arm anchor is
         // geometrically and visually symmetrical, matching Motion Studio.
         if (len < .001 || Number(pose.torsoScale) <= .001) {
@@ -7658,7 +7668,7 @@ body::before {
         const bounds=frames.map(kf=>poseBounds(kf.pose));
         if(!bounds.length)return{x:0,y:0,w:760,h:198};
         const raw={minX:Math.min(...bounds.map(b=>b.minX)),maxX:Math.max(...bounds.map(b=>b.maxX)),minY:Math.min(...bounds.map(b=>b.minY)),maxY:Math.max(...bounds.map(b=>b.maxY))};
-        // v0.9.6.0: exact authored sequence bounds. reviewedCameraViewBox()
+        // v0.9.6.1: exact authored sequence bounds. reviewedCameraViewBox()
         // already applies the same one authoritative safety gutter as Studio.
         return{x:raw.minX,y:raw.minY,w:(raw.maxX-raw.minX),h:(raw.maxY-raw.minY)};
       }
@@ -9362,7 +9372,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
         font-weight: 900;
       }
 
-/* v0.9.6.0 — Library search focus should sit above filter pills */
+/* v0.9.6.1 — Library search focus should sit above filter pills */
 #libraryPage .librarySearchWrap,
 #libraryPage .searchPill,
 .libraryPage .librarySearchWrap,
@@ -9384,7 +9394,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
 }
 
 
-/* v0.9.6.0 Library search focus-ring visibility */
+/* v0.9.6.1 Library search focus-ring visibility */
 #page-library #exerciseSearch {
   position: relative;
   z-index: 3;
@@ -9399,7 +9409,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
 }
 
 
-      /* v0.9.6.0 exercise preference */
+      /* v0.9.6.1 exercise preference */
       .exerciseChallengeExplanation {
         color: var(--text);
         font-weight: 700;
@@ -9420,7 +9430,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
       }
 
 
-      /* v0.9.6.0 Exercise preference segmented choice */
+      /* v0.9.6.1 Exercise preference segmented choice */
       .exerciseChallengeStateSelect {
         position: absolute !important;
         width: 1px !important;
@@ -9456,14 +9466,14 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
       }
 
 
-      /* v0.9.6.0 phone polish: neutral dark animation canvas */
+      /* v0.9.6.1 phone polish: neutral dark animation canvas */
       html[data-mode="dark"] #page-active .exerciseItem.currentExercise .exerciseMotion.reviewedMotion {
         background: #121315 !important;
         border-color: color-mix(in srgb, var(--accent) 34%, rgba(255,255,255,.10)) !important;
       }
 
 
-      /* v0.9.6.0 Capacitor/WKWebView scrolling */
+      /* v0.9.6.1 Capacitor/WKWebView scrolling */
       html.capacitorNative,
       html.capacitorNative body {
         height: 100% !important;
