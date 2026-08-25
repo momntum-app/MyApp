@@ -4079,9 +4079,9 @@ body::before {
 
       /* v0.9.1.7 authoritative reviewed-animation theme surface */
       html[data-mode="dark"] .exerciseMotion.reviewedMotion {
-        background: #0b1422 !important;
+        background: #121315 !important;
         border-color: rgba(255,255,255,.10) !important;
-        box-shadow: inset 0 0 0 1px rgba(255,255,255,.015) !important;
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,.018) !important;
       }
       html[data-mode="dark"] .exerciseMotion.reviewedMotion svg {
         background: transparent !important;
@@ -4605,13 +4605,13 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.9.5.5</p>
+        <p class="testerInstallVersion">v0.9.5.6</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
       <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.9.5.5 UI build</div>
+      <div class="launchVersion">v0.9.5.6 UI build</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
@@ -5330,7 +5330,7 @@ body::before {
       function canonicalExerciseName(name){ return EXERCISE_NAME_ALIASES[name] || name; }
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.9.5.5",
+        version: "0.9.5.6",
         buildDate: "24 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
@@ -7207,7 +7207,7 @@ body::before {
         return workouts[Math.min(weeklyCompleted(), 3)] || workouts[0];
       }
       function toast(m) {
-        // v0.9.5.5: keep active workouts visually quiet.
+        // v0.9.5.6: keep active workouts visually quiet.
         // Set completion/rest/workout interactions already have dedicated
         // in-workout feedback, so suppress the global bottom toast while
         // a workout session is active.
@@ -7528,7 +7528,7 @@ body::before {
         ["thighR","hip","kneeR"],
         ["shinR","kneeR","ankleR"]
       ]);
-      // v0.9.5.5: this is the canonical Studio rig topology.
+      // v0.9.5.6: this is the canonical Studio rig topology.
       // Do not derive separate shoulder anchors at render time: authored upper
       // arms begin at neckPivot exactly as they do in Motion Studio.
 
@@ -7538,7 +7538,7 @@ body::before {
          retained. Apply the same projection here at render time. */
       function reviewedDisplayPose(rawPose, requestedPerspective = 1) {
         if (!rawPose) return rawPose;
-        // v0.9.5.5: Studio coordinates are already the reviewed display geometry.
+        // v0.9.5.6: Studio coordinates are already the reviewed display geometry.
         // presentation.*.perspective is retained for backwards-compatible data loading
         // but must never compress the authored torso/shins a second time.
         return JSON.parse(JSON.stringify(rawPose));
@@ -7582,7 +7582,7 @@ body::before {
         const neck = pose.neckPivot, hip = pose.hip;
         let dx = neck.x - hip.x, dy = neck.y - hip.y;
         const len = Math.hypot(dx,dy);
-        // v0.9.5.5: a fully collapsed torso is an authored axial/top-down
+        // v0.9.5.6: a fully collapsed torso is an authored axial/top-down
         // view. Centre the head on neckPivot so the bilateral arm anchor is
         // geometrically and visually symmetrical, matching Motion Studio.
         if (len < .001 || Number(pose.torsoScale) <= .001) {
@@ -7623,7 +7623,7 @@ body::before {
         const bounds=frames.map(kf=>poseBounds(kf.pose));
         if(!bounds.length)return{x:0,y:0,w:760,h:198};
         const raw={minX:Math.min(...bounds.map(b=>b.minX)),maxX:Math.max(...bounds.map(b=>b.maxX)),minY:Math.min(...bounds.map(b=>b.minY)),maxY:Math.max(...bounds.map(b=>b.maxY))};
-        // v0.9.5.5: exact authored sequence bounds. reviewedCameraViewBox()
+        // v0.9.5.6: exact authored sequence bounds. reviewedCameraViewBox()
         // already applies the same one authoritative safety gutter as Studio.
         return{x:raw.minX,y:raw.minY,w:(raw.maxX-raw.minX),h:(raw.maxY-raw.minY)};
       }
@@ -9327,7 +9327,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
         font-weight: 900;
       }
 
-/* v0.9.5.5 — Library search focus should sit above filter pills */
+/* v0.9.5.6 — Library search focus should sit above filter pills */
 #libraryPage .librarySearchWrap,
 #libraryPage .searchPill,
 .libraryPage .librarySearchWrap,
@@ -9349,7 +9349,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
 }
 
 
-/* v0.9.5.5 Library search focus-ring visibility */
+/* v0.9.5.6 Library search focus-ring visibility */
 #page-library #exerciseSearch {
   position: relative;
   z-index: 3;
@@ -9364,7 +9364,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
 }
 
 
-      /* v0.9.5.5 exercise preference */
+      /* v0.9.5.6 exercise preference */
       .exerciseChallengeExplanation {
         color: var(--text);
         font-weight: 700;
@@ -9385,7 +9385,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
       }
 
 
-      /* v0.9.5.5 Exercise preference segmented choice */
+      /* v0.9.5.6 Exercise preference segmented choice */
       .exerciseChallengeStateSelect {
         position: absolute !important;
         width: 1px !important;
@@ -9419,10 +9419,23 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
       .exerciseChallengeButton:active {
         transform: scale(.98);
       }
-      @media (max-width: 390px) {
+      @media (max-width: 460px) {
         .exerciseChallengeButtons {
           grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 8px;
         }
+        .exerciseChallengeButton {
+          padding-left: 12px;
+          padding-right: 12px;
+          font-size: 12px;
+        }
+      }
+
+
+      /* v0.9.5.6 phone polish: neutral dark animation canvas */
+      html[data-mode="dark"] #page-active .exerciseItem.currentExercise .exerciseMotion.reviewedMotion {
+        background: #121315 !important;
+        border-color: color-mix(in srgb, var(--accent) 34%, rgba(255,255,255,.10)) !important;
       }
 
 </style>
