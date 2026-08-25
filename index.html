@@ -4605,13 +4605,13 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.9.4.9</p>
+        <p class="testerInstallVersion">v0.9.5.1</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
       <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.9.4.9 UI build</div>
+      <div class="launchVersion">v0.9.5.1 UI build</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
@@ -5322,7 +5322,7 @@ body::before {
       function canonicalExerciseName(name){ return EXERCISE_NAME_ALIASES[name] || name; }
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.9.4.9",
+        version: "0.9.5.1",
         buildDate: "24 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
@@ -7499,7 +7499,7 @@ body::before {
         ["thighR","hip","kneeR"],
         ["shinR","kneeR","ankleR"]
       ]);
-      // v0.9.4.9: this is the canonical Studio rig topology.
+      // v0.9.5.1: this is the canonical Studio rig topology.
       // Do not derive separate shoulder anchors at render time: authored upper
       // arms begin at neckPivot exactly as they do in Motion Studio.
 
@@ -7509,7 +7509,7 @@ body::before {
          retained. Apply the same projection here at render time. */
       function reviewedDisplayPose(rawPose, requestedPerspective = 1) {
         if (!rawPose) return rawPose;
-        // v0.9.4.9: Studio coordinates are already the reviewed display geometry.
+        // v0.9.5.1: Studio coordinates are already the reviewed display geometry.
         // presentation.*.perspective is retained for backwards-compatible data loading
         // but must never compress the authored torso/shins a second time.
         return JSON.parse(JSON.stringify(rawPose));
@@ -7553,7 +7553,7 @@ body::before {
         const neck = pose.neckPivot, hip = pose.hip;
         let dx = neck.x - hip.x, dy = neck.y - hip.y;
         const len = Math.hypot(dx,dy);
-        // v0.9.4.9: a fully collapsed torso is an authored axial/top-down
+        // v0.9.5.1: a fully collapsed torso is an authored axial/top-down
         // view. Centre the head on neckPivot so the bilateral arm anchor is
         // geometrically and visually symmetrical, matching Motion Studio.
         if (len < .001 || Number(pose.torsoScale) <= .001) {
@@ -7594,7 +7594,7 @@ body::before {
         const bounds=frames.map(kf=>poseBounds(kf.pose));
         if(!bounds.length)return{x:0,y:0,w:760,h:198};
         const raw={minX:Math.min(...bounds.map(b=>b.minX)),maxX:Math.max(...bounds.map(b=>b.maxX)),minY:Math.min(...bounds.map(b=>b.minY)),maxY:Math.max(...bounds.map(b=>b.maxY))};
-        // v0.9.4.9: exact authored sequence bounds. reviewedCameraViewBox()
+        // v0.9.5.1: exact authored sequence bounds. reviewedCameraViewBox()
         // already applies the same one authoritative safety gutter as Studio.
         return{x:raw.minX,y:raw.minY,w:(raw.maxX-raw.minX),h:(raw.maxY-raw.minY)};
       }
@@ -7610,14 +7610,73 @@ body::before {
         return dark ? {fg:"#ffffff",bg:"#66717d",guide:"#3b4652",headFill:"#020814",equipment:"#64d2ff"} : {fg:"#111214",bg:"#969ba2",guide:"#a4a9af",headFill:"#dceaf7",equipment:"#2f80ed"};
       }
 
+      const REVIEWED_RIG_LENGTHS={torso:155,upperArm:74,foreArm:70,thigh:100,shin:100};
+      const REVIEWED_JOINTS=["neckPivot","elbowL","wristL","elbowR","wristR","hip","kneeL","ankleL","kneeR","ankleR"];
+      function reviewedVSub(a,b){return{x:a.x-b.x,y:a.y-b.y}}
+      function reviewedVAdd(a,b){return{x:a.x+b.x,y:a.y+b.y}}
+      function reviewedVMul(v,k){return{x:v.x*k,y:v.y*k}}
+      function reviewedVLen(v){return Math.hypot(v.x,v.y)||1}
+      function reviewedVNorm(v){const m=reviewedVLen(v);return{x:v.x/m,y:v.y/m}}
+      function reviewedVDist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
+      function reviewedClamp(v,a,b){return Math.max(a,Math.min(b,v))}
+      function reviewedPointAt(o,ang,r){return{x:o.x+Math.cos(ang)*r,y:o.y+Math.sin(ang)*r}}
+      function reviewedSolveTwoBone(root,target,l1,l2,currentJoint){
+        let d=reviewedVDist(root,target);
+        d=reviewedClamp(d,Math.abs(l1-l2)+.001,l1+l2-.001);
+        const dir=reviewedVNorm(reviewedVSub(target,root)),base=Math.atan2(dir.y,dir.x);
+        const c=(l1*l1+d*d-l2*l2)/(2*l1*d),off=Math.acos(reviewedClamp(c,-1,1));
+        const A=reviewedPointAt(root,base+off,l1),B=reviewedPointAt(root,base-off,l1);
+        return currentJoint&&reviewedVDist(B,currentJoint)<reviewedVDist(A,currentJoint)?B:A;
+      }
+      function reviewedNormaliseInterpolatedPose(p){
+        const torsoScale=reviewedClamp(Number.isFinite(+p.torsoScale)?+p.torsoScale:1,0,1);
+        p.torsoScale=torsoScale;
+        if(torsoScale<.999)return p;
+        const raw=reviewedVSub(p.neckPivot,p.hip),dir=reviewedVLen(raw)<.001?{x:0,y:-1}:reviewedVNorm(raw);
+        p.neckPivot=reviewedVAdd(p.hip,reviewedVMul(dir,REVIEWED_RIG_LENGTHS.torso));
+        const solveArm=(elbow,wrist)=>{
+          const target0=p[wrist],d=reviewedVDist(p.neckPivot,target0);
+          const reachable=reviewedClamp(d,Math.abs(REVIEWED_RIG_LENGTHS.upperArm-REVIEWED_RIG_LENGTHS.foreArm)+.5,REVIEWED_RIG_LENGTHS.upperArm+REVIEWED_RIG_LENGTHS.foreArm-.5);
+          const target=reviewedVAdd(p.neckPivot,reviewedVMul(reviewedVNorm(reviewedVSub(target0,p.neckPivot)),reachable));
+          p[wrist]=target;p[elbow]=reviewedSolveTwoBone(p.neckPivot,target,REVIEWED_RIG_LENGTHS.upperArm,REVIEWED_RIG_LENGTHS.foreArm,p[elbow]);
+        };
+        solveArm("elbowL","wristL");solveArm("elbowR","wristR");
+        const solveLeg=(knee,ankle)=>{
+          const target0=p[ankle],d=reviewedVDist(p.hip,target0);
+          const reachable=reviewedClamp(d,1,REVIEWED_RIG_LENGTHS.thigh+REVIEWED_RIG_LENGTHS.shin-.5);
+          const target=reviewedVAdd(p.hip,reviewedVMul(reviewedVNorm(reviewedVSub(target0,p.hip)),reachable));
+          p[ankle]=target;p[knee]=reviewedSolveTwoBone(p.hip,target,REVIEWED_RIG_LENGTHS.thigh,REVIEWED_RIG_LENGTHS.shin,p[knee]);
+        };
+        solveLeg("kneeL","ankleL");solveLeg("kneeR","ankleR");
+        return p;
+      }
+      function reviewedInterpPoseExact(A,B,t){
+        const e=(Math.sin(t*Math.PI-Math.PI/2)+1)/2,p={
+          torsoScale:(Number.isFinite(+A.torsoScale)?+A.torsoScale:1)+(((Number.isFinite(+B.torsoScale)?+B.torsoScale:1)-(Number.isFinite(+A.torsoScale)?+A.torsoScale:1))*e)
+        };
+        REVIEWED_JOINTS.forEach(n=>p[n]={x:A[n].x+(B[n].x-A[n].x)*e,y:A[n].y+(B[n].y-A[n].y)*e});
+        return reviewedNormaliseInterpolatedPose(p);
+      }
+      function reviewedSampledPoseRoute(data,view=1,samplesPerSegment=24){
+        const frames=reviewedFramesForView(data,view),route=reviewedMotionRoute(data,view),out=[];
+        for(let seg=0;seg<route.length-1;seg++){
+          const A=frames[route[seg]]?.pose,B=frames[route[seg+1]]?.pose;if(!A||!B)continue;
+          for(let i=0;i<samplesPerSegment;i++){
+            if(seg>0&&i===0)continue;
+            out.push(reviewedInterpPoseExact(A,B,i/(samplesPerSegment-1)));
+          }
+        }
+        return out.length?out:route.map(i=>frames[i]?.pose).filter(Boolean);
+      }
+
       function reviewedAnimatedLine(id,a,b,data,route,totalDur,view=1) {
         const hidden=new Set(view===2?reviewedPresentation(data).view2HiddenLimbs:reviewedPresentation(data).view1HiddenLimbs);
         if(hidden.has(id))return "";
         const style=data.limbStyle?.[id]||"fg",palette=reviewedMotionPalette(),stroke=style==="bg"?palette.bg:palette.fg,width=style==="bg"?6:7;
-        const poses=route.map(i=>reviewedFramePose(data,i,view));
+        const poses=reviewedSampledPoseRoute(data,view);
         const x1=poses.map(p=>p[a].x.toFixed(2)),y1=poses.map(p=>p[a].y.toFixed(2)),x2=poses.map(p=>p[b].x.toFixed(2)),y2=poses.map(p=>p[b].y.toFixed(2));
-        const seg=route.length-1;
-        return `<line x1="${x1[0]}" y1="${y1[0]}" x2="${x2[0]}" y2="${y2[0]}" stroke="${stroke}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round">${reviewedAnimate("x1",x1,totalDur,seg)}${reviewedAnimate("y1",y1,totalDur,seg)}${reviewedAnimate("x2",x2,totalDur,seg)}${reviewedAnimate("y2",y2,totalDur,seg)}</line>`;
+        const anim=(attr,vals)=>vals.length<2?"":`<animate attributeName="${attr}" values="${vals.join(";")}" dur="${totalDur}ms" repeatCount="indefinite" calcMode="linear"/>`;
+        return `<line x1="${x1[0]}" y1="${y1[0]}" x2="${x2[0]}" y2="${y2[0]}" stroke="${stroke}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round">${anim("x1",x1)}${anim("y1",y1)}${anim("x2",x2)}${anim("y2",y2)}</line>`;
       }
 
       function reviewedEnvironmentMarkup(data,view=1) {
@@ -7627,28 +7686,66 @@ body::before {
         return out;
       }
 
-      function reviewedEquipmentMarkup(data,route,totalDur,view=1) {
-        const frames=reviewedFramesForView(data,view),first=frames[0]?.equipment||[],palette=reviewedMotionPalette(),seg=route.length-1;
-        return first.map((eq,idx)=>{
-          const seq=route.map(i=>frames[i]?.equipment?.[idx]).filter(Boolean);if(!seq.length)return"";
-          if(eq.type==="band"&&eq.a&&eq.b){
-            const vals=k=>seq.map(x=>Number(x[k[0]][k[1]]).toFixed(2));
-            const x1=vals(['a','x']),y1=vals(['a','y']),x2=vals(['b','x']),y2=vals(['b','y']);
-            return `<line x1="${x1[0]}" y1="${y1[0]}" x2="${x2[0]}" y2="${y2[0]}" stroke="${palette.equipment}" stroke-width="6" stroke-linecap="round">${reviewedAnimate('x1',x1,totalDur,seg)}${reviewedAnimate('y1',y1,totalDur,seg)}${reviewedAnimate('x2',x2,totalDur,seg)}${reviewedAnimate('y2',y2,totalDur,seg)}</line>`;
-          }
-          if(["dumbbell","kettlebell","platform"].includes(eq.type)){
-            const positions=seq.map(x=>`${Number(x.x||0).toFixed(2)} ${Number(x.y||0).toFixed(2)}`), anim=positions.length>1&&!window.matchMedia("(prefers-reduced-motion: reduce)").matches?`<animateTransform attributeName="transform" type="translate" values="${positions.join(';')}" keyTimes="${positions.map((_,i)=>(i/(positions.length-1)).toFixed(4)).join(';')}" dur="${totalDur}ms" repeatCount="indefinite"/>`:"";
-            if(eq.type==="platform"){const w=eq.w||150,h=eq.h||22;return `<g transform="translate(${eq.x} ${eq.y})"><rect x="${-w/2}" y="${-h}" width="${w}" height="${h}" rx="5" fill="${palette.equipment}"/><line x1="${-w/2+18}" y1="0" x2="${-w/2+18}" y2="42" stroke="${palette.equipment}" stroke-width="8" stroke-linecap="round"/><line x1="${w/2-18}" y1="0" x2="${w/2-18}" y2="42" stroke="${palette.equipment}" stroke-width="8" stroke-linecap="round"/>${anim}</g>`;}
-            if(eq.type==="dumbbell")return `<g transform="translate(${eq.x} ${eq.y})"><line x1="-18" y1="0" x2="18" y2="0" stroke="${palette.equipment}" stroke-width="6" stroke-linecap="round"/><rect x="-29" y="-10" width="10" height="20" rx="3" fill="${palette.equipment}"/><rect x="19" y="-10" width="10" height="20" rx="3" fill="${palette.equipment}"/>${anim}</g>`;
-            return `<g transform="translate(${eq.x} ${eq.y})"><path d="M-14 -8 Q-14 -26 0 -26 Q14 -26 14 -8" fill="none" stroke="${palette.equipment}" stroke-width="6" stroke-linecap="round"/><circle cx="0" cy="8" r="19" fill="${palette.equipment}"/>${anim}</g>`;
-          }
-          return"";
-        }).join("");
+      function reviewedEquipmentMarkup(data,route,totalDur,view=1){
+  const frames=reviewedFramesForView(data,view),first=frames[0]?.equipment||[],palette=reviewedMotionPalette();
+  const sampledPoses=reviewedSampledPoseRoute(data,view),samplesPerSegment=24;
+  const attachFor=(eq,pose,maxDistance=54)=>{
+    if(!eq||!pose||!Number.isFinite(eq.x)||!Number.isFinite(eq.y))return null;
+    const cs=["wristL","wristR"].map(key=>({key,pt:pose[key]})).filter(x=>x.pt)
+      .sort((u,v)=>Math.hypot(eq.x-u.pt.x,eq.y-u.pt.y)-Math.hypot(eq.x-v.pt.x,eq.y-v.pt.y));
+    if(!cs.length)return null;
+    const hit=cs[0],d=Math.hypot(eq.x-hit.pt.x,eq.y-hit.pt.y);
+    return d<=maxDistance?{key:hit.key,dx:eq.x-hit.pt.x,dy:eq.y-hit.pt.y}:null;
+  };
+  const sampledPointEquipment=(idx)=>{
+    const eq0=first[idx];if(!eq0||!["dumbbell","kettlebell"].includes(eq0.type))return[];
+    const out=[];let poseIndex=0;
+    for(let seg=0;seg<route.length-1;seg++){
+      const fa=frames[route[seg]],fb=frames[route[seg+1]];
+      const ea=fa?.equipment?.[idx]||eq0,eb=fb?.equipment?.[idx]||ea;
+      const aa=attachFor(ea,fa?.pose),ab=attachFor(eb,fb?.pose);
+      const attach=(aa&&ab&&aa.key===ab.key)?aa:(aa||ab);
+      for(let i=0;i<samplesPerSegment;i++){
+        if(seg>0&&i===0)continue;
+        const t=i/(samplesPerSegment-1),e=(Math.sin(t*Math.PI-Math.PI/2)+1)/2;
+        const p=sampledPoses[poseIndex++]||sampledPoses[sampledPoses.length-1];
+        if(attach&&p?.[attach.key]){
+          const dxA=aa?.key===attach.key?aa.dx:attach.dx,dyA=aa?.key===attach.key?aa.dy:attach.dy;
+          const dxB=ab?.key===attach.key?ab.dx:dxA,dyB=ab?.key===attach.key?ab.dy:dyA;
+          out.push({x:p[attach.key].x+dxA+(dxB-dxA)*e,y:p[attach.key].y+dyA+(dyB-dyA)*e});
+        }else{
+          out.push({x:(ea.x||0)+((eb.x||ea.x||0)-(ea.x||0))*e,y:(ea.y||0)+((eb.y||ea.y||0)-(ea.y||0))*e});
+        }
       }
+    }
+    return out;
+  };
+  return first.map((eq,idx)=>{
+    if(eq.type==="band"&&eq.a&&eq.b){
+      const seq=route.map(i=>frames[i]?.equipment?.[idx]).filter(Boolean);if(!seq.length)return"";
+      const vals=k=>seq.map(x=>Number(x[k[0]][k[1]]).toFixed(2));
+      const x1=vals(["a","x"]),y1=vals(["a","y"]),x2=vals(["b","x"]),y2=vals(["b","y"]),seg=route.length-1;
+      return`<line x1="${x1[0]}" y1="${y1[0]}" x2="${x2[0]}" y2="${y2[0]}" stroke="${palette.equipment}" stroke-width="6" stroke-linecap="round">${reviewedAnimate("x1",x1,totalDur,seg)}${reviewedAnimate("y1",y1,totalDur,seg)}${reviewedAnimate("x2",x2,totalDur,seg)}${reviewedAnimate("y2",y2,totalDur,seg)}</line>`;
+    }
+    if(["dumbbell","kettlebell"].includes(eq.type)){
+      const pts=sampledPointEquipment(idx);if(!pts.length)return"";
+      const positions=pts.map(p=>`${p.x.toFixed(2)} ${p.y.toFixed(2)}`);
+      const anim=positions.length>1?`<animateTransform attributeName="transform" type="translate" values="${positions.join(";")}" dur="${totalDur}ms" repeatCount="indefinite" calcMode="linear"/>`:"";
+      if(eq.type==="dumbbell")return`<g transform="translate(${pts[0].x} ${pts[0].y})"><line x1="-18" y1="0" x2="18" y2="0" stroke="${palette.equipment}" stroke-width="6" stroke-linecap="round"/><rect x="-29" y="-10" width="10" height="20" rx="3" fill="${palette.equipment}"/><rect x="19" y="-10" width="10" height="20" rx="3" fill="${palette.equipment}"/>${anim}</g>`;
+      return`<g transform="translate(${pts[0].x} ${pts[0].y})"><path d="M-14 -8 Q-14 -26 0 -26 Q14 -26 14 -8" fill="none" stroke="${palette.equipment}" stroke-width="6" stroke-linecap="round"/><circle cx="0" cy="8" r="19" fill="${palette.equipment}"/>${anim}</g>`;
+    }
+    if(eq.type==="platform"){
+      const w=eq.w||150,h=eq.h||22;
+      return`<g transform="translate(${eq.x} ${eq.y})"><rect x="${-w/2}" y="${-h}" width="${w}" height="${h}" rx="5" fill="${palette.equipment}"/><line x1="${-w/2+18}" y1="0" x2="${-w/2+18}" y2="42" stroke="${palette.equipment}" stroke-width="8" stroke-linecap="round"/><line x1="${w/2-18}" y1="0" x2="${w/2-18}" y2="42" stroke="${palette.equipment}" stroke-width="8" stroke-linecap="round"/></g>`;
+    }
+    return"";
+  }).join("");
+}
 
       function reviewedHeadMarkup(data,route,totalDur,view=1) {
-        const pts=route.map(i=>reviewedHeadPoint(reviewedFramePose(data,i,view))),xs=pts.map(p=>p.x.toFixed(2)),ys=pts.map(p=>p.y.toFixed(2)),seg=route.length-1,palette=reviewedMotionPalette();
-        return `<circle cx="${xs[0]}" cy="${ys[0]}" r="24" fill="${palette.headFill}" stroke="${palette.fg}" stroke-width="5">${reviewedAnimate("cx",xs,totalDur,seg)}${reviewedAnimate("cy",ys,totalDur,seg)}</circle>`;
+        const poses=reviewedSampledPoseRoute(data,view),pts=poses.map(reviewedHeadPoint),xs=pts.map(p=>p.x.toFixed(2)),ys=pts.map(p=>p.y.toFixed(2)),palette=reviewedMotionPalette();
+        const anim=(attr,vals)=>vals.length<2?"":`<animate attributeName="${attr}" values="${vals.join(";")}" dur="${totalDur}ms" repeatCount="indefinite" calcMode="linear"/>`;
+        return `<circle cx="${xs[0]}" cy="${ys[0]}" r="24" fill="${palette.headFill}" stroke="${palette.fg}" stroke-width="5">${anim("cx",xs)}${anim("cy",ys)}</circle>`;
       }
 
       function reviewedCameraViewBox(data,view,paneW=760,paneH=198){
@@ -9187,7 +9284,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
         font-weight: 900;
       }
 
-/* v0.9.4.9 — Library search focus should sit above filter pills */
+/* v0.9.5.1 — Library search focus should sit above filter pills */
 #libraryPage .librarySearchWrap,
 #libraryPage .searchPill,
 .libraryPage .librarySearchWrap,
@@ -9209,7 +9306,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
 }
 
 
-/* v0.9.4.9 Library search focus-ring visibility */
+/* v0.9.5.1 Library search focus-ring visibility */
 #page-library #exerciseSearch {
   position: relative;
   z-index: 3;
