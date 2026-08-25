@@ -4541,7 +4541,7 @@ body::before {
           /iPad|iPhone|iPod/.test(navigator.userAgent) ||
           (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-        // v0.9.6.2: Capacitor is already a native installed app, so the
+        // v0.9.6.3: Capacitor is already a native installed app, so the
         // temporary Safari/PWA install gate must never appear inside it.
         const isCapacitorNative =
           window.Capacitor?.isNativePlatform?.() === true ||
@@ -4612,13 +4612,13 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.9.6.2</p>
+        <p class="testerInstallVersion">v0.9.6.3</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
       <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.9.6.2 UI build</div>
+      <div class="launchVersion">v0.9.6.3 UI build</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
@@ -5337,7 +5337,7 @@ body::before {
       function canonicalExerciseName(name){ return EXERCISE_NAME_ALIASES[name] || name; }
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.9.6.2",
+        version: "0.9.6.3",
         buildDate: "24 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
@@ -7246,7 +7246,7 @@ body::before {
         return workouts[Math.min(weeklyCompleted(), 3)] || workouts[0];
       }
       function toast(m) {
-        // v0.9.6.2: keep active workouts visually quiet.
+        // v0.9.6.3: keep active workouts visually quiet.
         // Set completion/rest/workout interactions already have dedicated
         // in-workout feedback, so suppress the global bottom toast while
         // a workout session is active.
@@ -7567,7 +7567,7 @@ body::before {
         ["thighR","hip","kneeR"],
         ["shinR","kneeR","ankleR"]
       ]);
-      // v0.9.6.2: this is the canonical Studio rig topology.
+      // v0.9.6.3: this is the canonical Studio rig topology.
       // Do not derive separate shoulder anchors at render time: authored upper
       // arms begin at neckPivot exactly as they do in Motion Studio.
 
@@ -7577,7 +7577,7 @@ body::before {
          retained. Apply the same projection here at render time. */
       function reviewedDisplayPose(rawPose, requestedPerspective = 1) {
         if (!rawPose) return rawPose;
-        // v0.9.6.2: Studio coordinates are already the reviewed display geometry.
+        // v0.9.6.3: Studio coordinates are already the reviewed display geometry.
         // presentation.*.perspective is retained for backwards-compatible data loading
         // but must never compress the authored torso/shins a second time.
         return JSON.parse(JSON.stringify(rawPose));
@@ -7621,7 +7621,7 @@ body::before {
         const neck = pose.neckPivot, hip = pose.hip;
         let dx = neck.x - hip.x, dy = neck.y - hip.y;
         const len = Math.hypot(dx,dy);
-        // v0.9.6.2: a fully collapsed torso is an authored axial/top-down
+        // v0.9.6.3: a fully collapsed torso is an authored axial/top-down
         // view. Centre the head on neckPivot so the bilateral arm anchor is
         // geometrically and visually symmetrical, matching Motion Studio.
         if (len < .001 || Number(pose.torsoScale) <= .001) {
@@ -7662,7 +7662,7 @@ body::before {
         const bounds=frames.map(kf=>poseBounds(kf.pose));
         if(!bounds.length)return{x:0,y:0,w:760,h:198};
         const raw={minX:Math.min(...bounds.map(b=>b.minX)),maxX:Math.max(...bounds.map(b=>b.maxX)),minY:Math.min(...bounds.map(b=>b.minY)),maxY:Math.max(...bounds.map(b=>b.maxY))};
-        // v0.9.6.2: exact authored sequence bounds. reviewedCameraViewBox()
+        // v0.9.6.3: exact authored sequence bounds. reviewedCameraViewBox()
         // already applies the same one authoritative safety gutter as Studio.
         return{x:raw.minX,y:raw.minY,w:(raw.maxX-raw.minX),h:(raw.maxY-raw.minY)};
       }
@@ -9367,7 +9367,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
         font-weight: 900;
       }
 
-/* v0.9.6.2 — Library search focus should sit above filter pills */
+/* v0.9.6.3 — Library search focus should sit above filter pills */
 #libraryPage .librarySearchWrap,
 #libraryPage .searchPill,
 .libraryPage .librarySearchWrap,
@@ -9389,7 +9389,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
 }
 
 
-/* v0.9.6.2 Library search focus-ring visibility */
+/* v0.9.6.3 Library search focus-ring visibility */
 #page-library #exerciseSearch {
   position: relative;
   z-index: 3;
@@ -9404,7 +9404,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
 }
 
 
-      /* v0.9.6.2 exercise preference */
+      /* v0.9.6.3 exercise preference */
       .exerciseChallengeExplanation {
         color: var(--text);
         font-weight: 700;
@@ -9425,7 +9425,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
       }
 
 
-      /* v0.9.6.2 Exercise preference segmented choice */
+      /* v0.9.6.3 Exercise preference segmented choice */
       .exerciseChallengeStateSelect {
         position: absolute !important;
         width: 1px !important;
@@ -9461,14 +9461,14 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
       }
 
 
-      /* v0.9.6.2 phone polish: neutral dark animation canvas */
+      /* v0.9.6.3 phone polish: neutral dark animation canvas */
       html[data-mode="dark"] #page-active .exerciseItem.currentExercise .exerciseMotion.reviewedMotion {
         background: #121315 !important;
         border-color: color-mix(in srgb, var(--accent) 34%, rgba(255,255,255,.10)) !important;
       }
 
 
-      /* v0.9.6.2 Capacitor/WKWebView scrolling
+      /* v0.9.6.3 Capacitor/WKWebView scrolling
          Keep MOMNTUM's proven grid + .content scroller. Reinforce the flex/grid
          minimum sizes WKWebView needs instead of replacing the layout with an
          absolute-positioned scroller. */
@@ -9500,7 +9500,10 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
         -webkit-overflow-scrolling: touch !important;
         touch-action: pan-y !important;
         overscroll-behavior-y: contain !important;
-        padding: 4px 16px calc(var(--navH) + 20px + env(safe-area-inset-bottom)) !important;
+        padding:
+          calc(82px + env(safe-area-inset-top))
+          16px
+          calc(var(--navH) + 20px + env(safe-area-inset-bottom)) !important;
       }
       html.capacitorNative .page {
         min-height: 0 !important;
@@ -9511,6 +9514,15 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
       html.capacitorNative .onboardingOverlay {
         -webkit-overflow-scrolling: touch !important;
         touch-action: pan-y !important;
+      }
+
+
+      @media (min-width: 760px) {
+        html.capacitorNative .content {
+          padding-top: calc(84px + env(safe-area-inset-top)) !important;
+          padding-left: 26px !important;
+          padding-right: 26px !important;
+        }
       }
 
 </style>
