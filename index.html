@@ -4605,13 +4605,13 @@ body::before {
         <button id="testerBrowserPreview" class="testerBrowserPreview" type="button">
           Continue in browser
         </button>
-        <p class="testerInstallVersion">v0.9.5.1</p>
+        <p class="testerInstallVersion">v0.9.5.5</p>
       </div>
     </section>
 
     <div id="launchSplash" class="launchSplash" aria-hidden="true">
       <div id="launchLogo" class="launchLogo"><img src="momntum-mark.svg?v=0.8.3" alt="" draggable="false" /></div>
-      <div class="launchVersion">v0.9.5.1 UI build</div>
+      <div class="launchVersion">v0.9.5.5 UI build</div>
     </div>
 
     <section id="onboardingOverlay" class="onboardingOverlay" aria-modal="true" role="dialog" aria-labelledby="onboardingTitle">
@@ -4844,12 +4844,10 @@ body::before {
               <div class="grid two" style="margin-top: 12px">
                 <label
                   >Rest duration<select id="restDuration">
+                    <option value="10">10 seconds</option>
+                    <option value="20">20 seconds</option>
                     <option value="30">30 seconds</option>
-                    <option value="45">45 seconds</option>
                     <option value="60">60 seconds</option>
-                    <option value="75">75 seconds</option>
-                    <option value="90">90 seconds</option>
-                    <option value="120">120 seconds</option>
                   </select></label
                 ><label
                   >Units<select id="units">
@@ -4873,18 +4871,28 @@ body::before {
                   >Sound<select id="soundSelect">
                     <option value="on">On</option>
                     <option value="off">Off</option>
-                  </select></label
-                ><label
-                  >Exercise difficulty<select id="exerciseDifficultySelect">
-                    <option value="off">Off</option>
-                    <option value="easy">Easy</option>
-                    <option value="medium">Medium</option>
-                    <option value="hard">Hard</option>
-                  </select></label
-                >
+                  </select></label>
               </div>
             </div>
             
+            <div class="card exerciseChallengeCard" id="exerciseChallengeSettingsCard">
+              <h3>Exercise preference</h3>
+              <p class="small muted" style="margin-top:6px">Choose the type of exercise variations MOMNTUM prefers when building your workouts.</p>
+              <div class="exerciseChallengeButtons" id="exerciseChallengeButtons" role="radiogroup" aria-label="Exercise preference">
+                <button type="button" class="exerciseChallengeButton" data-exercise-challenge="off" role="radio" aria-checked="false">Any</button>
+                <button type="button" class="exerciseChallengeButton" data-exercise-challenge="easy" role="radio" aria-checked="false">Lighter</button>
+                <button type="button" class="exerciseChallengeButton" data-exercise-challenge="medium" role="radio" aria-checked="false">Standard</button>
+                <button type="button" class="exerciseChallengeButton" data-exercise-challenge="hard" role="radio" aria-checked="false">Challenging</button>
+              </div>
+              <select id="exerciseDifficultySelect" class="exerciseChallengeStateSelect" aria-hidden="true" tabindex="-1">
+                <option value="off">Any</option>
+                <option value="easy">Lighter</option>
+                <option value="medium">Standard</option>
+                <option value="hard">Challenging</option>
+              </select>
+              <p class="small exerciseChallengeExplanation" id="exerciseChallengeExplanation" style="margin-top:10px"></p>
+              <p class="small muted exerciseChallengeFallback" style="margin-top:6px">If an exact match isn’t available, MOMNTUM uses the closest suitable variation so your workout stays balanced.</p>
+            </div>
             <div class="card" id="equipmentSettingsCard">
               <h3>My equipment</h3>
               <p class="small" style="margin-top:6px">Bodyweight is always included. Add any portable equipment you have available.</p>
@@ -5322,7 +5330,7 @@ body::before {
       function canonicalExerciseName(name){ return EXERCISE_NAME_ALIASES[name] || name; }
       const APP_INFO = {
         name: "MOMNTUM",
-        version: "0.9.5.1",
+        version: "0.9.5.5",
         buildDate: "24 August 2026",
         creator: "Mark Taylor",
         poweredBy: "Offline PWA • HTML • CSS • JavaScript",
@@ -7164,6 +7172,22 @@ body::before {
         return generated ? { ...workout, ...generated } : { ...workout, activeEquipment: "Bodyweight only" };
       }
 
+      function exerciseChallengeLabel(value = state.settings.exerciseDifficulty || "off") {
+        return ({off:"Any",easy:"Lighter",medium:"Standard",hard:"Challenging"})[value] || "Any";
+      }
+      function exerciseChallengeExplanation(value = state.settings.exerciseDifficulty || "off") {
+        return ({
+          off:"MOMNTUM chooses freely from suitable variations.",
+          easy:"MOMNTUM prefers less demanding exercise variations where available.",
+          medium:"MOMNTUM prefers standard exercise variations where available.",
+          hard:"MOMNTUM prefers more demanding exercise variations where available."
+        })[value] || "MOMNTUM chooses freely from suitable variations.";
+      }
+      function workoutChallengePreferenceMarkup() {
+        const value=state.settings.exerciseDifficulty||"off";
+        return value==="off" ? "" : `<div class="workoutChallengePreference"><span>Exercise preference</span><strong>· ${exerciseChallengeLabel(value)}</strong></div>`;
+      }
+
       function equipmentProfileLabel() {
         const selected = selectedEquipment();
         return ["Bodyweight", ...selected.map((x) => equipmentLabels[x]).filter(Boolean)].join(" • ");
@@ -7183,6 +7207,11 @@ body::before {
         return workouts[Math.min(weeklyCompleted(), 3)] || workouts[0];
       }
       function toast(m) {
+        // v0.9.5.5: keep active workouts visually quiet.
+        // Set completion/rest/workout interactions already have dedicated
+        // in-workout feedback, so suppress the global bottom toast while
+        // a workout session is active.
+        if (state.active) return;
         const t = $("toast");
         t.textContent = m;
         t.classList.add("show");
@@ -7419,7 +7448,7 @@ body::before {
             const profileAvailable = selectedEquipment().length > 0;
             const enabled = equipmentEnabledFor(w.id);
             const switchLabel = enabled ? rw.activeEquipment : "Bodyweight only";
-            return `<article class="card expandableWorkoutCard" data-workout-card="${w.id}" role="button" tabindex="0" aria-expanded="false"><div class="workoutCardCollapsed"><div class="workoutCardCollapsedTop"><div class="workoutCardCollapsedTitle"><h3>${w.title}</h3></div><button class="cardChevron" type="button" data-workout-expand="${w.id}" aria-label="Expand ${w.title}" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><div class="workoutCardSummaryMeta"><span class="pill">${w.duration} min</span><span class="pill">${rw.main.length} exercises</span><span class="pill">${w.warm.length} warmups</span></div><div class="workoutCardExpanded"><div class="workoutFocusAreas"><span class="kicker">Focus areas</span><p>${w.focusAreas.join(" • ")}</p><div class="focusExerciseSummary">${rw.main.join(" • ")}</div></div><div class="workoutExpandedEquipmentDetail"><div class="workoutExpandedEquipmentHeader"><div><strong>${enabled ? "Equipment selected" : "Bodyweight"}</strong><small>${switchLabel}${profileAvailable ? "" : " · Add equipment in Settings"}</small></div><label class="workoutExpandedEquipmentToggle" aria-label="Use equipment for ${w.title}"><span>Equipment</span><span class="switchControl"><input type="checkbox" data-equipment-toggle="${w.id}" ${enabled ? "checked" : ""} ${profileAvailable ? "" : "disabled"}><span class="switchTrack"></span></span></label></div></div><p class="small muted regenerateExplainer">Regenerate swaps in another balanced mix of exercises.</p></div><div class="workoutCardActions"><button class="btn secondary" data-regenerate="${w.id}" type="button">Regenerate</button>
+            return `<article class="card expandableWorkoutCard" data-workout-card="${w.id}" role="button" tabindex="0" aria-expanded="false"><div class="workoutCardCollapsed"><div class="workoutCardCollapsedTop"><div class="workoutCardCollapsedTitle"><h3>${w.title}</h3></div><button class="cardChevron" type="button" data-workout-expand="${w.id}" aria-label="Expand ${w.title}" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><div class="workoutCardSummaryMeta"><span class="pill">${w.duration} min</span><span class="pill">${rw.main.length} exercises</span><span class="pill">${w.warm.length} warmups</span></div><div class="workoutCardExpanded"><div class="workoutFocusAreas"><span class="kicker">Focus areas</span><p>${w.focusAreas.join(" • ")}</p><div class="focusExerciseSummary">${rw.main.join(" • ")}</div></div><div class="workoutExpandedEquipmentDetail"><div class="workoutExpandedEquipmentHeader"><div><strong>${enabled ? "Equipment selected" : "Bodyweight"}</strong><small>${switchLabel}${profileAvailable ? "" : " · Add equipment in Settings"}</small></div><label class="workoutExpandedEquipmentToggle" aria-label="Use equipment for ${w.title}"><span>Equipment</span><span class="switchControl"><input type="checkbox" data-equipment-toggle="${w.id}" ${enabled ? "checked" : ""} ${profileAvailable ? "" : "disabled"}><span class="switchTrack"></span></span></label></div></div>${workoutChallengePreferenceMarkup()}<p class="small muted regenerateExplainer">Regenerate swaps in another balanced mix of exercises.</p></div><div class="workoutCardActions"><button class="btn secondary" data-regenerate="${w.id}" type="button">Regenerate</button>
                     <button class="btn primary" data-start="${w.id}">Start</button><label class="workoutEquipmentInline" aria-label="Use equipment for ${w.title}"><span>Equipment</span><span class="switchControl"><input type="checkbox" data-equipment-toggle="${w.id}" ${enabled ? "checked" : ""} ${profileAvailable ? "" : "disabled"}><span class="switchTrack"></span></span></label></div></div></article>`;
           })
           .join("");
@@ -7499,7 +7528,7 @@ body::before {
         ["thighR","hip","kneeR"],
         ["shinR","kneeR","ankleR"]
       ]);
-      // v0.9.5.1: this is the canonical Studio rig topology.
+      // v0.9.5.5: this is the canonical Studio rig topology.
       // Do not derive separate shoulder anchors at render time: authored upper
       // arms begin at neckPivot exactly as they do in Motion Studio.
 
@@ -7509,7 +7538,7 @@ body::before {
          retained. Apply the same projection here at render time. */
       function reviewedDisplayPose(rawPose, requestedPerspective = 1) {
         if (!rawPose) return rawPose;
-        // v0.9.5.1: Studio coordinates are already the reviewed display geometry.
+        // v0.9.5.5: Studio coordinates are already the reviewed display geometry.
         // presentation.*.perspective is retained for backwards-compatible data loading
         // but must never compress the authored torso/shins a second time.
         return JSON.parse(JSON.stringify(rawPose));
@@ -7553,7 +7582,7 @@ body::before {
         const neck = pose.neckPivot, hip = pose.hip;
         let dx = neck.x - hip.x, dy = neck.y - hip.y;
         const len = Math.hypot(dx,dy);
-        // v0.9.5.1: a fully collapsed torso is an authored axial/top-down
+        // v0.9.5.5: a fully collapsed torso is an authored axial/top-down
         // view. Centre the head on neckPivot so the bilateral arm anchor is
         // geometrically and visually symmetrical, matching Motion Studio.
         if (len < .001 || Number(pose.torsoScale) <= .001) {
@@ -7594,7 +7623,7 @@ body::before {
         const bounds=frames.map(kf=>poseBounds(kf.pose));
         if(!bounds.length)return{x:0,y:0,w:760,h:198};
         const raw={minX:Math.min(...bounds.map(b=>b.minX)),maxX:Math.max(...bounds.map(b=>b.maxX)),minY:Math.min(...bounds.map(b=>b.minY)),maxY:Math.max(...bounds.map(b=>b.maxY))};
-        // v0.9.5.1: exact authored sequence bounds. reviewedCameraViewBox()
+        // v0.9.5.5: exact authored sequence bounds. reviewedCameraViewBox()
         // already applies the same one authoritative safety gutter as Studio.
         return{x:raw.minX,y:raw.minY,w:(raw.maxX-raw.minX),h:(raw.maxY-raw.minY)};
       }
@@ -8175,12 +8204,20 @@ body::before {
         scheduleExerciseSvgHydration();
       }
       function renderSettings() {
+        const allowedRestDurations=[10,20,30,60];
+        if(!allowedRestDurations.includes(Number(state.settings.restDuration))) state.settings.restDuration=30;
         $("restDuration").value = state.settings.restDuration;
         $("units").value = state.settings.units;
         $("themeModeSelect").value = state.settings.themeMode;
         $("themeHueSelect").value = state.settings.themeHue;
         $("soundSelect").value = state.settings.sound;
         $("exerciseDifficultySelect").value = state.settings.exerciseDifficulty || "off";
+        document.querySelectorAll("[data-exercise-challenge]").forEach(btn=>{
+          const active=btn.dataset.exerciseChallenge===(state.settings.exerciseDifficulty||"off");
+          btn.classList.toggle("active",active);
+          btn.setAttribute("aria-checked",String(active));
+        });
+        if ($("exerciseChallengeExplanation")) $("exerciseChallengeExplanation").textContent = exerciseChallengeExplanation();
         $("useFavouritesToggle").checked = !!state.settings.useFavourites;
         $("favouriteLimitSection").classList.toggle("hiddenControl", !state.settings.useFavourites);
         $("favouritesSettingsCard").classList.toggle("expanded", !!state.settings.useFavourites);
@@ -9007,6 +9044,12 @@ body::before {
         input.addEventListener("change", saveSettings)
       );
 
+      document.querySelectorAll("[data-exercise-challenge]").forEach(btn=>btn.addEventListener("click",()=>{
+        const select=$("exerciseDifficultySelect");
+        select.value=btn.dataset.exerciseChallenge;
+        select.dispatchEvent(new Event("change",{bubbles:true}));
+      }));
+
       document.querySelectorAll("[data-favourite-limit]").forEach(btn=>btn.addEventListener("click",()=>{ state.settings.favouriteLimit=Number(btn.dataset.favouriteLimit); saveState(); renderAll(); toast(`Up to ${state.settings.favouriteLimit} favourite${state.settings.favouriteLimit===1?"":"s"} per workout`); }));
 
       function changeWeeklyTarget(delta) {
@@ -9284,7 +9327,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
         font-weight: 900;
       }
 
-/* v0.9.5.1 — Library search focus should sit above filter pills */
+/* v0.9.5.5 — Library search focus should sit above filter pills */
 #libraryPage .librarySearchWrap,
 #libraryPage .searchPill,
 .libraryPage .librarySearchWrap,
@@ -9306,7 +9349,7 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
 }
 
 
-/* v0.9.5.1 Library search focus-ring visibility */
+/* v0.9.5.5 Library search focus-ring visibility */
 #page-library #exerciseSearch {
   position: relative;
   z-index: 3;
@@ -9319,5 +9362,67 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)");
   position: relative;
   z-index: 1;
 }
+
+
+      /* v0.9.5.5 exercise preference */
+      .exerciseChallengeExplanation {
+        color: var(--text);
+        font-weight: 700;
+        line-height: 1.45;
+      }
+      .workoutChallengePreference {
+        margin: 10px 2px 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .workoutChallengePreference strong {
+        color: var(--heading);
+        font-weight: 850;
+      }
+
+
+      /* v0.9.5.5 Exercise preference segmented choice */
+      .exerciseChallengeStateSelect {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+      .exerciseChallengeButtons {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 7px;
+        margin-top: 14px;
+      }
+      .exerciseChallengeButton {
+        min-width: 0;
+        min-height: 42px;
+        padding: 9px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--divider);
+        background: var(--card2);
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+        line-height: 1.1;
+      }
+      .exerciseChallengeButton.active {
+        background: color-mix(in srgb, var(--accent) 16%, var(--card2));
+        border-color: color-mix(in srgb, var(--accent) 58%, var(--divider));
+        color: var(--heading);
+      }
+      .exerciseChallengeButton:active {
+        transform: scale(.98);
+      }
+      @media (max-width: 390px) {
+        .exerciseChallengeButtons {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
 
 </style>
